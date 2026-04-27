@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Inventra.Domain.Enums
+﻿namespace Inventra.Domain.Enums
 {
-    public class CustomIdElementType
+    public enum CustomIdElementType
     {
+        Fixed,
+        Random20,
+        Random32,
+        Random6Digits,
+        Random9Digits,
+        Guid,
+        DateTime,
+        Sequence
     }
 }

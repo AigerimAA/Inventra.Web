@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Inventra.Domain.Entities
 {

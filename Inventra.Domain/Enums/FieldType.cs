@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Inventra.Domain.Enums
 {
-    public class FieldType
+    public enum FieldType
     {
+        Text,
+        MultiText,
+        Number,
+        Link,
+        Boolean
     }
 }
