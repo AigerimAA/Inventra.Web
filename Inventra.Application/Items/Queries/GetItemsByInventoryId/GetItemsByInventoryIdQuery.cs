@@ -1,6 +1,7 @@
-﻿namespace Inventra.Application.Items.Queries.GetItemsByInventoryId
+﻿using Inventra.Application.DTOs;
+using MediatR;
+
+namespace Inventra.Application.Items.Queries.GetItemsByInventoryId
 {
-    public class GetItemsByInventoryIdQuery
-    {
-    }
+    public record GetItemsByInventoryIdQuery(int InventoryId) : IRequest<IEnumerable<ItemDto>>;
 }
