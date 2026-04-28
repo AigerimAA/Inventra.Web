@@ -1,6 +1,6 @@
-﻿namespace Inventra.Application.Items.Commands.DeleteItem
+﻿using MediatR;
+
+namespace Inventra.Application.Items.Commands.DeleteItem
 {
-    public class DeleteItemCommand
-    {
-    }
+    public record DeleteItemCommand(int Id) : IRequest;
 }
