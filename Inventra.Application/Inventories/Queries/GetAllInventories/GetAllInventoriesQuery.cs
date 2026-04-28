@@ -1,6 +1,7 @@
-﻿namespace Inventra.Application.Inventories.Queries.GetAllInventories
+﻿using Inventra.Application.DTOs;
+using MediatR;
+
+namespace Inventra.Application.Inventories.Queries.GetAllInventories
 {
-    public class GetAllInventoriesQuery
-    {
-    }
+    public record GetAllInventoriesQuery : IRequest<IEnumerable<InventoryDto>>;    
 }

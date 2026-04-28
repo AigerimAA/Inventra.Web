@@ -1,6 +1,8 @@
-﻿namespace Inventra.Application.Inventories.Queries.GetInventoryById
+﻿using Inventra.Application.DTOs;
+using MediatR;
+
+namespace Inventra.Application.Inventories.Queries.GetInventoryById
 {
-    public class GetInventoryByIdQuery
-    {
-    }
+    public record GetInventoryByIdQuery(int Id) : IRequest<InventoryDto>;
+    
 }
