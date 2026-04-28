@@ -34,7 +34,7 @@ namespace Inventra.Domain.Entities
         public string? CustomLink2Value { get; set; }
         public string? CustomLink3Value { get; set; }
         public Inventory Inventory { get; set; } = null!;
-        public ApplicationUser Createdby { get; set; } = null!;
+        public ApplicationUser CreatedBy { get; set; } = null!;
         public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 }

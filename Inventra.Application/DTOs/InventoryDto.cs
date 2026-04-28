@@ -52,6 +52,6 @@
         public bool CustomLink3Shown { get; set; }
 
         public IList<string> Tags { get; set; } = new List<string>();
-        public int ItemCount { get; set; }
+        public int ItemsCount { get; set; }
     }
 }
