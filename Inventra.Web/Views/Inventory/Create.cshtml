@@ -1,0 +1,52 @@
+﻿@using Inventra.Application.Inventories.Commands.CreateInventory
+@model CreateInventoryCommand
+
+@{
+    ViewData["Title"] = "New Inventory";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <h2 class="mb-4">New Inventory</h2>
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">Title</label>
+                <input asp-for="Title" class="form-control" placeholder="e.g. Office Equipment" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"
+                          placeholder="Describe your inventory..."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="form-label">Category</label>
+                <select asp-for="CategoryId" class="form-select">
+                    <option value="0">-- Select category --</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input asp-for="IsPublic" class="form-check-input" />
+                <label asp-for="IsPublic" class="form-check-label">
+                    Public (any authenticated user can add items)
+                </label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

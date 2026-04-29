@@ -1,0 +1,55 @@
+﻿@using Inventra.Application.DTOs
+@model IEnumerable<InventoryDto>
+
+@{
+    ViewData["Title"] = "Inventories";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Inventories</h2>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ New Inventory</a>
+    }
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Creator</th>
+            <th>Items</th>
+            <th>Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    No inventories yet. Be the first to create one!
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var inventory in Model)
+            {
+                <tr style="cursor: pointer;"
+                    onclick="window.location='/Inventory/Details/@inventory.Id'">
+                    <td>@inventory.Title</td>
+                    <td>@inventory.CategoryName</td>
+                    <td>@inventory.OwnerName</td>
+                    <td>@inventory.ItemsCount</td>
+                    <td>
+                        @foreach (var tag in inventory.Tags)
+                        {
+                            <span class="badge bg-secondary me-1">@tag</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
