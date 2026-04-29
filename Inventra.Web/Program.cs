@@ -46,7 +46,7 @@ namespace Inventra.Web
                     options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
                 });
 
-            builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
             builder.Services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(
