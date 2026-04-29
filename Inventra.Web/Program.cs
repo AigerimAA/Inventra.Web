@@ -61,12 +61,16 @@ namespace Inventra.Web
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            var cloudinaryAccount = new Account(
-                builder.Configuration["Cloudinary:CloudName"],
-                builder.Configuration["Cloudinary:ApiKey"],
-                builder.Configuration["Cloudinary:ApiSecret"]);
-            builder.Services.AddSingleton(new Cloudinary(cloudinaryAccount));
-            builder.Services.AddScoped<CloudStorageServices>();
+            var cloudName = builder.Configuration["Cloudinary:CloudName"];
+            if (!string.IsNullOrEmpty(cloudName))
+            {
+                var cloudinaryAccount = new Account(
+                    cloudName,
+                    builder.Configuration["Cloudinary:ApiKey"],
+                    builder.Configuration["Cloudinary:ApiSecret"]);
+                builder.Services.AddSingleton(new Cloudinary(cloudinaryAccount));
+                builder.Services.AddScoped<CloudStorageService>();
+            }
 
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.Configure<RequestLocalizationOptions>(options =>

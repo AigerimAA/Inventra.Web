@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Inventra.Infrastructure.Services
 {
-    public class CloudStorageServices
+    public class CloudStorageService
     {
         private readonly Cloudinary _cloudinary;
 
-        public CloudStorageServices(Cloudinary cloudinary)
+        public CloudStorageService(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
         }
