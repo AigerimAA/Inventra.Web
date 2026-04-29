@@ -1,0 +1,112 @@
+﻿@using Inventra.Application.Items.Commands.CreateItem
+@using Inventra.Application.DTOs
+@model CreateItemCommand
+
+@{
+    ViewData["Title"] = "Add Item";
+    var inventory = ViewBag.Inventory as InventoryDto;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <h2 class="mb-1">Add Item</h2>
+        <p class="text-muted mb-4">
+            to <a asp-controller="Inventory" asp-action="Details"
+                  asp-route-id="@inventory?.Id">@inventory?.Title</a>
+        </p>
+
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="InventoryId" value="@inventory?.Id" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            @if (inventory?.CustomString1Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomString1Name</label>
+                    <input asp-for="CustomString1Value" class="form-control" />
+                </div>
+            }
+            @if (inventory?.CustomString2Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomString2Name</label>
+                    <input asp-for="CustomString2Value" class="form-control" />
+                </div>
+            }
+            @if (inventory?.CustomString3Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomString3Name</label>
+                    <input asp-for="CustomString3Value" class="form-control" />
+                </div>
+            }
+            @if (inventory?.CustomInt1Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomInt1Name</label>
+                    <input asp-for="CustomInt1Value" class="form-control" type="number" step="0.01" />
+                </div>
+            }
+            @if (inventory?.CustomInt2Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomInt2Name</label>
+                    <input asp-for="CustomInt2Value" class="form-control" type="number" step="0.01" />
+                </div>
+            }
+            @if (inventory?.CustomInt3Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomInt3Name</label>
+                    <input asp-for="CustomInt3Value" class="form-control" type="number" step="0.01" />
+                </div>
+            }
+            @if (inventory?.CustomText1Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomText1Name</label>
+                    <textarea asp-for="CustomText1Value" class="form-control" rows="3"></textarea>
+                </div>
+            }
+            @if (inventory?.CustomBool1Name != null)
+            {
+                <div class="mb-3 form-check">
+                    <input asp-for="CustomBool1Value" class="form-check-input" />
+                    <label class="form-check-label">@inventory.CustomBool1Name</label>
+                </div>
+            }
+            @if (inventory?.CustomLink1Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">@inventory.CustomLink1Name</label>
+                    <input asp-for="CustomLink1Value" class="form-control"
+                           placeholder="https://..." />
+                </div>
+            }
+
+            @if (inventory?.CustomString1Name == null &&
+                 inventory?.CustomInt1Name == null &&
+                 inventory?.CustomText1Name == null &&
+                 inventory?.CustomBool1Name == null &&
+                 inventory?.CustomLink1Name == null)
+            {
+                <div class="alert alert-info">
+                    This inventory has no custom fields yet.
+                    <a asp-controller="Inventory" asp-action="Edit"
+                       asp-route-id="@inventory?.Id">Add fields</a> first.
+                </div>
+            }
+
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Add Item</button>
+                <a asp-controller="Inventory" asp-action="Details"
+                   asp-route-id="@inventory?.Id"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
