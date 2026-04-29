@@ -1,0 +1,58 @@
+﻿@model Inventra.Web.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h2 class="mb-4">Login</h2>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <hr />
+
+        <div class="text-center">
+            <p class="text-muted mb-3">Or login with</p>
+            <form asp-action="ExternalLogin" method="post">
+                <button type="submit" name="provider" value="Google"
+                        class="btn btn-outline-danger me-2">
+                    Google
+                </button>
+                <button type="submit" name="provider" value="Facebook"
+                        class="btn btn-outline-primary">
+                    Facebook
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-3">
+            <a asp-action="Register">Don't have an account? Register</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
