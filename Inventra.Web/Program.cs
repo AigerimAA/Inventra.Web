@@ -34,17 +34,40 @@ namespace Inventra.Web
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-            builder.Services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-                    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-                })
-                .AddFacebook(options =>
-                {
-                    options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
-                    options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
-                });
+            //builder.Services.AddAuthentication()
+            //    .AddGoogle(options =>
+            //    {
+            //        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+            //        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+            //    })
+            //    .AddFacebook(options =>
+            //    {
+            //        options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+            //        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+            //    });
+
+            var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+            var facebookAppId = builder.Configuration["Authentication:Facebook:AppId"];
+
+            if (!string.IsNullOrEmpty(googleClientId))
+            {
+                builder.Services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        options.ClientId = googleClientId;
+                        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+                    });
+            }
+
+            if (!string.IsNullOrEmpty(facebookAppId))
+            {
+                builder.Services.AddAuthentication()
+                    .AddFacebook(options =>
+                    {
+                        options.AppId = facebookAppId;
+                        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+                    });
+            }
 
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
