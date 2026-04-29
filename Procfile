@@ -1,0 +1,1 @@
+web: dotnet Inventra.Web.dll
