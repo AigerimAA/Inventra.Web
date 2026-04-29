@@ -1,8 +1,75 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="px-4 py-5 text-center">
+    <h1 class="display-5 fw-bold">📦 Inventra</h1>
+    <p class="lead mb-4">
+        Create and manage custom inventories for anything —
+        office equipment, books, documents, and more.
+    </p>
+    @if (!User.Identity?.IsAuthenticated ?? true)
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">
+            Get Started
+        </a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">
+            Login
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-lg">
+            + New Inventory
+        </a>
+    }
+</div>
+
+<hr />
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <h4>Latest Inventories</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Creator</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" class="text-muted text-center">
+                        No inventories yet. Be the first to create one!
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <h4>Top 5 Popular</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2" class="text-muted text-center">
+                        No data yet.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 class="mt-4">Tags</h4>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="text-muted">No tags yet.</span>
+        </div>
+    </div>
 </div>
