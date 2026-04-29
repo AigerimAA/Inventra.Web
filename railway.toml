@@ -1,6 +1,5 @@
 [build]
-builder = "nixpacks"
-buildCommand = "dotnet restore Inventra.Web.slnx && dotnet publish Inventra.Web/Inventra.Web.csproj -c Release -o out"
+builder = "dockerfile"
 
 [deploy]
-startCommand = "dotnet out/Inventra.Web.dll"
+startCommand = "dotnet Inventra.Web.dll"
