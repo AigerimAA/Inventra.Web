@@ -126,6 +126,20 @@ namespace Inventra.Infrastructure.Persistence
                 .HasForeignKey(i => i.OwnerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Entity<Item>()
+                .Property(i => i.CustomInt1Value)
+                .HasPrecision(18, 4);
+
+            builder.Entity<Item>()
+                .Property(i => i.CustomInt2Value)
+                .HasPrecision(18, 4);
+
+            builder.Entity<Item>()
+                .Property(i => i.CustomInt3Value)
+                .HasPrecision(18, 4);
         }
     }
 }
+        
+    
+
