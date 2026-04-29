@@ -81,6 +81,7 @@ namespace Inventra.Web
             builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
             builder.Services.AddScoped<IItemRepository, ItemRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

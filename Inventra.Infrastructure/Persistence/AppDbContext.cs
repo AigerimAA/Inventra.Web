@@ -137,6 +137,14 @@ namespace Inventra.Infrastructure.Persistence
             builder.Entity<Item>()
                 .Property(i => i.CustomInt3Value)
                 .HasPrecision(18, 4);
+
+            builder.Entity<Category>().HasData(
+                new Category { Id = 1, Name = "Equipment" },
+                new Category { Id = 2, Name = "Furniture" },
+                new Category { Id = 3, Name = "Books" },
+                new Category { Id = 4, Name = "Documents" },
+                new Category { Id = 5, Name = "Other" }
+            );
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Inventra.Application.Inventories.Commands.CreateInventory;
+﻿using Inventra.Application.Categories.Queries.GetAllCategories;
+using Inventra.Application.Inventories.Commands.CreateInventory;
 using Inventra.Application.Inventories.Commands.DeleteInventory;
 using Inventra.Application.Inventories.Queries.GetAllInventories;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
@@ -35,10 +36,13 @@ namespace Inventra.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var categories = await _mediator.Send(new GetAllCategoriesQuery());
+            ViewBag.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categories, "Id", "Name");
             return View();
         }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
