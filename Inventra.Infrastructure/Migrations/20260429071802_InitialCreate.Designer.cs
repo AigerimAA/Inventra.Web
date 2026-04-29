@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventra.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260429070806_InitialCreate")]
+    [Migration("20260429071802_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -132,6 +132,9 @@ namespace Inventra.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("AuthorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -147,6 +150,8 @@ namespace Inventra.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("AuthorId");
 
@@ -354,7 +359,12 @@ namespace Inventra.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("InventoryId", "UserId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -483,7 +493,12 @@ namespace Inventra.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ItemId", "UserId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -642,10 +657,14 @@ namespace Inventra.Infrastructure.Migrations
 
             modelBuilder.Entity("Inventra.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("Inventra.Domain.Entities.ApplicationUser", "Author")
+                    b.HasOne("Inventra.Domain.Entities.ApplicationUser", null)
                         .WithMany("Comments")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Inventra.Domain.Entities.ApplicationUser", "Author")
+                        .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Inventra.Domain.Entities.Inventory", "Inventory")
@@ -692,7 +711,7 @@ namespace Inventra.Infrastructure.Migrations
                     b.HasOne("Inventra.Domain.Entities.ApplicationUser", "Owner")
                         .WithMany("OwnedInventories")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -702,6 +721,10 @@ namespace Inventra.Infrastructure.Migrations
 
             modelBuilder.Entity("Inventra.Domain.Entities.InventoryAccess", b =>
                 {
+                    b.HasOne("Inventra.Domain.Entities.ApplicationUser", null)
+                        .WithMany("InventoryAccesses")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Inventra.Domain.Entities.Inventory", "Inventory")
                         .WithMany("AccessList")
                         .HasForeignKey("InventoryId")
@@ -709,9 +732,9 @@ namespace Inventra.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Inventra.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("InventoryAccesses")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Inventory");
@@ -741,7 +764,7 @@ namespace Inventra.Infrastructure.Migrations
                     b.HasOne("Inventra.Domain.Entities.Tag", "Tag")
                         .WithMany("InventoryTags")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Inventory");
@@ -754,7 +777,7 @@ namespace Inventra.Infrastructure.Migrations
                     b.HasOne("Inventra.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Inventra.Domain.Entities.Inventory", "Inventory")
@@ -770,6 +793,10 @@ namespace Inventra.Infrastructure.Migrations
 
             modelBuilder.Entity("Inventra.Domain.Entities.Like", b =>
                 {
+                    b.HasOne("Inventra.Domain.Entities.ApplicationUser", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Inventra.Domain.Entities.Item", "Item")
                         .WithMany("Likes")
                         .HasForeignKey("ItemId")
@@ -777,9 +804,9 @@ namespace Inventra.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Inventra.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("Likes")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Item");

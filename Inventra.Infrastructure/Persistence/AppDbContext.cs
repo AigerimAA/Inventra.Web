@@ -48,17 +48,35 @@ namespace Inventra.Infrastructure.Persistence
                 .HasForeignKey(i => i.InventoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Item>()
+                .HasOne(i => i.CreatedBy)
+                .WithMany()
+                .HasForeignKey(i => i.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<Comment>()
                 .HasOne(c => c.Inventory)
                 .WithMany(inv => inv.Comments)
                 .HasForeignKey(c => c.InventoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Comment>()
+                .HasOne(c => c.Author)
+                .WithMany()
+                .HasForeignKey(c => c.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<Like>()
                 .HasOne(l => l.Item)
                 .WithMany(i => i.Likes)
                 .HasForeignKey(l => l.ItemId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Like>()
+                .HasOne(l => l.User)
+                .WithMany()
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<CustomIdFormat>()
                 .HasOne(f => f.Inventory)
@@ -84,11 +102,29 @@ namespace Inventra.Infrastructure.Persistence
                 .HasForeignKey(it => it.InventoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<InventoryTag>()
+                .HasOne(it => it.Tag)
+                .WithMany(t => t.InventoryTags)
+                .HasForeignKey(it => it.TagId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<InventoryAccess>()
                 .HasOne(ia => ia.Inventory)
                 .WithMany(inv => inv.AccessList)
                 .HasForeignKey(ia => ia.InventoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<InventoryAccess>()
+                .HasOne(ia => ia.User)
+                .WithMany()
+                .HasForeignKey(ia => ia.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Inventory>()
+                .HasOne(i => i.Owner)
+                .WithMany(u => u.OwnedInventories)
+                .HasForeignKey(i => i.OwnerId)
+                .OnDelete(DeleteBehavior.NoAction);
 
         }
     }
