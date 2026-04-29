@@ -131,6 +131,7 @@ namespace Inventra.Web.Controllers
 
             dto.Title = existing.Title;
             dto.Version = existing.Version;
+            dto.CategoryId = existing.CategoryId;
 
             var command = new UpdateInventoryCommand
             {

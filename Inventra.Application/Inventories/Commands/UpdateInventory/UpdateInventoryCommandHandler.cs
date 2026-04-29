@@ -30,7 +30,10 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.Description = request.Description;
             inventory.ImageUrl = request.ImageUrl;
             inventory.IsPublic = request.IsPublic;
-            inventory.CategoryId = request.CategoryId;
+
+            if (request.CategoryId > 0)
+                inventory.CategoryId = request.CategoryId;
+
             inventory.UpdatedAt = DateTime.UtcNow;
             inventory.Version = request.Version;
 
@@ -69,15 +72,8 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.CustomLink3Name = request.CustomLink3Name;
             inventory.CustomLink3Shown = request.CustomLink3Shown;
 
-            try
-            {
-                await _inventoryRepository.UpdateAsync(inventory);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-            }
-            catch(Exception)
-            {
-                throw new ConcurrencyException();
-            }
+            await _inventoryRepository.UpdateAsync(inventory);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
