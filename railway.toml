@@ -1,5 +1,6 @@
 [build]
 builder = "nixpacks"
+buildCommand = "dotnet publish Inventra.Web/Inventra.Web.csproj -c Release -o out"
 
 [deploy]
-startCommand = "dotnet Inventra.Web.dll"
+startCommand = "dotnet out/Inventra.Web.dll"
