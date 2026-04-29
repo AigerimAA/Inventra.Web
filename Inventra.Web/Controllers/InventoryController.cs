@@ -122,9 +122,15 @@ namespace Inventra.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditFields(InventoryDto dto)
         {
+            var existing = await _mediator.Send(new GetInventoryByIdQuery(dto.Id));
+            if (existing == null) return NotFound();
+
             var userId = _userManager.GetUserId(User);
-            if (dto.OwnerId != userId && !User.IsInRole("Admin"))
+            if (existing.OwnerId != userId && !User.IsInRole("Admin"))
                 return Forbid();
+
+            dto.Title = existing.Title;
+            dto.Version = existing.Version;
 
             var command = new UpdateInventoryCommand
             {
