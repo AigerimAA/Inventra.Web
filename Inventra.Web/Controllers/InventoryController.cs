@@ -5,6 +5,7 @@ using Inventra.Application.Inventories.Commands.DeleteInventory;
 using Inventra.Application.Inventories.Commands.UpdateInventory;
 using Inventra.Application.Inventories.Queries.GetAllInventories;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
+using Inventra.Application.Items.Queries.GetItemsByInventoryId;
 using Inventra.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,10 @@ namespace Inventra.Web.Controllers
             var inventory = await _mediator.Send(new GetInventoryByIdQuery(id));
             if (inventory == null)
                 return NotFound();
+
+            var items = await _mediator.Send(new GetItemsByInventoryIdQuery(id));
+            ViewBag.Items = items;
+
             return View(inventory);
         }
 

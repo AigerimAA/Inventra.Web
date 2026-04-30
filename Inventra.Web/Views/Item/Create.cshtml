@@ -71,7 +71,10 @@
             @if (inventory?.CustomBool1Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input asp-for="CustomBool1Value" class="form-check-input" />
+                    <input type="checkbox" class="form-check-input"
+                           name="CustomBool1Value" value="true"
+                    @(Model?.CustomBool1Value == true ? "checked" : "") />
+                    <input type="hidden" name="CustomBool1Value" value="false" />
                     <label class="form-check-label">@inventory.CustomBool1Name</label>
                 </div>
             }

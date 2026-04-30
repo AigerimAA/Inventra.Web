@@ -78,7 +78,7 @@
 </ul>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
-    <h5>Items</h5>
+    <h5>Items (@((ViewBag.Items as IEnumerable<Inventra.Application.DTOs.ItemDto>)?.Count() ?? 0))</h5>
     @if (User.Identity?.IsAuthenticated == true)
     {
         <a asp-controller="Item" asp-action="Create"
@@ -87,20 +87,116 @@
     }
 </div>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Created By</th>
-            <th>Created At</th>
-            <th>Likes</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan="4" class="text-center text-muted">
-                No items yet.
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Custom ID</th>
+                @if (Model.CustomString1Name != null)
+                {
+                    <th>@Model.CustomString1Name</th>
+                }
+                @if (Model.CustomString2Name != null)
+                {
+                    <th>@Model.CustomString2Name</th>
+                }
+                @if (Model.CustomString3Name != null)
+                {
+                    <th>@Model.CustomString3Name</th>
+                }
+                @if (Model.CustomInt1Name != null)
+                {
+                    <th class="text-end">@Model.CustomInt1Name</th>
+                }
+                @if (Model.CustomInt2Name != null)
+                {
+                    <th class="text-end">@Model.CustomInt2Name</th>
+                }
+                @if (Model.CustomInt3Name != null)
+                {
+                    <th class="text-end">@Model.CustomInt3Name</th>
+                }
+                @if (Model.CustomText1Name != null)
+                {
+                    <th>@Model.CustomText1Name</th>
+                }
+                @if (Model.CustomBool1Name != null)
+                {
+                    <th>@Model.CustomBool1Name</th>
+                }
+                @if (Model.CustomLink1Name != null)
+                {
+                    <th>@Model.CustomLink1Name</th>
+                }
+                <th>Created By</th>
+                <th>Likes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var items = ViewBag.Items as IEnumerable<Inventra.Application.DTOs.ItemDto>;
+            }
+            @if (items == null || !items.Any())
+            {
+                <tr>
+                    <td colspan="20" class="text-center text-muted">
+                        No items yet.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in items)
+                {
+                    <tr style="cursor:pointer"
+                        onclick="window.location='/Item/Details/@item.Id'">
+                        <td>@item.CustomId</td>
+                        @if (Model.CustomString1Name != null)
+                        {
+                            <td>@item.CustomString1Value</td>
+                        }
+                        @if (Model.CustomString2Name != null)
+                        {
+                            <td>@item.CustomString2Value</td>
+                        }
+                        @if (Model.CustomString3Name != null)
+                        {
+                            <td>@item.CustomString3Value</td>
+                        }
+                        @if (Model.CustomInt1Name != null)
+                        {
+                            <td class="text-end">@item.CustomInt1Value?.ToString("N2")</td>
+                        }
+                        @if (Model.CustomInt2Name != null)
+                        {
+                            <td class="text-end">@item.CustomInt2Value</td>
+                        }
+                        @if (Model.CustomInt3Name != null)
+                        {
+                            <td class="text-end">@item.CustomInt3Value</td>
+                        }
+                        @if (Model.CustomText1Name != null)
+                        {
+                            <td>@item.CustomText1Value</td>
+                        }
+                        @if (Model.CustomBool1Name != null)
+                        {
+                            <td>@(item.CustomBool1Value == true ? "✓" : "✗")</td>
+                        }
+                        @if (Model.CustomLink1Name != null)
+                        {
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.CustomLink1Value))
+                                {
+                                    <a href="@item.CustomLink1Value" target="_blank">Link</a>
+                                }
+                            </td>
+                        }
+                        <td>@item.CreatedByName</td>
+                        <td class="text-end">@item.LikesCount</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
