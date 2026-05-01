@@ -20,6 +20,7 @@ namespace Inventra.Web
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSignalR();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -156,6 +157,8 @@ namespace Inventra.Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<Inventra.Web.Hubs.ChatHub>("/chatHub");
 
             app.Run();
         }

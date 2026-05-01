@@ -8,7 +8,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>@Model.Title</h2>
     @if (User.Identity?.IsAuthenticated == true &&
-         (Model.OwnerId == @User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+         (Model.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
           || User.IsInRole("Admin")))
     {
         <div class="d-flex gap-2">
@@ -24,179 +24,245 @@
     }
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-8">
-        <table class="table table-borderless">
-            <tr>
-                <th width="150">Category</th>
-                <td>@Model.CategoryName</td>
-            </tr>
-            <tr>
-                <th>Creator</th>
-                <td>@Model.OwnerName</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>@Model.Description</td>
-            </tr>
-            <tr>
-                <th>Access</th>
-                <td>@(Model.IsPublic ? "Public" : "Private")</td>
-            </tr>
-            <tr>
-                <th>Tags</th>
-                <td>
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <span class="badge bg-secondary me-1">@tag</span>
-                    }
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
-
-<ul class="nav nav-tabs mb-3">
+<ul class="nav nav-tabs mb-3" id="inventoryTabs">
     <li class="nav-item">
-        <a class="nav-link active">Items</a>
+        <a class="nav-link active" data-bs-toggle="tab" href="#items">Items</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link">Discussion</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#discussion">Discussion</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link">Settings</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link">Fields</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link">Access</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link">Stats</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#settings">Settings</a>
     </li>
 </ul>
 
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h5>Items (@((ViewBag.Items as IEnumerable<Inventra.Application.DTOs.ItemDto>)?.Count() ?? 0))</h5>
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a asp-controller="Item" asp-action="Create"
-           asp-route-inventoryId="@Model.Id"
-           class="btn btn-primary btn-sm">+ Add Item</a>
-    }
-</div>
+<div class="tab-content">
 
-<div class="table-responsive">
-    <table class="table table-hover table-sm">
-        <thead>
-            <tr>
-                <th>Custom ID</th>
-                @if (Model.CustomString1Name != null)
-                {
-                    <th>@Model.CustomString1Name</th>
-                }
-                @if (Model.CustomString2Name != null)
-                {
-                    <th>@Model.CustomString2Name</th>
-                }
-                @if (Model.CustomString3Name != null)
-                {
-                    <th>@Model.CustomString3Name</th>
-                }
-                @if (Model.CustomInt1Name != null)
-                {
-                    <th class="text-end">@Model.CustomInt1Name</th>
-                }
-                @if (Model.CustomInt2Name != null)
-                {
-                    <th class="text-end">@Model.CustomInt2Name</th>
-                }
-                @if (Model.CustomInt3Name != null)
-                {
-                    <th class="text-end">@Model.CustomInt3Name</th>
-                }
-                @if (Model.CustomText1Name != null)
-                {
-                    <th>@Model.CustomText1Name</th>
-                }
-                @if (Model.CustomBool1Name != null)
-                {
-                    <th>@Model.CustomBool1Name</th>
-                }
-                @if (Model.CustomLink1Name != null)
-                {
-                    <th>@Model.CustomLink1Name</th>
-                }
-                <th>Created By</th>
-                <th>Likes</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                var items = ViewBag.Items as IEnumerable<Inventra.Application.DTOs.ItemDto>;
-            }
-            @if (items == null || !items.Any())
+    <div class="tab-pane fade show active" id="items">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Items (@((ViewBag.Items as IEnumerable<ItemDto>)?.Count() ?? 0))</h5>
+            @if (User.Identity?.IsAuthenticated == true)
             {
-                <tr>
-                    <td colspan="20" class="text-center text-muted">
-                        No items yet.
-                    </td>
-                </tr>
+                <a asp-controller="Item" asp-action="Create"
+                   asp-route-inventoryId="@Model.Id"
+                   class="btn btn-primary btn-sm">+ Add Item</a>
             }
-            else
-            {
-                @foreach (var item in items)
-                {
-                    <tr style="cursor:pointer"
-                        onclick="window.location='/Item/Details/@item.Id'">
-                        <td>@item.CustomId</td>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Custom ID</th>
                         @if (Model.CustomString1Name != null)
                         {
-                            <td>@item.CustomString1Value</td>
+                            <th>@Model.CustomString1Name</th>
                         }
                         @if (Model.CustomString2Name != null)
                         {
-                            <td>@item.CustomString2Value</td>
+                            <th>@Model.CustomString2Name</th>
                         }
                         @if (Model.CustomString3Name != null)
                         {
-                            <td>@item.CustomString3Value</td>
+                            <th>@Model.CustomString3Name</th>
                         }
                         @if (Model.CustomInt1Name != null)
                         {
-                            <td class="text-end">@item.CustomInt1Value?.ToString("N2")</td>
+                            <th class="text-end">@Model.CustomInt1Name</th>
                         }
                         @if (Model.CustomInt2Name != null)
                         {
-                            <td class="text-end">@item.CustomInt2Value</td>
+                            <th class="text-end">@Model.CustomInt2Name</th>
                         }
                         @if (Model.CustomInt3Name != null)
                         {
-                            <td class="text-end">@item.CustomInt3Value</td>
+                            <th class="text-end">@Model.CustomInt3Name</th>
                         }
                         @if (Model.CustomText1Name != null)
                         {
-                            <td>@item.CustomText1Value</td>
+                            <th>@Model.CustomText1Name</th>
                         }
                         @if (Model.CustomBool1Name != null)
                         {
-                            <td>@(item.CustomBool1Value == true ? "✓" : "✗")</td>
+                            <th>@Model.CustomBool1Name</th>
                         }
                         @if (Model.CustomLink1Name != null)
                         {
-                            <td>
-                                @if (!string.IsNullOrEmpty(item.CustomLink1Value))
-                                {
-                                    <a href="@item.CustomLink1Value" target="_blank">Link</a>
-                                }
-                            </td>
+                            <th>@Model.CustomLink1Name</th>
                         }
-                        <td>@item.CreatedByName</td>
-                        <td class="text-end">@item.LikesCount</td>
+                        <th>Created By</th>
+                        <th class="text-end">Likes</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    @{
+                        var items = ViewBag.Items as IEnumerable<ItemDto>;
+                    }
+                    @if (items == null || !items.Any())
+                    {
+                        <tr>
+                            <td colspan="20" class="text-center text-muted">No items yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in items)
+                        {
+                            <tr style="cursor:pointer"
+                                onclick="window.location='/Item/Details/@item.Id'">
+                                <td>@item.CustomId</td>
+                                @if (Model.CustomString1Name != null)
+                                {
+                                    <td>@item.CustomString1Value</td>
+                                }
+                                @if (Model.CustomString2Name != null)
+                                {
+                                    <td>@item.CustomString2Value</td>
+                                }
+                                @if (Model.CustomString3Name != null)
+                                {
+                                    <td>@item.CustomString3Value</td>
+                                }
+                                @if (Model.CustomInt1Name != null)
+                                {
+                                    <td class="text-end">@item.CustomInt1Value?.ToString("N2")</td>
+                                }
+                                @if (Model.CustomInt2Name != null)
+                                {
+                                    <td class="text-end">@item.CustomInt2Value?.ToString("N2")</td>
+                                }
+                                @if (Model.CustomInt3Name != null)
+                                {
+                                    <td class="text-end">@item.CustomInt3Value?.ToString("N2")</td>
+                                }
+                                @if (Model.CustomText1Name != null)
+                                {
+                                    <td>@item.CustomText1Value</td>
+                                }
+                                @if (Model.CustomBool1Name != null)
+                                {
+                                    <td>@(item.CustomBool1Value == true ? "✓" : "✗")</td>
+                                }
+                                @if (Model.CustomLink1Name != null)
+                                {
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.CustomLink1Value))
+                                        {
+                                            <a href="@item.CustomLink1Value" target="_blank">Link</a>
+                                        }
+                                    </td>
+                                }
+                                <td>@item.CreatedByName</td>
+                                <td class="text-end">@item.LikesCount</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="discussion">
+        <div id="chatMessages"
+             style="height:400px; overflow-y:auto; border:1px solid #dee2e6; border-radius:4px; padding:15px; margin-bottom:15px;">
+            <p class="text-muted text-center mt-5" id="noMessages">
+                No messages yet. Be the first to write! 💬
+            </p>
+        </div>
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-controller="Comment" asp-action="Create" method="post">
+                <input type="hidden" name="inventoryId" value="@Model.Id" />
+                <div class="input-group">
+                    <input type="text" name="content" class="form-control"
+                           placeholder="Write a message..." />
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <p class="text-muted">
+                <a asp-controller="Account" asp-action="Login">Login</a> to join discussion.
+            </p>
+        }
+    </div>
+
+    <div class="tab-pane fade" id="settings">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="150">Category</th>
+                        <td>@Model.CategoryName</td>
+                    </tr>
+                    <tr>
+                        <th>Creator</th>
+                        <td>@Model.OwnerName</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>@Model.Description</td>
+                    </tr>
+                    <tr>
+                        <th>Access</th>
+                        <td>@(Model.IsPublic ? "Public" : "Private")</td>
+                    </tr>
+                    <tr>
+                        <th>Tags</th>
+                        <td>
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-secondary me-1">@tag</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const inventoryId = parseInt('@Model.Id');
+
+        async function loadComments() {
+            const response = await fetch(`/Comment/GetComments?inventoryId=${inventoryId}`);
+            const comments = await response.json();
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            if (comments.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center mt-5">No messages yet. Be the first to write! 💬</p>';
+            } else {
+                comments.forEach(c => appendMessage(c.authorName, c.content, c.createdAt));
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendMessage(author, content, time) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'mb-2';
+            div.innerHTML = `<strong>${author}</strong> <small class="text-muted">${time}</small><br>${content}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        connection.on("ReceiveMessage", (user, message, timestamp) => {
+            appendMessage(user, message, timestamp);
+        });
+
+        connection.start().then(() => {
+            connection.invoke("JoinInventory", inventoryId);
+            loadComments();
+        });
+    </script>
+}
