@@ -172,12 +172,13 @@
 
         @if (User.Identity?.IsAuthenticated == true)
         {
-            <form asp-controller="Comment" asp-action="Create" method="post">
+            <form asp-controller="Comment" asp-action="Create" method="post"
+                  id="commentForm">
                 <input type="hidden" name="inventoryId" value="@Model.Id" />
                 <div class="input-group">
                     <input type="text" name="content" class="form-control"
                            placeholder="Write a message..." />
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary px-4">Send</button>
                 </div>
             </form>
         }
@@ -236,7 +237,7 @@
             const container = document.getElementById('chatMessages');
             container.innerHTML = '';
             if (comments.length === 0) {
-                container.innerHTML = '<p class="text-muted text-center mt-5">No messages yet. Be the first to write! 💬</p>';
+                container.innerHTML = '<p class="text-muted text-center mt-5">No messages yet. Be the first to write!</p>';
             } else {
                 comments.forEach(c => appendMessage(c.authorName, c.content, c.createdAt));
             }
@@ -264,5 +265,17 @@
             connection.invoke("JoinInventory", inventoryId);
             loadComments();
         });
+
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', e => {
+                localStorage.setItem('activeTab_' + inventoryId, e.target.getAttribute('href'));
+            });
+        });
+
+        const savedTab = localStorage.getItem('activeTab_' + inventoryId);
+        if (savedTab) {
+            const tab = document.querySelector(`[href="${savedTab}"]`);
+            if (tab) new bootstrap.Tab(tab).show();
+        }
     </script>
 }
