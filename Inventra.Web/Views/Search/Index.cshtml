@@ -1,0 +1,79 @@
+﻿@using Inventra.Web.Models
+@model SearchResultViewModel
+
+@{
+	ViewData["Title"] = "Search Results";
+}
+
+<h2 class="mb-4">
+    Search results for: <em>"@Model.Query"</em>
+</h2>
+
+<h4>Inventories (@Model.Inventories.Count)</h4>
+<table class="table table-hover table-sm mb-5">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Creator</th>
+            <th class="text-end">Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Inventories.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">No inventories found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var inv in Model.Inventories)
+            {
+                <tr style="cursor:pointer"
+                    onclick="window.location='/Inventory/Details/@inv.Id'">
+                    <td>@inv.Title</td>
+                    <td>@inv.CategoryName</td>
+                    <td>@inv.OwnerName</td>
+                    <td class="text-end">@inv.ItemsCount</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h4>Items (@Model.Items.Count)</h4>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th>Custom ID</th>
+            <th>Inventory</th>
+            <th>Created By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Items.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">No items found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model.Items)
+            {
+                <tr style="cursor:pointer"
+                    onclick="window.location='/Item/Details/@item.Id'">
+                    <td>@item.CustomId</td>
+                    <td>
+                        <a asp-controller="Inventory" asp-action="Details"
+                               asp-route-id="@item.InventoryId">
+                            @item.InventoryTitle
+                        </a>
+                    </td>
+                    <td>@item.CreatedByName</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
