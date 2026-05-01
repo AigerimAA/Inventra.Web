@@ -1,0 +1,90 @@
+﻿@using Inventra.Web.Models
+@model IEnumerable<AdminUserViewModel>
+
+@{
+	ViewData["Title"] = "Admin Panel";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admin Panel</h2>
+    <span class="badge bg-danger">Admin</span>
+</div>
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.CreatedAt.ToString("dd.MM.yyyy")</td>
+                <td>
+                    @if (user.IsBlocked)
+                    {
+                        <span class="badge bg-danger">Blocked</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                </td>
+                <td>
+                    @if (user.IsAdmin)
+                    {
+                        <span class="badge bg-primary">Admin</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">User</span>
+                    }
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                data-bs-toggle="dropdown">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form asp-action="ToggleBlock" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button class="dropdown-item">
+                                        @(user.IsBlocked ? "Unblock" : "Block")
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form asp-action="ToggleAdmin" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button class="dropdown-item">
+                                        @(user.IsAdmin ? "Remove Admin" : "Make Admin")
+                                    </button>
+                                </form>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-action="Delete" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button class="dropdown-item text-danger"
+                                            onclick="return confirm('Delete user @user.UserName?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
