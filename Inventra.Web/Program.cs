@@ -15,7 +15,7 @@ namespace Inventra.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -116,6 +116,27 @@ namespace Inventra.Web
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 db.Database.Migrate();
+
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                {
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var adminEmail = "admin@inventra.com";
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
+                {
+                    adminUser = new ApplicationUser
+                    {
+                        UserName = "admin",
+                        Email = adminEmail,
+                        EmailConfirmed = true
+                    };
+                    await userManager.CreateAsync(adminUser, "Admin1234!");
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
             }
 
             if (!app.Environment.IsDevelopment())
