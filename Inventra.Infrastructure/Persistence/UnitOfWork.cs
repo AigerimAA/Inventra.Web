@@ -1,4 +1,5 @@
 ﻿using Inventra.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Infrastructure.Persistence
 {
@@ -12,7 +13,15 @@ namespace Inventra.Infrastructure.Persistence
         }
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return await _context.SaveChangesAsync(cancellationToken);
+            try
+            {
+                return await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new DbUpdateConcurrencyException();
+            }
+            
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Inventra.Application.Common.Behaviors;
-using Inventra.Application.Common.Behaviours;
 using Inventra.Application.Common.Mappings;
 using Inventra.Application.Inventories.Commands.CreateInventory;
 using MediatR;

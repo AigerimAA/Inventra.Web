@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Inventra.Application.Common.Exceptions;
+﻿using Inventra.Application.Common.Exceptions;
 using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
 using Inventra.Domain.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Application.Inventories.Commands.UpdateInventory
 {
@@ -29,8 +27,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
 
             var userId = _currentUserService.UserId;
             if (inventory.OwnerId != userId && !_currentUserService.IsAdmin)
-                throw new UnauthorizedAccessException(
-                    "Only the inventory owner or an admin can edit this inventory.");
+                throw new UnauthorizedAccessException("Only the inventory owner or an admin can edit this inventory");
 
             inventory.Title = request.Title;
             inventory.Description = request.Description;
@@ -77,15 +74,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.CustomLink3Shown = request.CustomLink3Shown;
 
             await _inventoryRepository.UpdateAsync(inventory);
-
-            try
-            {
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw new ConcurrencyException();
-            }
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
