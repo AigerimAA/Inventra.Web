@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using AutoMapper;
+﻿using AutoMapper;
 using Inventra.Application.Common.Exceptions;
 using Inventra.Application.DTOs;
 using Inventra.Domain.Entities;

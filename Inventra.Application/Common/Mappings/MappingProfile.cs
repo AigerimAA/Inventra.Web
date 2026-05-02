@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Inventra.Application.DTOs;
 using Inventra.Domain.Entities;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace Inventra.Application.Common.Mappings
 {

@@ -1,6 +1,4 @@
-﻿
-
-using Inventra.Domain.Entities;
+﻿using Inventra.Domain.Entities;
 using Inventra.Domain.Interfaces;
 using MediatR;
 
