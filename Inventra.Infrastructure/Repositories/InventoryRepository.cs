@@ -44,6 +44,27 @@ namespace Inventra.Infrastructure.Repositories
                 .Where(i => i.OwnerId == ownerId)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Inventory>> GetLatestAsync(int count)
+        {
+            return await _context.Inventories
+                .Include(i => i.Owner)
+                .Include(i => i.Category)
+                .Include(i => i.Items)
+                .Include(i => i.InventoryTags)
+                    .ThenInclude(it => it.Tag)
+                .OrderByDescending(i => i.CreatedAt)
+                .Take(count)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Inventory>> GetMostPopularAsync(int count)
+        {
+            return await _context.Inventories
+                .Include(i => i.Owner)
+                .Include(i => i.Items)
+                .OrderByDescending(i => i.Items.Count)
+                .Take(count)
+                .ToListAsync();
+        }
         public async Task AddAsync(Inventory inventory)
         {
             await _context.Inventories.AddAsync(inventory);

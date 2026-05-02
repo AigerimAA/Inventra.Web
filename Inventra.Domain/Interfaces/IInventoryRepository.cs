@@ -7,6 +7,8 @@ namespace Inventra.Domain.Interfaces
         Task<Inventory?> GetByIdAsync(int id);
         Task<IEnumerable<Inventory>> GetAllAsync();
         Task<IEnumerable<Inventory>> GetByOwnerIdAsync(string OwnerId);
+        Task<IEnumerable<Inventory>> GetLatestAsync(int count);
+        Task<IEnumerable<Inventory>> GetMostPopularAsync(int count);
         Task AddAsync(Inventory inventory);
         Task UpdateAsync(Inventory inventory);
         Task DeleteAsync(int id);

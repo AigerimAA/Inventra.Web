@@ -1,6 +1,4 @@
-﻿using FluentValidation.TestHelper;
-using Inventra.Domain.Entities;
-using Inventra.Infrastructure.Persistence;
+﻿using Inventra.Infrastructure.Persistence;
 using Inventra.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
