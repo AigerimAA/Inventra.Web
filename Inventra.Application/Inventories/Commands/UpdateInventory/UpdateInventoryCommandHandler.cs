@@ -12,30 +12,34 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
     {
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
         public UpdateInventoryCommandHandler(
             IInventoryRepository inventoryRepository,
-            IUnitOfWork unitOfWork, IMapper mapper)
+            IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
         {
             _inventoryRepository = inventoryRepository;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _currentUserService = currentUserService;
         }
         public async Task Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
         {
             var inventory = await _inventoryRepository.GetByIdAsync(request.Id)
                     ?? throw new NotFoundException(nameof(Inventory), request.Id);
 
+            var userId = _currentUserService.UserId;
+            if (inventory.OwnerId != userId && !_currentUserService.IsAdmin)
+                throw new UnauthorizedAccessException(
+                    "Only the inventory owner or an admin can edit this inventory.");
+
             inventory.Title = request.Title;
             inventory.Description = request.Description;
             inventory.ImageUrl = request.ImageUrl;
             inventory.IsPublic = request.IsPublic;
+            inventory.UpdatedAt = DateTime.UtcNow;
 
             if (request.CategoryId > 0)
                 inventory.CategoryId = request.CategoryId;
-
-            inventory.UpdatedAt = DateTime.UtcNow;
 
             inventory.CustomString1Name = request.CustomString1Name;
             inventory.CustomString1Shown = request.CustomString1Shown;
@@ -73,11 +77,9 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.CustomLink3Shown = request.CustomLink3Shown;
 
             await _inventoryRepository.UpdateAsync(inventory);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             try
             {
-                await _inventoryRepository.UpdateAsync(inventory);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateConcurrencyException)
