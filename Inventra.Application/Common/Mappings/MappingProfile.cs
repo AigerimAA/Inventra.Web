@@ -46,6 +46,8 @@ namespace Inventra.Application.Common.Mappings
                 .ForMember(dest => dest.Inventory, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.Likes, opt => opt.Ignore());
+
+            CreateMap<Category, CategoryDto>();
         }
     }
 }

@@ -1,20 +1,25 @@
 ﻿using Inventra.Domain.Entities;
 using Inventra.Domain.Interfaces;
 using MediatR;
+using AutoMapper;
+using Inventra.Application.DTOs;
 
 namespace Inventra.Application.Categories.Queries.GetAllCategories
 {
-    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<Category>>
+    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public GetAllCategoriesQueryHandler(ICategoryRepository categoryRepository)
+        public GetAllCategoriesQueryHandler(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
-        public async Task<IEnumerable<Category>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            return await _categoryRepository.GetAllAsync();
+            var categories = await _categoryRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
     }
 }

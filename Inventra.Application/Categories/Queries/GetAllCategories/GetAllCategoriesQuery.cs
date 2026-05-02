@@ -1,7 +1,7 @@
-﻿using Inventra.Domain.Entities;
+﻿using Inventra.Application.DTOs;
 using MediatR;
 
 namespace Inventra.Application.Categories.Queries.GetAllCategories
 {
-    public record GetAllCategoriesQuery : IRequest<IEnumerable<Category>>;
+    public record GetAllCategoriesQuery : IRequest<IEnumerable<CategoryDto>>;
 }
