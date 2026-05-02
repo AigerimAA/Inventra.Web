@@ -9,24 +9,29 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
     public class UpdateInventoryCommandHandler : IRequestHandler<UpdateInventoryCommand>
     {
         private readonly IInventoryRepository _inventoryRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
 
         public UpdateInventoryCommandHandler(
-            IInventoryRepository inventoryRepository,
+            IInventoryRepository inventoryRepository, ITagRepository tagRepository,
             IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
         {
             _inventoryRepository = inventoryRepository;
+            _tagRepository = tagRepository;
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
         }
         public async Task Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
         {
-            var inventory = await _inventoryRepository.GetByIdAsync(request.Id)
-                    ?? throw new NotFoundException(nameof(Inventory), request.Id);
+            if (!_currentUserService.IsAuthenticated)
+                throw new UnauthorizedAccessException("User is not authenticated");
 
-            var userId = _currentUserService.UserId;
-            if (inventory.OwnerId != userId && !_currentUserService.IsAdmin)
+            var inventory = await _inventoryRepository.GetByIdAsync(request.Id)
+                ?? throw new NotFoundException(nameof(Inventory), request.Id);
+
+            if (inventory.OwnerId != _currentUserService.UserId
+                && !_currentUserService.IsAdmin)
                 throw new UnauthorizedAccessException("Only the inventory owner or an admin can edit this inventory");
 
             inventory.Title = request.Title;
@@ -72,6 +77,26 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.CustomLink2Shown = request.CustomLink2Shown;
             inventory.CustomLink3Name = request.CustomLink3Name;
             inventory.CustomLink3Shown = request.CustomLink3Shown;
+
+            inventory.InventoryTags.Clear();
+
+            foreach (var tagName in request.Tags.Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                var normalized = tagName.Trim().ToLowerInvariant();
+                if (string.IsNullOrEmpty(normalized)) continue;
+
+                var tag = await _tagRepository.GetByNameAsync(normalized)
+                          ?? new Tag { Name = normalized };
+
+                if (tag.Id == 0)
+                    await _tagRepository.AddAsync(tag);
+
+                inventory.InventoryTags.Add(new InventoryTag
+                {
+                    Inventory = inventory,
+                    Tag = tag
+                });
+            }
 
             await _inventoryRepository.UpdateAsync(inventory);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
