@@ -1,21 +1,23 @@
-﻿using Inventra.Infrastructure.Persistence;
+﻿using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
+using Inventra.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Web.Controllers
 {
     [Authorize]
     public class LikeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ILikeRepository _likeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public LikeController(AppDbContext context, UserManager<ApplicationUser> userManager)
+        public LikeController(ILikeRepository likeRepository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _likeRepository = likeRepository;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
 
@@ -25,18 +27,16 @@ namespace Inventra.Web.Controllers
         {
             var userId = _userManager.GetUserId(User)!;
 
-            var existing = await _context.Likes
-                .FirstOrDefaultAsync(l => l.ItemId == itemId && l.UserId == userId);
+            var existing = await _likeRepository.GetByUserAndItemAsync(itemId, userId);
 
             if (existing != null)
-                _context.Likes.Remove(existing);
+                await _likeRepository.RemoveAsync(existing);
             else
-                _context.Likes.Add(new Like { ItemId = itemId, UserId = userId });
+                await _likeRepository.AddAsync(new Like { ItemId = itemId, UserId = userId });
 
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction("Details", "Inventory", new {id = inventoryId});
-
         }
     }
 }
