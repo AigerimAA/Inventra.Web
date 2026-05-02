@@ -1,5 +1,9 @@
-﻿@{
+﻿@using Inventra.Application.DTOs
+
+@{
     ViewData["Title"] = "Home";
+    var latest = ViewBag.LatestInventories as IEnumerable<InventoryDto>;
+    var popular = ViewBag.PopularInventories as IEnumerable<InventoryDto>;
 }
 
 <div class="px-4 py-5 text-center">
@@ -30,40 +34,68 @@
 <div class="row mt-4">
     <div class="col-md-8">
         <h4>Latest Inventories</h4>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm">
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Category</th>
                     <th>Creator</th>
-                    <th>Items</th>
+                    <th class="text-end">Items</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="4" class="text-muted text-center">
-                        No inventories yet. Be the first to create one!
-                    </td>
-                </tr>
+                @if (latest == null || !latest.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-muted text-center">
+                            No inventories yet. Be the first to create one!
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var inv in latest)
+                    {
+                        <tr style="cursor:pointer"
+                            onclick="window.location='/Inventory/Details/@inv.Id'">
+                            <td>@inv.Title</td>
+                            <td>@inv.CategoryName</td>
+                            <td>@inv.OwnerName</td>
+                            <td class="text-end">@inv.ItemsCount</td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
 
     <div class="col-md-4">
         <h4>Top 5 Popular</h4>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm">
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Items</th>
+                    <th class="text-end">Items</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td colspan="2" class="text-muted text-center">
-                        No data yet.
-                    </td>
-                </tr>
+                @if (popular == null || !popular.Any())
+                {
+                    <tr>
+                        <td colspan="2" class="text-muted text-center">No data yet.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var inv in popular)
+                    {
+                        <tr style="cursor:pointer"
+                            onclick="window.location='/Inventory/Details/@inv.Id'">
+                            <td>@inv.Title</td>
+                            <td class="text-end">@inv.ItemsCount</td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
 
