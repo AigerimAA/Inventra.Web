@@ -4,6 +4,7 @@ using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
 using Inventra.Domain.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Application.Inventories.Commands.UpdateInventory
 {
@@ -35,7 +36,6 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
                 inventory.CategoryId = request.CategoryId;
 
             inventory.UpdatedAt = DateTime.UtcNow;
-            inventory.Version = request.Version;
 
             inventory.CustomString1Name = request.CustomString1Name;
             inventory.CustomString1Shown = request.CustomString1Shown;
@@ -74,6 +74,16 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
 
             await _inventoryRepository.UpdateAsync(inventory);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            try
+            {
+                await _inventoryRepository.UpdateAsync(inventory);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new ConcurrencyException();
+            }
         }
     }
 }
