@@ -4,7 +4,6 @@ using Inventra.Domain.Entities;
 using Inventra.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Infrastructure.Services
@@ -24,7 +23,6 @@ namespace Inventra.Infrastructure.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync()
         {
-            // Optimized query to avoid N+1: load users and their roles in three queries
             var users = await _userManager.Users.ToListAsync();
             var userIds = users.Select(u => u.Id).ToList();
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Inventra.Application.Interfaces;
+﻿using Inventra.Application.Interfaces;
 
 namespace Inventra.Infrastructure.Persistence
 {
