@@ -1,16 +1,16 @@
-﻿using Inventra.Infrastructure.Persistence;
+﻿using Inventra.Domain.Interfaces;
 using Inventra.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Web.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly AppDbContext _context;
-        public SearchController(AppDbContext context)
+        private readonly ISearchRepository _searchRepository;
+
+        public SearchController(ISearchRepository searchRepository)
         {
-            _context = context;
+            _searchRepository = searchRepository;
         }
 
         public async Task<IActionResult> Index(string q)
@@ -20,21 +20,8 @@ namespace Inventra.Web.Controllers
 
             ViewData["SearchQuery"] = q;
 
-            var inventories = await _context.Inventories
-                .Include(i => i.Owner)
-                .Include(i => i.Category)
-                .Include(i => i.Items)
-                .Where(i => i.Title.Contains(q) ||
-                        (i.Description != null && i.Description.Contains(q))).ToListAsync();
-
-            var items = await _context.Items
-                .Include(i => i.Inventory)
-                .Include(i => i.CreatedBy)
-                .Where(i => i.CustomId.Contains(q) ||
-                        (i.CustomString1Value != null && i.CustomString1Value.Contains(q)) ||
-                        (i.CustomString2Value != null && i.CustomString2Value.Contains(q)) ||
-                        (i.CustomString3Value != null && i.CustomString3Value.Contains(q)))
-                .ToListAsync();
+            var inventories = await _searchRepository.SearchInventoriesAsync(q);
+            var items = await _searchRepository.SearchItemsAsync(q);
 
             var result = new SearchResultViewModel
             {
@@ -57,7 +44,9 @@ namespace Inventra.Web.Controllers
                     CreatedByName = i.CreatedBy?.UserName
                 }).ToList()
             };
+
             return View(result);
+
         }
     }
 }

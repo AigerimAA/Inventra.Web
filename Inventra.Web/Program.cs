@@ -35,18 +35,6 @@ namespace Inventra.Web
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-            //builder.Services.AddAuthentication()
-            //    .AddGoogle(options =>
-            //    {
-            //        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-            //        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-            //    })
-            //    .AddFacebook(options =>
-            //    {
-            //        options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
-            //        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
-            //    });
-
             var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
             var facebookAppId = builder.Configuration["Authentication:Facebook:AppId"];
 
@@ -85,6 +73,7 @@ namespace Inventra.Web
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+            builder.Services.AddScoped<ISearchRepository, SearchRepository>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
