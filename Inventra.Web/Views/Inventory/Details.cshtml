@@ -154,16 +154,20 @@
                                 }
                                 <td>@item.CreatedByName</td>
                                 <td class="text-end">
-                                    @item.LikesCount
                                     @if (User.Identity?.IsAuthenticated == true)
                                     {
                                         <form asp-controller="Like" asp-action="Toggle" method="post" class="d-inline">
                                             <input type="hidden" name="itemId" value="@item.Id" />
                                             <input type="hidden" name="inventoryId" value="@Model.Id" />
-                                            <button type="submit" class="btn btn-sm btn-link p-0 ms-1">
-                                                @(item.IsLikedByCurrentUser ? "❤️" : "🤍")
+                                            <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none"
+                                                    title="@item.LikesCount likes">
+                                                ❤️ @item.LikesCount
                                             </button>
                                         </form>
+                                    }
+                                    else
+                                    {
+                                        <span>❤️ @item.LikesCount</span>
                                     }
                                 </td>
                             </tr>
