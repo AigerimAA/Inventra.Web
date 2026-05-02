@@ -1,15 +1,10 @@
-using FluentValidation;
-using Inventra.Application.Common.Mappings;
-using Inventra.Application.Interfaces;
-using Inventra.Application.Inventories.Commands.CreateInventory;
-using Inventra.Domain.Interfaces;
+using Inventra.Application;
+using Inventra.Domain.Entities;
+using Inventra.Infrastructure;
 using Inventra.Infrastructure.Persistence;
-using Inventra.Infrastructure.Repositories;
-using Inventra.Infrastructure.Services;
+using Inventra.Web.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CloudinaryDotNet;
-using Inventra.Domain.Entities;
 
 namespace Inventra.Web
 {
@@ -22,8 +17,8 @@ namespace Inventra.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddApplication();
+            builder.Services.AddInfrastructure(builder.Configuration);
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -58,36 +53,6 @@ namespace Inventra.Web
                     });
             }
 
-            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
-
-            builder.Services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(
-                        typeof(CreateInventoryCommand).Assembly));
-
-            builder.Services.AddValidatorsFromAssembly(
-                typeof(CreateInventoryCommand).Assembly);
-
-            builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
-            builder.Services.AddScoped<IItemRepository, ItemRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-            builder.Services.AddScoped<ILikeRepository, LikeRepository>();
-            builder.Services.AddScoped<ISearchRepository, SearchRepository>();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            var cloudName = builder.Configuration["Cloudinary:CloudName"];
-            if (!string.IsNullOrEmpty(cloudName))
-            {
-                var cloudinaryAccount = new Account(
-                    cloudName,
-                    builder.Configuration["Cloudinary:ApiKey"],
-                    builder.Configuration["Cloudinary:ApiSecret"]);
-                builder.Services.AddSingleton(new Cloudinary(cloudinaryAccount));
-                builder.Services.AddScoped<CloudStorageService>();
-            }
-
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -111,9 +76,7 @@ namespace Inventra.Web
 
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 if (!await roleManager.RoleExistsAsync("Admin"))
-                {
                     await roleManager.CreateAsync(new IdentityRole("Admin"));
-                }
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var adminEmail = "admin@inventra.com";
@@ -140,7 +103,6 @@ namespace Inventra.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
             app.UseRequestLocalization();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -149,7 +111,7 @@ namespace Inventra.Web
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.MapHub<Inventra.Web.Hubs.ChatHub>("/chatHub");
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }
