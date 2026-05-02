@@ -145,6 +145,24 @@ namespace Inventra.Infrastructure.Persistence
                 new Category { Id = 4, Name = "Documents" },
                 new Category { Id = 5, Name = "Other" }
             );
+
+            builder.Entity<Inventory>()
+                .Property(i => i.Version)
+                .IsRowVersion();
+
+            builder.Entity<Item>()
+                .Property(i => i.Version)
+                .IsRowVersion();
+
+            builder.Entity<Item>()
+                .Property(i => i.CustomId)
+                .HasMaxLength(200)
+                .IsRequired();
+
+            builder.Entity<Inventory>()
+                .Property(i => i.Title)
+                .HasMaxLength(200)
+                .IsRequired();
         }
     }
 }
