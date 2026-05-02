@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Inventra.Domain.Entities
+﻿namespace Inventra.Domain.Entities
 {
     public class Tag
     {

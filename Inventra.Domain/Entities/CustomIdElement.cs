@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Inventra.Domain.Enums;
+﻿using Inventra.Domain.Enums;
 
 namespace Inventra.Domain.Entities
 {

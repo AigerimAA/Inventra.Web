@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Inventra.Domain.Entities;
+﻿using Inventra.Domain.Entities;
 
 namespace Inventra.Domain.Interfaces
 {

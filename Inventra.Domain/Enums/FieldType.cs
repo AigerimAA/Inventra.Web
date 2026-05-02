@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Inventra.Domain.Enums
+﻿namespace Inventra.Domain.Enums
 {
     public enum FieldType
     {
