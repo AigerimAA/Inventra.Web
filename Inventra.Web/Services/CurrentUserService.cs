@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Inventra.Application.Interfaces;
+using Inventra.Domain.Constants;
 
 namespace Inventra.Web.Services
 {
@@ -15,6 +16,6 @@ namespace Inventra.Web.Services
 
         public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
 
-        public bool IsAdmin => _httpContextAccessor.HttpContext?.User.IsInRole("Admin") ?? false;
+        public bool IsAdmin => _httpContextAccessor.HttpContext?.User.IsInRole(Roles.Admin) ?? false;
     }
 }
