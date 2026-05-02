@@ -1,8 +1,6 @@
 ﻿using Inventra.Application.Items.Commands.CreateItem;
 using Inventra.Application.Items.Commands.DeleteItem;
-using Inventra.Application.Items.Commands.UpdateItem;
 using Inventra.Application.Items.Queries.GetItemById;
-using Inventra.Application.Items.Queries.GetItemsByInventoryId;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
 using Inventra.Domain.Entities;
 using MediatR;

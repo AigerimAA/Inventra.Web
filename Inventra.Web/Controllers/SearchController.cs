@@ -35,6 +35,7 @@ namespace Inventra.Web.Controllers
                     OwnerName = i.Owner?.UserName,
                     ItemsCount = i.Items.Count
                 }).ToList(),
+
                 Items = items.Select(i => new SearchItemResult
                 {
                     Id = i.Id,

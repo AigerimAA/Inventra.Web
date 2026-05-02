@@ -1,5 +1,4 @@
-﻿using Inventra.Application.DTOs;
-using Inventra.Application.Interfaces;
+﻿using Inventra.Application.Interfaces;
 using Inventra.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
