@@ -12,20 +12,26 @@ namespace Inventra.Application.Items.Commands.CreateItem
         private readonly IItemRepository _itemRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICustomIdGenerator _customIdGenerator;
 
-        public CreateItemCommandHandler(IItemRepository itemRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateItemCommandHandler(IItemRepository itemRepository, 
+                IUnitOfWork unitOfWork, IMapper mapper, ICustomIdGenerator customIdGenerator)
         {
             _itemRepository = itemRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _customIdGenerator = customIdGenerator;
         }
 
         public async Task<ItemDto> Handle(CreateItemCommand request, CancellationToken cancellationToken)
         {
+            var customId = await _customIdGenerator.GenerateAsync(request.InventoryId, cancellationToken);
+
             var item = new Item
             {
                 InventoryId = request.InventoryId,
                 CreatedById = request.CreatedById,
+                CustomId = customId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
 

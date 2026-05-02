@@ -1,8 +1,10 @@
 using Inventra.Application;
+using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
 using Inventra.Infrastructure;
 using Inventra.Infrastructure.Persistence;
 using Inventra.Web.Hubs;
+using Inventra.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,9 @@ namespace Inventra.Web
 
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
+
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
