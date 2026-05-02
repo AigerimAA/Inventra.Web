@@ -1,20 +1,22 @@
-﻿using Inventra.Infrastructure.Persistence;
+﻿using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
+using Inventra.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Web.Controllers
 {
     public class CommentController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CommentController(AppDbContext context, UserManager<ApplicationUser> userManager)
+        public CommentController(ICommentRepository commentRepository, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _commentRepository = commentRepository;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
 
@@ -36,26 +38,25 @@ namespace Inventra.Web.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            await _commentRepository.AddAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
+
             return RedirectToAction("Details", "Inventory", new {id = inventoryId});
         }
 
         [HttpGet]
         public async Task<IActionResult> GetComments(int inventoryId)
         {
-            var comments = await _context.Comments
-                .Include(c => c.Author)
-                .Where(c => c.InventoryId == inventoryId)
-                .OrderBy(c => c.CreatedAt)
-                .Select(c => new
-                {
-                    authorName = c.Author.UserName,
-                    content = c.Content,
-                    createdAt = c.CreatedAt.ToString("dd.MM.yyyy HH:mm")
-                }).ToListAsync();
+            var comments = await _commentRepository.GetByInventoryIdAsync(inventoryId);
 
-            return Json(comments);
+            var result = comments.Select(c => new
+            {
+                authorName = c.Author?.UserName,
+                content = c.Content,
+                createdAt = c.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+            });
+
+            return Json(result);
         }
     }
 }
