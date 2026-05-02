@@ -1,20 +1,18 @@
-﻿using Inventra.Domain.Entities;
+﻿using Inventra.Application.Interfaces;
+using Inventra.Domain.Entities;
 using Inventra.Web.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Inventra.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IIdentityService _identityService;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        public AccountController(IIdentityService identityService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _identityService = identityService;
         }
 
         [HttpGet]
@@ -36,11 +34,11 @@ namespace Inventra.Web.Controllers
                 Email = model.Email
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _identityService.CreateUserAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _identityService.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -64,14 +62,14 @@ namespace Inventra.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _identityService.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(
+            var result = await _identityService.PasswordSignInAsync(
                 user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
@@ -90,7 +88,7 @@ namespace Inventra.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _identityService.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -99,18 +97,18 @@ namespace Inventra.Web.Controllers
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = _identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
             return Challenge(properties, provider);
         }
 
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null)
         {
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await _identityService.GetExternalLoginInfoAsync();
             if (info == null)
                 return RedirectToAction("Login");
 
-            var result = await _signInManager.ExternalLoginSignInAsync(
+            var result = await _identityService.ExternalLoginSignInAsync(
                 info.LoginProvider, info.ProviderKey, isPersistent: false);
 
             if (result.Succeeded)
@@ -127,12 +125,12 @@ namespace Inventra.Web.Controllers
                     EmailConfirmed = true
                 };
 
-                var createResult = await _userManager.CreateAsync(user);
+                var createResult = await _identityService.CreateUserAsync(user, Guid.NewGuid().ToString());
 
                 if (createResult.Succeeded)
                 {
-                    await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _identityService.AddLoginAsync(user, info);
+                    await _identityService.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
             }

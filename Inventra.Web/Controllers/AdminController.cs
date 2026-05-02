@@ -1,7 +1,7 @@
-﻿using Inventra.Domain.Entities;
+﻿using Inventra.Application.DTOs;
+using Inventra.Application.Interfaces;
 using Inventra.Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventra.Web.Controllers
@@ -9,31 +9,25 @@ namespace Inventra.Web.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
-        public AdminController(UserManager<ApplicationUser> userManager)
+        public AdminController(IIdentityService identityService)
         {
-            _userManager = userManager;
+            _identityService = identityService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var users = _userManager.Users.ToList();
-            var userViewModels = new List<AdminUserViewModel>();
-
-            foreach (var user in users)
+            var users = await _identityService.GetAllUsersWithRolesAsync();
+            var userViewModels = users.Select(u => new AdminUserViewModel
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                userViewModels.Add(new AdminUserViewModel
-                {
-                    Id = user.Id,
-                    UserName = user.UserName!,
-                    Email = user.Email!,
-                    IsBlocked = user.IsBlocked,
-                    IsAdmin = roles.Contains("Admin"),
-                    CreatedAt = user.CreatedAt
-                });
-            }
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                IsBlocked = u.IsBlocked,
+                IsAdmin = u.IsAdmin,
+                CreatedAt = u.CreatedAt
+            });
             return View(userViewModels);
         }
 
@@ -41,11 +35,11 @@ namespace Inventra.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleBlock(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _identityService.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
             user.IsBlocked = !user.IsBlocked;
-            await _userManager.UpdateAsync(user);
+            await _identityService.UpdateUserAsync(user);
             return RedirectToAction(nameof(Index));
         }
 
@@ -53,14 +47,14 @@ namespace Inventra.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleAdmin(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _identityService.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var isAdmin = await _identityService.IsInRoleAsync(user, "Admin");
             if (isAdmin)
-                await _userManager.RemoveFromRoleAsync(user, "Admin");
+                await _identityService.RemoveFromRoleAsync(user, "Admin");
             else
-                await _userManager.AddToRoleAsync(user, "Admin");
+                await _identityService.AddToRoleAsync(user, "Admin");
 
             return RedirectToAction(nameof(Index));
         }
@@ -69,10 +63,10 @@ namespace Inventra.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _identityService.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            await _userManager.DeleteAsync(user);
+            await _identityService.DeleteUserAsync(user);
             return RedirectToAction(nameof(Index));
         }
     }
