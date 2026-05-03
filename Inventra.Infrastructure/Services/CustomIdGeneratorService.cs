@@ -19,11 +19,13 @@ namespace Inventra.Infrastructure.Services
         public async Task<string> GenerateAsync(int inventoryId, CancellationToken cancellationToken = default)
         {
             var format = await _context.CustomIdFormats
-                .Include(f => f.Elements.OrderBy(e => e.SortOrder))
+                .Include(f => f.Elements)
                 .FirstOrDefaultAsync(f => f.InventoryId == inventoryId, cancellationToken);
 
             if (format == null || !format.Elements.Any())
                 return Guid.NewGuid().ToString("N")[..12].ToUpper();
+
+            var orderedElements = format.Elements.OrderBy(e => e.SortOrder).ToList();
 
             for (int attempt = 0; attempt < 3; attempt++)
             {
@@ -37,7 +39,7 @@ namespace Inventra.Infrastructure.Services
                     return generated;
             }
 
-            var fallback = await BuildIdAsync(format.Elements, inventoryId, cancellationToken);
+            var fallback = await BuildIdAsync(orderedElements, inventoryId, cancellationToken);
             return fallback + "_" + Guid.NewGuid().ToString("N")[..4].ToUpper();
         }
         private async Task<string> BuildIdAsync(IEnumerable<CustomIdElement> elements, int inventoryId, CancellationToken ct)
@@ -79,8 +81,8 @@ namespace Inventra.Infrastructure.Services
                         defaultWidth: 5),
 
                 CustomIdElementType.Random32 =>
-                    FormatHex(
-                        (int)(Random.Shared.NextInt64(0, 0x100000000L) & 0x7FFFFFFF),
+                    FormatHexLong(
+                        Random.Shared.NextInt64(0, 0x100000000L),
                         element.FormatString,
                         defaultWidth: 8),
 
@@ -112,6 +114,16 @@ namespace Inventra.Infrastructure.Services
         }
 
         private static string FormatHex(int value, string? fmt, int defaultWidth)
+        {
+            if (string.IsNullOrEmpty(fmt))
+                return value.ToString("X").PadLeft(defaultWidth, '0');
+
+            if (fmt.StartsWith('X') && int.TryParse(fmt[1..], out var width))
+                return value.ToString("X").PadLeft(width, '0');
+
+            return value.ToString("X");
+        }
+        private static string FormatHexLong(long value, string? fmt, int defaultWidth)
         {
             if (string.IsNullOrEmpty(fmt))
                 return value.ToString("X").PadLeft(defaultWidth, '0');
