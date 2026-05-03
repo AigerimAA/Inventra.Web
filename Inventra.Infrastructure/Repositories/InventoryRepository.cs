@@ -79,5 +79,9 @@ namespace Inventra.Infrastructure.Repositories
             if (inventory is not null)
                 _context.Inventories.Remove(inventory);
         }
+        public void RemoveInventoryTags(IEnumerable<InventoryTag> inventoryTags)
+        {
+            _context.InventoryTags.RemoveRange(inventoryTags);
+        }
     }
 }

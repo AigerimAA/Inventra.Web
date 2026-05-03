@@ -33,5 +33,26 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context.InventoryTags.RemoveRange(inventoryTags);
         }
+        public async Task<Tag> GetOrCreateAsync(string name)
+        {
+            var existing = await _context.Tags.FirstOrDefaultAsync(t => t.Name == name);
+
+            if (existing != null) return existing;
+
+            var tag = new Tag { Name = name };
+            _context.Tags.Add(tag);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return tag;
+            }
+            catch (DbUpdateException)
+            {
+                _context.Entry(tag).State = EntityState.Detached;
+
+                return await _context.Tags.FirstAsync(t => t.Name == name);
+            }
+        }
     }
 }

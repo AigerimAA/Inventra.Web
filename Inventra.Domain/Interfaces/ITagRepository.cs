@@ -8,5 +8,6 @@ namespace Inventra.Domain.Interfaces
         Task<Tag?> GetByNameAsync(string name);
         Task AddAsync(Tag tag);
         void RemoveInventoryTags(IList<InventoryTag> inventoryTags);
+        Task<Tag> GetOrCreateAsync(string name);
     }
 }

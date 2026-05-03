@@ -163,6 +163,10 @@ namespace Inventra.Infrastructure.Persistence
                 .Property(i => i.Title)
                 .HasMaxLength(200)
                 .IsRequired();
+
+            builder.Entity<Tag>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
         }
     }
 }

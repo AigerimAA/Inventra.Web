@@ -87,11 +87,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
                 var normalized = tagName.Trim().ToLowerInvariant();
                 if (string.IsNullOrEmpty(normalized)) continue;
 
-                var tag = await _tagRepository.GetByNameAsync(normalized)
-                          ?? new Tag { Name = normalized };
-
-                if (tag.Id == 0)
-                    await _tagRepository.AddAsync(tag);
+                var tag = await _tagRepository.GetOrCreateAsync(normalized);
 
                 inventory.InventoryTags.Add(new InventoryTag
                 {
@@ -100,8 +96,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
                 });
             }
 
-            await _inventoryRepository.UpdateAsync(inventory);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            
         }
     }
 }
