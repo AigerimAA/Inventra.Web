@@ -17,27 +17,23 @@ namespace Inventra.Infrastructure.Services
         {
             if (isAdmin) return true;
 
-            var inventory = await _context.Inventories
+            return await _context.Inventories
                 .AsNoTracking()
-                .FirstOrDefaultAsync(i => i.Id == inventoryId);
-
-            if (inventory == null) return false;
-            if (inventory.OwnerId == userId) return true;
-            if (inventory.IsPublic) return true;
-
-            return await _context.InventoryAccesses
-                .AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId);
+                .Where(i => i.Id == inventoryId)
+                .AnyAsync(i =>
+                    i.OwnerId == userId ||
+                    i.IsPublic ||
+                    _context.InventoryAccesses
+                        .Any(a => a.InventoryId == i.Id && a.UserId == userId));
         }
 
         public async Task<bool> CanManageAsync(string userId, bool isAdmin, int inventoryId)
         {
             if (isAdmin) return true;
 
-            var inventory = await _context.Inventories
+            return await _context.Inventories
                 .AsNoTracking()
-                .FirstOrDefaultAsync(i => i.Id == inventoryId);
-
-            return inventory?.OwnerId == userId;
+                .AnyAsync(i => i.Id == inventoryId && i.OwnerId == userId);
         }
     }
 }

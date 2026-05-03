@@ -24,14 +24,13 @@ namespace Inventra.Application.Items.Commands.DeleteItem
 
         public async Task Handle(DeleteItemCommand request, CancellationToken cancellationToken)
         {
-            if (!_currentUserService.IsAuthenticated)
-                throw new UnauthorizedAccessException("User is not authenticated");
+            var userId = _currentUserService.UserId
+                ?? throw new UnauthorizedAccessException("User is not authenticated");
 
             var item = await _itemRepository.GetByIdAsync(request.Id)
                 ?? throw new NotFoundException(nameof(Item), request.Id);
 
-            var userId = _currentUserService.UserId!;
-            if (!await _permissionService.CanWriteAsync(userId, item.InventoryId))
+            if (!await _permissionService.CanWriteAsync(userId, _currentUserService.IsAdmin, item.InventoryId))
                 throw new UnauthorizedAccessException("You do not have write access to this inventory");
 
             await _itemRepository.DeleteAsync(item.Id);
