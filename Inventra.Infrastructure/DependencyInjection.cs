@@ -1,12 +1,13 @@
-﻿using Inventra.Application.Interfaces;
+﻿using CloudinaryDotNet;
+using Inventra.Application.Interfaces;
 using Inventra.Domain.Interfaces;
+using Inventra.Infrastructure.Options;
 using Inventra.Infrastructure.Persistence;
 using Inventra.Infrastructure.Repositories;
 using Inventra.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using CloudinaryDotNet;
 
 namespace Inventra.Infrastructure
 {
@@ -32,6 +33,7 @@ namespace Inventra.Infrastructure
             services.AddScoped<ICustomIdGenerator, CustomIdGeneratorService>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IInventoryPermissionService, InventoryPermissionService>();
+            services.Configure<SearchOptions>(configuration.GetSection("Search"));
 
             var cloudName = configuration["Cloudinary:CloudName"];
             if (!string.IsNullOrEmpty(cloudName))
@@ -43,7 +45,6 @@ namespace Inventra.Infrastructure
                 services.AddSingleton(new Cloudinary(cloudinaryAccount));
                 services.AddScoped<CloudStorageService>();
             }
-
             return services;
         }
     }

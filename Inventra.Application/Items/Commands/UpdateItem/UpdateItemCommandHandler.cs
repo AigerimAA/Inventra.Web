@@ -23,7 +23,7 @@ namespace Inventra.Application.Items.Commands.UpdateItem
                 ?? throw new NotFoundException(nameof(Item), request.Id);
 
             await _itemRepository.SetOriginalVersionAsync(item, request.Version);
-
+            
             item.UpdatedAt = DateTime.UtcNow;
 
             item.CustomString1Value = request.CustomString1Value;
