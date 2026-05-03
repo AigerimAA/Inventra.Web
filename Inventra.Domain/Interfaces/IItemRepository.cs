@@ -8,6 +8,7 @@ namespace Inventra.Domain.Interfaces
         Task<IEnumerable<Item>> GetByInventoryIdAsync(int inventoryId);
         Task AddAsync(Item item);
         Task UpdateAsync(Item item);
+        Task SetOriginalVersionAsync(Item item, byte[] expectedVersion);
         Task DeleteAsync(int id);
     }
 }

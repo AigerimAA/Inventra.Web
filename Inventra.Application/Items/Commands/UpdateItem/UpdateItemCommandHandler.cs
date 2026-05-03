@@ -22,7 +22,8 @@ namespace Inventra.Application.Items.Commands.UpdateItem
             var item = await _itemRepository.GetByIdAsync(request.Id)
                 ?? throw new NotFoundException(nameof(Item), request.Id);
 
-            item.Version = request.Version;
+            await _itemRepository.SetOriginalVersionAsync(item, request.Version);
+
             item.UpdatedAt = DateTime.UtcNow;
 
             item.CustomString1Value = request.CustomString1Value;
