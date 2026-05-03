@@ -8,16 +8,14 @@ namespace Inventra.Infrastructure.Services
     public class InventoryPermissionService : IInventoryPermissionService
     {
         private readonly AppDbContext _context;
-        private readonly ICurrentUserService _currentUserService;
 
-        public InventoryPermissionService(AppDbContext context, ICurrentUserService currentUserService)
+        public InventoryPermissionService(AppDbContext context)
         {
             _context = context;
-            _currentUserService = currentUserService;
         }
-        public async Task<bool> CanWriteAsync(string userId, int inventoryId)
+        public async Task<bool> CanWriteAsync(string userId, bool isAdmin, int inventoryId)
         {
-            if (_currentUserService.IsAdmin) return true;
+            if (isAdmin) return true;
 
             var inventory = await _context.Inventories
                 .AsNoTracking()
@@ -31,9 +29,9 @@ namespace Inventra.Infrastructure.Services
                 .AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId);
         }
 
-        public async Task<bool> CanManageAsync(string userId, int inventoryId)
+        public async Task<bool> CanManageAsync(string userId, bool isAdmin, int inventoryId)
         {
-            if (_currentUserService.IsAdmin) return true;
+            if (isAdmin) return true;
 
             var inventory = await _context.Inventories
                 .AsNoTracking()

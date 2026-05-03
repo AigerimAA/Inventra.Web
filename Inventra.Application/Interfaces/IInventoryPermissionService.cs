@@ -2,7 +2,7 @@
 {
     public interface IInventoryPermissionService
     {
-        Task<bool> CanWriteAsync(string userId, int inventoryId);
-        Task<bool> CanManageAsync(string userId, int inevntoryId);
+        Task<bool> CanWriteAsync(string userId, bool isAdmin, int inventoryId);
+        Task<bool> CanManageAsync(string userId, bool isAdmin, int inevntoryId);
     }
 }
