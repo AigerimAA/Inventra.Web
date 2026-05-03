@@ -25,13 +25,16 @@ namespace Inventra.Infrastructure.Repositories
         public async Task<IEnumerable<ApplicationUser>> SearchByNameOrEmailAsync(string query)
         {
             return await _context.Users
-                .Where(u => u.UserName!.Contains(query) || u.Email!.Contains(query))
+                .Where(u =>
+                    EF.Functions.Like(u.UserName!, query + "%") ||
+                    EF.Functions.Like(u.Email!, query + "%"))
                 .Take(10)
                 .ToListAsync();
         }
-        public async Task UpdateAsync(ApplicationUser user)
+        public Task UpdateAsync(ApplicationUser user)
         {
             _context.Users.Update(user);
+            return Task.CompletedTask;
         }
     }
 }

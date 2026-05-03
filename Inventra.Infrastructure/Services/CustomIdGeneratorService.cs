@@ -35,8 +35,7 @@ namespace Inventra.Infrastructure.Services
                     .AnyAsync(i => i.InventoryId == inventoryId
                                 && i.CustomId == generated, cancellationToken);
 
-                if (!exists)
-                    return generated;
+                if (!exists) return generated;
             }
 
             var fallback = await BuildIdAsync(orderedElements, inventoryId, cancellationToken);
