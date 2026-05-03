@@ -29,7 +29,7 @@ namespace Inventra.Infrastructure.Services
 
             for (int attempt = 0; attempt < 3; attempt++)
             {
-                var generated = await BuildIdAsync(format.Elements, inventoryId, cancellationToken);
+                var generated = await BuildIdAsync(orderedElements, inventoryId, cancellationToken);
 
                 var exists = await _context.Items
                     .AnyAsync(i => i.InventoryId == inventoryId
