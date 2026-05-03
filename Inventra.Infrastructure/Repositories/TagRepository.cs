@@ -15,7 +15,7 @@ namespace Inventra.Infrastructure.Repositories
         public async Task<IEnumerable<Tag>> GetByPrefixAsync(string prefix, int maxResults = 10)
         {
             return await _context.Tags
-                .Where(t => t.Name.StartsWith(prefix))
+                .Where(t => EF.Functions.Like(t.Name, prefix + "%"))
                 .OrderBy(t => t.Name)
                 .Take(maxResults)
                 .ToListAsync();
@@ -28,6 +28,10 @@ namespace Inventra.Infrastructure.Repositories
         public async Task AddAsync(Tag tag)
         {
             await _context.Tags.AddAsync(tag);
+        }
+        public void RemoveInventoryTags(IList<InventoryTag> inventoryTags)
+        {
+            _context.InventoryTags.RemoveRange(inventoryTags);
         }
     }
 }

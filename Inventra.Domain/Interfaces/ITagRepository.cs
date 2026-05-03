@@ -7,5 +7,6 @@ namespace Inventra.Domain.Interfaces
         Task<IEnumerable<Tag>> GetByPrefixAsync(string prefix, int maxResults = 10);
         Task<Tag?> GetByNameAsync(string name);
         Task AddAsync(Tag tag);
+        void RemoveInventoryTags(IList<InventoryTag> inventoryTags);
     }
 }

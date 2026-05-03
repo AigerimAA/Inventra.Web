@@ -12,26 +12,27 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
         private readonly ITagRepository _tagRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IInventoryPermissionService _permissionService;
 
         public UpdateInventoryCommandHandler(
             IInventoryRepository inventoryRepository, ITagRepository tagRepository,
-            IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
+            IUnitOfWork unitOfWork, ICurrentUserService currentUserService, IInventoryPermissionService permissionService)
         {
             _inventoryRepository = inventoryRepository;
             _tagRepository = tagRepository;
             _unitOfWork = unitOfWork;
             _currentUserService = currentUserService;
+            _permissionService = permissionService;
         }
         public async Task Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
         {
-            if (!_currentUserService.IsAuthenticated)
-                throw new UnauthorizedAccessException("User is not authenticated");
+            var userId = _currentUserService.UserId 
+                ?? throw new UnauthorizedAccessException("User is not authenticated");
 
             var inventory = await _inventoryRepository.GetByIdAsync(request.Id)
                 ?? throw new NotFoundException(nameof(Inventory), request.Id);
 
-            if (inventory.OwnerId != _currentUserService.UserId
-                && !_currentUserService.IsAdmin)
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.Id))
                 throw new UnauthorizedAccessException("Only the inventory owner or an admin can edit this inventory");
 
             inventory.Title = request.Title;
@@ -78,6 +79,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             inventory.CustomLink3Name = request.CustomLink3Name;
             inventory.CustomLink3Shown = request.CustomLink3Shown;
 
+            _tagRepository.RemoveInventoryTags(inventory.InventoryTags.ToList());
             inventory.InventoryTags.Clear();
 
             foreach (var tagName in request.Tags.Distinct(StringComparer.OrdinalIgnoreCase))
