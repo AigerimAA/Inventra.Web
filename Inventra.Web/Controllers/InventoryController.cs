@@ -64,7 +64,17 @@ namespace Inventra.Web.Controllers
                 return View(command);
 
             var userId = _userManager.GetUserId(User)!;
-            var commandWithOwner = command with { OwnerId = userId };
+
+            var commandWithOwner = new CreateInventoryCommand
+            {
+                Title = command.Title,
+                Description = command.Description,
+                ImageUrl = command.ImageUrl,
+                IsPublic = command.IsPublic,
+                CategoryId = command.CategoryId,
+                OwnerId = userId,
+                Tags = command.Tags
+            };
 
             var result = await _mediator.Send(commandWithOwner);
             return RedirectToAction(nameof(Details), new { id = result.Id });
@@ -73,8 +83,8 @@ namespace Inventra.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
-            var userId = _currentUserService.UserId
-                ?? return Forbid();
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Forbid();
 
             if (!await _permissionService.CanManageAsync(
                     userId, _currentUserService.IsAdmin, id))

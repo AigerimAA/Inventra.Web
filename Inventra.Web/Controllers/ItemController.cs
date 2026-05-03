@@ -61,7 +61,26 @@ namespace Inventra.Web.Controllers
                 return View(command);
             }
 
-            var commandWithUser = command with { CreatedById = userId };
+            var commandWithUser = new CreateItemCommand
+            {
+                InventoryId = command.InventoryId,
+                CreatedById = userId,   
+                CustomString1Value = command.CustomString1Value,
+                CustomString2Value = command.CustomString2Value,
+                CustomString3Value = command.CustomString3Value,
+                CustomInt1Value = command.CustomInt1Value,
+                CustomInt2Value = command.CustomInt2Value,
+                CustomInt3Value = command.CustomInt3Value,
+                CustomText1Value = command.CustomText1Value,
+                CustomText2Value = command.CustomText2Value,
+                CustomText3Value = command.CustomText3Value,
+                CustomBool1Value = command.CustomBool1Value,
+                CustomBool2Value = command.CustomBool2Value,
+                CustomBool3Value = command.CustomBool3Value,
+                CustomLink1Value = command.CustomLink1Value,
+                CustomLink2Value = command.CustomLink2Value,
+                CustomLink3Value = command.CustomLink3Value
+            };
 
             await _mediator.Send(commandWithUser);
             return RedirectToAction("Details", "Inventory",

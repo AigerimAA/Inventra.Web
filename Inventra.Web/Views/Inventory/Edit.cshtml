@@ -30,7 +30,7 @@
             <div class="col-md-7">
                 <form asp-action="EditSettings" method="post">
                     <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="Version" />
+                    <input type="hidden" asp-for="OwnerId" />
 
                     <div class="mb-3">
                         <label asp-for="Title" class="form-label">Title</label>
@@ -67,89 +67,353 @@
     <div class="tab-pane fade" id="fields">
         <form asp-action="EditFields" method="post">
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Version" />
 
             <h5 class="mb-3">String Fields (up to 3)</h5>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <input asp-for="CustomString1Name" class="form-control"
-                           placeholder="Field name (e.g. Model)" />
+            <p class="text-muted small mb-3">
+                Single-line text. Leave name empty to disable the field.
+            </p>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">String Field 1</label>
+                        <input asp-for="CustomString1Name"
+                               class="form-control"
+                               placeholder="Field name, e.g. Model" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomString1Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomString1Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomString2Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">String Field 2</label>
+                        <input asp-for="CustomString2Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomString2Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomString2Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomString3Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">String Field 3</label>
+                        <input asp-for="CustomString3Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomString3Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomString3Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <h5 class="mb-3 mt-4">Number Fields (up to 3)</h5>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <input asp-for="CustomInt1Name" class="form-control"
-                           placeholder="Field name (e.g. Price)" />
+            <p class="text-muted small mb-3">
+                Decimal numbers. Good for prices, quantities, measurements.
+            </p>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Number Field 1</label>
+                        <input asp-for="CustomInt1Name"
+                               class="form-control"
+                               placeholder="Field name, e.g. Price" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomInt1Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomInt1Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomInt2Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Number Field 2</label>
+                        <input asp-for="CustomInt2Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomInt2Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomInt2Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomInt3Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Number Field 3</label>
+                        <input asp-for="CustomInt3Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomInt3Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomInt3Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <h5 class="mb-3 mt-4">Text Fields (up to 3)</h5>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <input asp-for="CustomText1Name" class="form-control"
-                           placeholder="Field name (e.g. Notes)" />
+            <p class="text-muted small mb-3">
+                Multi-line text. Good for descriptions, notes, annotations.
+            </p>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Text Field 1</label>
+                        <input asp-for="CustomText1Name"
+                               class="form-control"
+                               placeholder="Field name, e.g. Notes" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomText1Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomText1Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomText2Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Text Field 2</label>
+                        <input asp-for="CustomText2Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomText2Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomText2Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomText3Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Text Field 3</label>
+                        <input asp-for="CustomText3Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomText3Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomText3Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <h5 class="mb-3 mt-4">Boolean Fields (up to 3)</h5>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <input asp-for="CustomBool1Name" class="form-control"
-                           placeholder="Field name (e.g. Available)" />
+            <p class="text-muted small mb-3">
+                True/false checkboxes. Good for flags like Available, Active, Verified.
+            </p>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Boolean Field 1</label>
+                        <input asp-for="CustomBool1Name"
+                               class="form-control"
+                               placeholder="Field name, e.g. Available" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomBool1Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomBool1Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomBool2Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Boolean Field 2</label>
+                        <input asp-for="CustomBool2Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomBool2Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomBool2Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomBool3Name" class="form-control"
-                           placeholder="Field name" />
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Boolean Field 3</label>
+                        <input asp-for="CustomBool3Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomBool3Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomBool3Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <h5 class="mb-3 mt-4">Link Fields (up to 3)</h5>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <input asp-for="CustomLink1Name" class="form-control"
-                           placeholder="Field name (e.g. Datasheet)" />
-                </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomLink2Name" class="form-control"
-                           placeholder="Field name" />
-                </div>
-                <div class="col-md-4">
-                    <input asp-for="CustomLink3Name" class="form-control"
-                           placeholder="Field name" />
+            <p class="text-muted small mb-3">
+                URL links. Good for datasheets, documentation, references.
+            </p>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Link Field 1</label>
+                        <input asp-for="CustomLink1Name"
+                               class="form-control"
+                               placeholder="Field name, e.g. Datasheet" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomLink1Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomLink1Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Save Fields</button>
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Link Field 2</label>
+                        <input asp-for="CustomLink2Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomLink2Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomLink2Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 border rounded p-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Link Field 3</label>
+                        <input asp-for="CustomLink3Name"
+                               class="form-control"
+                               placeholder="Field name" />
+                    </div>
+                    <div class="col-md-auto d-flex align-items-end pb-1">
+                        <div class="form-check mb-0">
+                            <input asp-for="CustomLink3Shown"
+                                   class="form-check-input" />
+                            <label asp-for="CustomLink3Shown"
+                                   class="form-check-label">
+                                Show in table
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Save Fields</button>
+                <a asp-action="Details" asp-route-id="@Model.Id"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+
         </form>
     </div>
 
@@ -163,4 +427,17 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', e => {
+                localStorage.setItem('editTab_@Model.Id',
+                    e.target.getAttribute('href'));
+            });
+        });
+        const saved = localStorage.getItem('editTab_@Model.Id');
+        if (saved) {
+            const tab = document.querySelector(`[href="${saved}"]`);
+            if (tab) new bootstrap.Tab(tab).show();
+        }
+    </script>
 }
