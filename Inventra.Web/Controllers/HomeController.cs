@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Inventra.Application.Inventories.Queries.GetLatestInventories;
 using Inventra.Application.Inventories.Queries.GetPopularInventories;
+using Inventra.Web.Models;
 
 namespace Inventra.Web.Controllers
 {
@@ -15,11 +16,11 @@ namespace Inventra.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var latest = await _mediator.Send(new GetLatestInventoriesQuery(10));
-            var popular = await _mediator.Send(new GetPopularInventoriesQuery(5));
-
-            ViewBag.LatestInventories = latest;
-            ViewBag.PopularInventories = popular;
+            var model = new HomeViewModel
+            {
+                LatestInventories = await _mediator.Send(new GetLatestInventoriesQuery(10)),
+                PopularInventories = await _mediator.Send(new GetPopularInventoriesQuery(5))
+            };
 
             return View();
         }

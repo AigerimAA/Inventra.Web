@@ -1,31 +1,21 @@
 ﻿@using Inventra.Application.DTOs
-
+@using Inventra.Web.Models
+@model HomeViewModel
 @{
     ViewData["Title"] = "Home";
-    var latest = ViewBag.LatestInventories as IEnumerable<InventoryDto>;
-    var popular = ViewBag.PopularInventories as IEnumerable<InventoryDto>;
 }
 
 <div class="px-4 py-5 text-center">
     <h1 class="display-5 fw-bold">📦 Inventra</h1>
-    <p class="lead mb-4">
-        Create and manage custom inventories for anything —
-        office equipment, books, documents, and more.
-    </p>
+    <p class="lead mb-4">Create and manage custom inventories for anything — office equipment, books, documents, and more.</p>
     @if (!User.Identity?.IsAuthenticated ?? true)
     {
-        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">
-            Get Started
-        </a>
-        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">
-            Login
-        </a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">Login</a>
     }
     else
     {
-        <a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-lg">
-            + New Inventory
-        </a>
+        <a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-lg">+ New Inventory</a>
     }
 </div>
 
@@ -44,20 +34,15 @@
                 </tr>
             </thead>
             <tbody>
-                @if (latest == null || !latest.Any())
+                @if (!Model.LatestInventories.Any())
                 {
-                    <tr>
-                        <td colspan="4" class="text-muted text-center">
-                            No inventories yet. Be the first to create one!
-                        </td>
-                    </tr>
+                    <tr><td colspan="4" class="text-muted text-center">No inventories yet. Be the first to create one!</td></tr>
                 }
                 else
                 {
-                    @foreach (var inv in latest)
+                    @foreach (var inv in Model.LatestInventories)
                     {
-                        <tr style="cursor:pointer"
-                            onclick="window.location='/Inventory/Details/@inv.Id'">
+                        <tr style="cursor:pointer" onclick="window.location='/Inventory/Details/@inv.Id'">
                             <td>@inv.Title</td>
                             <td>@inv.CategoryName</td>
                             <td>@inv.OwnerName</td>
@@ -79,18 +64,15 @@
                 </tr>
             </thead>
             <tbody>
-                @if (popular == null || !popular.Any())
+                @if (!Model.PopularInventories.Any())
                 {
-                    <tr>
-                        <td colspan="2" class="text-muted text-center">No data yet.</td>
-                    </tr>
+                    <tr><td colspan="2" class="text-muted text-center">No data yet.</td></tr>
                 }
                 else
                 {
-                    @foreach (var inv in popular)
+                    @foreach (var inv in Model.PopularInventories)
                     {
-                        <tr style="cursor:pointer"
-                            onclick="window.location='/Inventory/Details/@inv.Id'">
+                        <tr style="cursor:pointer" onclick="window.location='/Inventory/Details/@inv.Id'">
                             <td>@inv.Title</td>
                             <td class="text-end">@inv.ItemsCount</td>
                         </tr>
