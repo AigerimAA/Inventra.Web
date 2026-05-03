@@ -65,6 +65,15 @@ namespace Inventra.Infrastructure.Repositories
                 .Take(count)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Inventory>> GetWithAccessByUserIdAsync(string userId)
+        {
+            return await _context.Inventories
+                .Include(i => i.Owner)
+                .Include(i => i.Category)
+                .Include(i => i.Items)
+                .Where(i => i.AccessList.Any(a => a.UserId == userId))
+                .ToListAsync();
+        }
         public async Task AddAsync(Inventory inventory)
         {
             await _context.Inventories.AddAsync(inventory);
