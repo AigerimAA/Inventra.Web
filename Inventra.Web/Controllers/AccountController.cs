@@ -67,6 +67,11 @@ namespace Inventra.Web.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
+            if (user.IsBlocked)
+            {
+                ModelState.AddModelError(string.Empty, "Your account has been blocked. Please contact the administrator");
+                return View(model);
+            }
 
             var result = await _identityService.PasswordSignInAsync(
                 user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);

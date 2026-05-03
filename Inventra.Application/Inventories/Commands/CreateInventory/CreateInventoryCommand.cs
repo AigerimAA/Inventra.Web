@@ -3,7 +3,7 @@ using Inventra.Application.DTOs;
 
 namespace Inventra.Application.Inventories.Commands.CreateInventory
 {
-    public class CreateInventoryCommand : IRequest<InventoryDto>
+    public record class CreateInventoryCommand : IRequest<InventoryDto>
     {
         public string Title { get; init; } = string.Empty;
         public string? Description { get; init; }
