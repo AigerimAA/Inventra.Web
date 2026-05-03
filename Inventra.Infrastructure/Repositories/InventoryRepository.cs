@@ -92,5 +92,9 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context.InventoryTags.RemoveRange(inventoryTags);
         }
+        public void SetOriginalVersion(Inventory inventory, byte[] expectedVersion)
+        {
+            _context.Entry(inventory).Property(i => i.Version).OriginalValue = expectedVersion;
+        }
     }
 }

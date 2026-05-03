@@ -120,7 +120,8 @@ namespace Inventra.Web.Controllers
                 ImageUrl = dto.ImageUrl,
                 IsPublic = dto.IsPublic,
                 CategoryId = dto.CategoryId,
-                Tags = dto.Tags
+                Tags = dto.Tags,
+                Version = dto.Version
             };
 
             try

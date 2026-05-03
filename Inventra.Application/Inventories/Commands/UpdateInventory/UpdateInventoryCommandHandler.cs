@@ -35,6 +35,8 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.Id))
                 throw new UnauthorizedAccessException("Only the inventory owner or an admin can edit this inventory");
 
+            _inventoryRepository.SetOriginalVersion(inventory, request.Version);
+
             inventory.Title = request.Title;
             inventory.Description = request.Description;
             inventory.ImageUrl = request.ImageUrl;

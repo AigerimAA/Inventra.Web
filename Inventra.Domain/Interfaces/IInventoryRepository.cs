@@ -14,5 +14,6 @@ namespace Inventra.Domain.Interfaces
         Task UpdateAsync(Inventory inventory);
         Task DeleteAsync(int id);
         void RemoveInventoryTags(IEnumerable<InventoryTag> inventoryTags);
+        void SetOriginalVersion(Inventory inventory, byte[] expectedVersion);
     }
 }
