@@ -4,7 +4,7 @@ namespace Inventra.Web.Models
 {
     public class HomeViewModel
     {
-        public IEnumerable<InventoryDto> LatestInventories { get; set; } = [];
-        public IEnumerable<InventoryDto> PopularInventories { get; set; } = [];
+        public IEnumerable<InventoryDto> LatestInventories { get; set; } = Enumerable.Empty<InventoryDto>();
+        public IEnumerable<InventoryDto> PopularInventories { get; set; } = Enumerable.Empty<InventoryDto>();
     }
 }

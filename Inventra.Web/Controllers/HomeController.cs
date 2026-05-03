@@ -22,7 +22,7 @@ namespace Inventra.Web.Controllers
                 PopularInventories = await _mediator.Send(new GetPopularInventoriesQuery(5))
             };
 
-            return View();
+            return View(model);
         }
 
         public IActionResult Privacy()
