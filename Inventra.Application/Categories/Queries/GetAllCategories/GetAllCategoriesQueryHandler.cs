@@ -1,5 +1,4 @@
-﻿using Inventra.Domain.Entities;
-using Inventra.Domain.Interfaces;
+﻿using Inventra.Domain.Interfaces;
 using MediatR;
 using AutoMapper;
 using Inventra.Application.DTOs;

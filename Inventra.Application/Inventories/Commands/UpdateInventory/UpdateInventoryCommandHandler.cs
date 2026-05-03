@@ -95,8 +95,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
                     Tag = tag
                 });
             }
-
-            
+            await _unitOfWork.SaveChangesAsync(cancellationToken);            
         }
     }
 }
