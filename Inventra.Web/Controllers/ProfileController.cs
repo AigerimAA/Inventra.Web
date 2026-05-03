@@ -1,4 +1,6 @@
 ﻿using Inventra.Application.Inventories.Queries.GetAllInventories;
+using Inventra.Application.Inventories.Queries.GetInventoriesByUserId;
+using Inventra.Application.Inventories.Queries.GetInventoriesWithAccess;
 using Inventra.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,15 +24,9 @@ namespace Inventra.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User)!;
-            var allInventories = await _mediator.Send(new GetAllInventoriesQuery());
 
-            var ownedInventories = allInventories
-                .Where(i => string.Equals(i.OwnerId, userId))
-                .ToList();
-
-            var accessibleInventories = allInventories
-                .Where(i => !string.Equals(i.OwnerId, userId))
-                .ToList();
+            var ownedInventories = await _mediator.Send(new GetInventoriesByUserIdQuery(userId));
+            var accessibleInventories = await _mediator.Send(new GetInventoriesWithAccessQuery(userId));
 
             ViewBag.OwnedInventories = ownedInventories;
             ViewBag.AccessibleInventories = accessibleInventories;
