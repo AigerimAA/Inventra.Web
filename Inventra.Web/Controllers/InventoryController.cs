@@ -128,9 +128,9 @@ namespace Inventra.Web.Controllers
 
             try
             {
-                await _mediator.Send(command);
+                var _ = await _mediator.Send(command);
             }
-            catch(Inventra.Application.Common.Exceptions.ConcurrencyException)
+            catch(ConcurrencyException)
             {
                 ModelState.AddModelError(string.Empty, "Someone else modified this inventory. Please reload and try again");
                 return View("Edit", dto);
@@ -159,6 +159,7 @@ namespace Inventra.Web.Controllers
                 Title = existing.Title,
                 CategoryId = existing.CategoryId,
                 Tags = existing.Tags,
+                Version = existing.Version,
 
                 CustomString1Name = dto.CustomString1Name,
                 CustomString1Shown = dto.CustomString1Shown,
@@ -196,19 +197,25 @@ namespace Inventra.Web.Controllers
                 CustomLink3Shown = dto.CustomLink3Shown
             };
 
-            await _mediator.Send(command);
+            var _ = await _mediator.Send(command);
             return RedirectToAction(nameof(Details), new { id = dto.Id });
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AutoSave([FromBody] AutoSaveInventoryRequest request)
+        public async Task<IActionResult> AutoSave([FromBody] AutoSaveInventoryRequest request, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var userId = _currentUserService.UserId;
             if (userId == null) return Unauthorized();
 
             if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.Id))
                 return Forbid();
+
+            byte[] versionBytes;
+            try { versionBytes = Convert.FromBase64String(request.Version); }
+            catch (FormatException) { return BadRequest(new { success = false, error = "invalid version format" }); }
 
             var command = new UpdateInventoryCommand
             {
@@ -218,7 +225,7 @@ namespace Inventra.Web.Controllers
                 ImageUrl = request.ImageUrl,
                 IsPublic = request.IsPublic,
                 CategoryId = request.CategoryId,
-                Version = request.Version,
+                Version = versionBytes,
                 Tags = request.Tags ?? new List<string>(),
                 CustomString1Name = request.CustomString1Name,
                 CustomString1Shown = request.CustomString1Shown,
@@ -254,9 +261,8 @@ namespace Inventra.Web.Controllers
 
             try
             {
-                await _mediator.Send(command);
-                var updated = await _mediator.Send(new GetInventoryByIdQuery(request.Id));
-                return Ok(new { success = true, version = Convert.ToBase64String(updated.Version)});
+                var newVersion = await _mediator.Send(command, cancellationToken);
+                return Ok(new { success = true, version = Convert.ToBase64String(newVersion) });
             }
             catch (ConcurrencyException)
             {

@@ -2,7 +2,7 @@
 
 namespace Inventra.Application.Inventories.Commands.UpdateInventory
 {
-    public class UpdateInventoryCommand : IRequest
+    public class UpdateInventoryCommand : IRequest<byte[]>
     {
         public int Id { get; init; }
         public string Title { get; init; } = string.Empty;

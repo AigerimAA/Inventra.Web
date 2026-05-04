@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Inventra.Application.Inventories.Commands.UpdateInventory
 {
-    public class UpdateInventoryCommandHandler : IRequestHandler<UpdateInventoryCommand>
+    public class UpdateInventoryCommandHandler : IRequestHandler<UpdateInventoryCommand, byte[]>
     {
         private readonly IInventoryRepository _inventoryRepository;
         private readonly ITagRepository _tagRepository;
@@ -24,7 +24,7 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
             _currentUserService = currentUserService;
             _permissionService = permissionService;
         }
-        public async Task Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
+        public async Task<byte[]> Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.UserId 
                 ?? throw new UnauthorizedAccessException("User is not authenticated");
@@ -97,7 +97,8 @@ namespace Inventra.Application.Inventories.Commands.UpdateInventory
                     Tag = tag
                 });
             }
-            await _unitOfWork.SaveChangesAsync(cancellationToken);            
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return inventory.Version;
         }
     }
 }
