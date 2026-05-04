@@ -1,0 +1,112 @@
+﻿@using Inventra.Application.DTOs
+@model ItemDto
+
+@{
+    ViewData["Title"] = "Item " + Model.CustomId;
+    var inventory = ViewBag.Inventory as InventoryDto;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1">Item: @Model.CustomId</h2>
+                <p class="text-muted mb-0">
+                    Created by @Model.CreatedByName on @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                    in <a asp-controller="Inventory" asp-action="Details" asp-route-id="@Model.InventoryId">@inventory?.Title</a>
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
+                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this item?')">Delete</button>
+                    </form>
+                }
+                <a asp-controller="Inventory" asp-action="Details" asp-route-id="@Model.InventoryId" class="btn btn-outline-secondary btn-sm">← Back</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="200">Custom ID</th>
+                        <td><code>@Model.CustomId</code></td>
+                    </tr>
+                    @if (inventory?.CustomString1Name != null)
+                    {
+                        <tr><th>@inventory.CustomString1Name</th><td>@Model.CustomString1Value</td></tr>
+                    }
+                    @if (inventory?.CustomString2Name != null)
+                    {
+                        <tr><th>@inventory.CustomString2Name</th><td>@Model.CustomString2Value</td></tr>
+                    }
+                    @if (inventory?.CustomString3Name != null)
+                    {
+                        <tr><th>@inventory.CustomString3Name</th><td>@Model.CustomString3Value</td></tr>
+                    }
+                    @if (inventory?.CustomInt1Name != null)
+                    {
+                        <tr><th>@inventory.CustomInt1Name</th><td>@Model.CustomInt1Value?.ToString("N2")</td></tr>
+                    }
+                    @if (inventory?.CustomInt2Name != null)
+                    {
+                        <tr><th>@inventory.CustomInt2Name</th><td>@Model.CustomInt2Value?.ToString("N2")</td></tr>
+                    }
+                    @if (inventory?.CustomInt3Name != null)
+                    {
+                        <tr><th>@inventory.CustomInt3Name</th><td>@Model.CustomInt3Value?.ToString("N2")</td></tr>
+                    }
+                    @if (inventory?.CustomText1Name != null)
+                    {
+                        <tr><th>@inventory.CustomText1Name</th><td><pre class="mb-0 text-wrap">@Model.CustomText1Value</pre></td></tr>
+                    }
+                    @if (inventory?.CustomText2Name != null)
+                    {
+                        <tr><th>@inventory.CustomText2Name</th><td><pre class="mb-0 text-wrap">@Model.CustomText2Value</pre></td></tr>
+                    }
+                    @if (inventory?.CustomText3Name != null)
+                    {
+                        <tr><th>@inventory.CustomText3Name</th><td><pre class="mb-0 text-wrap">@Model.CustomText3Value</pre></td></tr>
+                    }
+                    @if (inventory?.CustomBool1Name != null)
+                    {
+                        <tr><th>@inventory.CustomBool1Name</th><td>@(Model.CustomBool1Value == true ? "✓ Yes" : "✗ No")</td></tr>
+                    }
+                    @if (inventory?.CustomBool2Name != null)
+                    {
+                        <tr><th>@inventory.CustomBool2Name</th><td>@(Model.CustomBool2Value == true ? "✓ Yes" : "✗ No")</td></tr>
+                    }
+                    @if (inventory?.CustomBool3Name != null)
+                    {
+                        <tr><th>@inventory.CustomBool3Name</th><td>@(Model.CustomBool3Value == true ? "✓ Yes" : "✗ No")</td></tr>
+                    }
+                    @if (inventory?.CustomLink1Name != null)
+                    {
+                        <tr><th>@inventory.CustomLink1Name</th><td><a href="@Model.CustomLink1Value" target="_blank">@Model.CustomLink1Value</a></td></tr>
+                    }
+                    @if (inventory?.CustomLink2Name != null)
+                    {
+                        <tr><th>@inventory.CustomLink2Name</th><td><a href="@Model.CustomLink2Value" target="_blank">@Model.CustomLink2Value</a></td></tr>
+                    }
+                    @if (inventory?.CustomLink3Name != null)
+                    {
+                        <tr><th>@inventory.CustomLink3Name</th><td><a href="@Model.CustomLink3Value" target="_blank">@Model.CustomLink3Value</a></td></tr>
+                    }
+                    <tr>
+                        <th>Likes</th>
+                        <td>❤️ @Model.LikesCount</td>
+                    </tr>
+                    <tr>
+                        <th>Last updated</th>
+                        <td>@Model.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

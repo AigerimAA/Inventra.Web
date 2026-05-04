@@ -1,14 +1,15 @@
-﻿using Inventra.Application.Items.Commands.CreateItem;
-using Inventra.Application.Items.Commands.DeleteItem;
-using Inventra.Application.Items.Queries.GetItemById;
+﻿using Inventra.Application.Common.Exceptions;
+using Inventra.Application.Interfaces;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
+using Inventra.Application.Items.Commands.CreateItem;
+using Inventra.Application.Items.Commands.DeleteItem;
+using Inventra.Application.Items.Commands.UpdateItem;
+using Inventra.Application.Items.Queries.GetItemById;
 using Inventra.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Inventra.Application.Interfaces;
-
 namespace Inventra.Web.Controllers
 {
     [Authorize]
@@ -92,7 +93,61 @@ namespace Inventra.Web.Controllers
         {
             var item = await _mediator.Send(new GetItemByIdQuery(id));
             if (item == null) return NotFound();
+
+            var inventory = await _mediator.Send(new GetInventoryByIdQuery(item.InventoryId));
+            ViewBag.Inventory = inventory;
             return View(item);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Forbid();
+
+            var item = await _mediator.Send(new GetItemByIdQuery(id));
+            if (item == null) return NotFound();
+
+            if (!await _permissionService.CanWriteAsync(userId, _currentUserService.IsAdmin, item.InventoryId))
+                return Forbid();
+
+            var inventory = await _mediator.Send(new GetInventoryByIdQuery(item.InventoryId));
+            ViewBag.Inventory = inventory;
+            return View(item);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UpdateItemCommand command)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Forbid();
+
+            var item = await _mediator.Send(new GetItemByIdQuery(command.Id));
+            if (item == null) return NotFound();
+
+            if (!await _permissionService.CanWriteAsync(userId, _currentUserService.IsAdmin, item.InventoryId))
+                return Forbid();
+
+            if (!ModelState.IsValid)
+            {
+                var inv = await _mediator.Send(new GetInventoryByIdQuery(item.InventoryId));
+                ViewBag.Inventory = inv;
+                return View(command);
+            }
+
+            try
+            {
+                await _mediator.Send(command);
+                return RedirectToAction(nameof(Details), new { id = command.Id });
+            }
+            catch (ConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty, "Someone else modified this item. Please reload and try again.");
+                var inv = await _mediator.Send(new GetInventoryByIdQuery(item.InventoryId));
+                ViewBag.Inventory = inv;
+                return View(command);
+            }
         }
 
         [HttpPost]
