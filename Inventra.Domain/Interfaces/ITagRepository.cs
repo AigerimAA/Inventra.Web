@@ -9,5 +9,6 @@ namespace Inventra.Domain.Interfaces
         Task AddAsync(Tag tag);
         void RemoveInventoryTags(IList<InventoryTag> inventoryTags);
         Task<Tag> GetOrCreateAsync(string name);
+        Task<IEnumerable<(string Name, int Count)>> GetTagsWithCountAsync(int maxTags = 50);
     }
 }

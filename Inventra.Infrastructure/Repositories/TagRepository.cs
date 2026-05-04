@@ -54,5 +54,12 @@ namespace Inventra.Infrastructure.Repositories
                 return await _context.Tags.FirstAsync(t => t.Name == name);
             }
         }
+        public async Task<IEnumerable<(string Name, int Count)>> GetTagsWithCountAsync(int maxTags = 50)
+            => await _context.InventoryTags
+                .GroupBy(it => it.Tag.Name)
+                .Select(g => ValueTuple.Create(g.Key, g.Count()))
+                .OrderByDescending(t => t.Item2)
+                .Take(maxTags)
+                .ToListAsync();
     }
 }

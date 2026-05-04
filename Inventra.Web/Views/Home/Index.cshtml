@@ -83,7 +83,24 @@
 
         <h4 class="mt-4">Tags</h4>
         <div class="d-flex flex-wrap gap-2">
-            <span class="text-muted">No tags yet.</span>
+            @if (!Model.TagCloud.Any())
+            {
+                <span class="text-muted">No tags yet.</span>
+            }
+            else
+            {
+                @foreach (var tag in Model.TagCloud)
+                {
+                    var fontSize = 0.8 + (tag.Count * 0.2);
+                    if (fontSize > 2.0) fontSize = 2.0;
+                    <a href="/Search?q=@Uri.EscapeDataString(tag.Name)"
+                           class="badge bg-secondary text-decoration-none"
+                           style="font-size: @fontSize.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)rem"
+                           title="@tag.Count inventories">
+                        @tag.Name
+                    </a>
+                }
+            }
         </div>
     </div>
 </div>
