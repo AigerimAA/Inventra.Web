@@ -32,7 +32,11 @@ namespace Inventra.Application.Items.Commands.UpdateItem
             var item = await _itemRepository.GetByIdAsync(request.Id)
                 ?? throw new NotFoundException(nameof(Item), request.Id);
 
-            await _itemRepository.SetOriginalVersionAsync(item, request.Version);
+            byte[] versionBytes;
+            try { versionBytes = Convert.FromBase64String(request.Version); }
+            catch (FormatException) { throw new ArgumentException("Invalid version format"); }
+
+            await _itemRepository.SetOriginalVersionAsync(item, versionBytes);
 
             item.UpdatedAt = DateTime.UtcNow;
             item.CustomString1Value = request.CustomString1Value;
@@ -56,7 +60,7 @@ namespace Inventra.Application.Items.Commands.UpdateItem
                 await _itemRepository.UpdateAsync(item);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
-            catch (Exception)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new ConcurrencyException();
             }

@@ -120,7 +120,7 @@ namespace Inventra.Web.Controllers
                 {
                     Id = item.Id,
                     InventoryId = item.InventoryId,
-                    Version = item.Version,
+                    Version = Convert.ToBase64String(item.Version),
                     CustomString1Value = item.CustomString1Value,
                     CustomString2Value = item.CustomString2Value,
                     CustomString3Value = item.CustomString3Value,
@@ -150,23 +150,21 @@ namespace Inventra.Web.Controllers
             var userId = _currentUserService.UserId;
             if (userId == null) return Forbid();
 
-            if (Request.Form.TryGetValue("Command.Version", out var versionStr))
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    var decoded = Convert.FromBase64String(versionStr!);
-                    model.Command.Version = decoded;
-                }
-                catch { }
+                var inv = await _mediator.Send(new GetInventoryByIdQuery(model.Command.InventoryId));
+                model.Inventory = inv;
+                return View(model);
             }
-
-            if (!await _permissionService.CanWriteAsync(userId, _currentUserService.IsAdmin, model.Command.InventoryId))
-                return Forbid();
 
             try
             {
                 await _mediator.Send(model.Command);
                 return RedirectToAction(nameof(Details), new { id = model.Command.Id });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
             }
             catch (ConcurrencyException)
             {

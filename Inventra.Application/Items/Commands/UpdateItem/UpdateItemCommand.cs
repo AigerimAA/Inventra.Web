@@ -6,7 +6,7 @@ namespace Inventra.Application.Items.Commands.UpdateItem
     {
         public int Id { get; init; }
         public int InventoryId { get; set; }
-        public byte[] Version { get; set; } = [];
+        public string Version { get; set; } = string.Empty;
 
         public string? CustomString1Value { get; init; }
         public string? CustomString2Value { get; init; }
