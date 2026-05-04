@@ -1,14 +1,17 @@
 ﻿@using Inventra.Application.DTOs
 @model InventoryDto
+@Html.AntiForgeryToken()
 
 @{
     ViewData["Title"] = "Edit - " + Model.Title;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Edit: @Model.Title</h2>
-    <a asp-action="Details" asp-route-id="@Model.Id"
-       class="btn btn-outline-secondary btn-sm">← Back</a>
+    <div class="d-flex align-items-center">
+        <h2>Edit: @Model.Title</h2>
+        <span id="autoSaveStatus" class="ms-3 small text-muted"></span>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">← Back</a>
 </div>
 
 <ul class="nav nav-tabs mb-4" id="editTabs">
@@ -440,5 +443,84 @@
             const tab = document.querySelector(`[href="${saved}"]`);
             if (tab) new bootstrap.Tab(tab).show();
         }
+    </script>
+
+    <script>
+        let isDirty = false;
+        let currentVersion = '@Convert.ToBase64String(Model.Version)';
+        let debounceTimer = null;
+        const inventoryId = @Model.Id;
+        const autoSaveUrl = '/Inventory/AutoSave';
+
+        function showStatus(text, cssClass) {
+            const el = document.getElementById('autoSaveStatus');
+            el.textContent = text;
+            el.className = 'ms-3 small ' + cssClass;
+        }
+
+        function collectFormData() {
+            const get = id => document.getElementById(id)?.value ?? null;
+            const getChecked = id => document.getElementById(id)?.checked ?? false;
+
+            return {
+                id: inventoryId,
+                version: currentVersion,
+                title: get('Title') ?? '',
+                description: get('Description'),
+                imageUrl: get('ImageUrl'),
+                isPublic: getChecked('IsPublic'),
+                categoryId: parseInt(get('CategoryId') ?? '0'),
+                tags: [...document.querySelectorAll('.tag-item')].map(t => t.dataset.value),
+                customString1Name: get('CustomString1Name'), customString1Shown: getChecked('CustomString1Shown'),
+                customString2Name: get('CustomString2Name'), customString2Shown: getChecked('CustomString2Shown'),
+                customString3Name: get('CustomString3Name'), customString3Shown: getChecked('CustomString3Shown'),
+                customInt1Name: get('CustomInt1Name'), customInt1Shown: getChecked('CustomInt1Shown'),
+                customInt2Name: get('CustomInt2Name'), customInt2Shown: getChecked('CustomInt2Shown'),
+                customInt3Name: get('CustomInt3Name'), customInt3Shown: getChecked('CustomInt3Shown'),
+                customText1Name: get('CustomText1Name'), customText1Shown: getChecked('CustomText1Shown'),
+                customText2Name: get('CustomText2Name'), customText2Shown: getChecked('CustomText2Shown'),
+                customText3Name: get('CustomText3Name'), customText3Shown: getChecked('CustomText3Shown'),
+                customBool1Name: get('CustomBool1Name'), customBool1Shown: getChecked('CustomBool1Shown'),
+                customBool2Name: get('CustomBool2Name'), customBool2Shown: getChecked('CustomBool2Shown'),
+                customBool3Name: get('CustomBool3Name'), customBool3Shown: getChecked('CustomBool3Shown'),
+                customLink1Name: get('CustomLink1Name'), customLink1Shown: getChecked('CustomLink1Shown'),
+                customLink2Name: get('CustomLink2Name'), customLink2Shown: getChecked('CustomLink2Shown'),
+                customLink3Name: get('CustomLink3Name'), customLink3Shown: getChecked('CustomLink3Shown'),
+            };
+        }
+
+        async function autoSave() {
+            if (!isDirty) return;
+            showStatus('Saving...', 'text-warning');
+            try {
+                const response = await fetch(autoSaveUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value },
+                    body: JSON.stringify(collectFormData())
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentVersion = data.version;
+                    isDirty = false;
+                    showStatus('All changes saved', 'text-success');
+                } else if (response.status === 409) {
+                    showStatus('Conflict! Reload the page', 'text-danger');
+                }
+            } catch {
+                showStatus('Save error', 'text-danger');
+            }
+        }
+
+        function onFormChange() {
+            isDirty = true;
+            showStatus('Unsaved changes...', 'text-muted');
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(autoSave, 1000);
+        }
+
+        document.querySelectorAll('#settings input, #settings textarea, #settings select, #fields input')
+            .forEach(el => el.addEventListener('input', onFormChange));
+        document.querySelectorAll('#settings input[type=checkbox], #fields input[type=checkbox]')
+            .forEach(el => el.addEventListener('change', onFormChange));
     </script>
 }

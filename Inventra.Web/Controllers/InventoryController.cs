@@ -1,4 +1,5 @@
 ﻿using Inventra.Application.Categories.Queries.GetAllCategories;
+using Inventra.Application.Common.Exceptions;
 using Inventra.Application.DTOs;
 using Inventra.Application.Interfaces;
 using Inventra.Application.Inventories.Commands.CreateInventory;
@@ -8,6 +9,7 @@ using Inventra.Application.Inventories.Queries.GetAllInventories;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
 using Inventra.Application.Items.Queries.GetItemsByInventoryId;
 using Inventra.Domain.Entities;
+using Inventra.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -196,6 +198,70 @@ namespace Inventra.Web.Controllers
 
             await _mediator.Send(command);
             return RedirectToAction(nameof(Details), new { id = dto.Id });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AutoSave([FromBody] AutoSaveInventoryRequest request)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Unauthorized();
+
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.Id))
+                return Forbid();
+
+            var command = new UpdateInventoryCommand
+            {
+                Id = request.Id,
+                Title = request.Title,
+                Description = request.Description,
+                ImageUrl = request.ImageUrl,
+                IsPublic = request.IsPublic,
+                CategoryId = request.CategoryId,
+                Version = request.Version,
+                Tags = request.Tags ?? new List<string>(),
+                CustomString1Name = request.CustomString1Name,
+                CustomString1Shown = request.CustomString1Shown,
+                CustomString2Name = request.CustomString2Name,
+                CustomString2Shown = request.CustomString2Shown,
+                CustomString3Name = request.CustomString3Name,
+                CustomString3Shown = request.CustomString3Shown,
+                CustomInt1Name = request.CustomInt1Name,
+                CustomInt1Shown = request.CustomInt1Shown,
+                CustomInt2Name = request.CustomInt2Name,
+                CustomInt2Shown = request.CustomInt2Shown,
+                CustomInt3Name = request.CustomInt3Name,
+                CustomInt3Shown = request.CustomInt3Shown,
+                CustomText1Name = request.CustomText1Name,
+                CustomText1Shown = request.CustomText1Shown,
+                CustomText2Name = request.CustomText2Name,
+                CustomText2Shown = request.CustomText2Shown,
+                CustomText3Name = request.CustomText3Name,
+                CustomText3Shown = request.CustomText3Shown,
+                CustomBool1Name = request.CustomBool1Name,
+                CustomBool1Shown = request.CustomBool1Shown,
+                CustomBool2Name = request.CustomBool2Name,
+                CustomBool2Shown = request.CustomBool2Shown,
+                CustomBool3Name = request.CustomBool3Name,
+                CustomBool3Shown = request.CustomBool3Shown,
+                CustomLink1Name = request.CustomLink1Name,
+                CustomLink1Shown = request.CustomLink1Shown,
+                CustomLink2Name = request.CustomLink2Name,
+                CustomLink2Shown = request.CustomLink2Shown,
+                CustomLink3Name = request.CustomLink3Name,
+                CustomLink3Shown = request.CustomLink3Shown,
+            };
+
+            try
+            {
+                await _mediator.Send(command);
+                var updated = await _mediator.Send(new GetInventoryByIdQuery(request.Id));
+                return Ok(new { success = true, version = Convert.ToBase64String(updated.Version)});
+            }
+            catch (ConcurrencyException)
+            {
+                return Conflict(new { success = false, error = "conflict" });
+            }
         }
 
         [Authorize]

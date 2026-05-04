@@ -19,7 +19,8 @@ namespace Inventra.Infrastructure
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")));
+                    configuration.GetConnectionString("DefaultConnection"),
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
