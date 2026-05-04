@@ -21,7 +21,7 @@ namespace Inventra.Application.Access.Commands.RemoveAccess
             var userId = _currentUserService.UserId ?? throw new UnauthorizedAccessException();
             if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.InventoryId))
                 throw new UnauthorizedAccessException();
-            await _accessRepository.RemoveAccessAsync(request.InventoryId, request.TargetUserId);
+            await _accessRepository.RemoveAccessAsync(request.InventoryId, request.TargetUserId, cancellationToken);
         }
     }
 }

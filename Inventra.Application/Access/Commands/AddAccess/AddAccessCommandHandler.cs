@@ -21,7 +21,7 @@ namespace Inventra.Application.Access.Commands.AddAccess
             if (request.TargetUserId == userId)
                 throw new InvalidOperationException("You already have access as the owner");
 
-            var access = await _accessRepository.AddAccessAsync(request.InventoryId, request.TargetUserId);
+            var access = await _accessRepository.AddAccessAsync(request.InventoryId, request.TargetUserId, cancellationToken);
             return new AccessUserDto { Id = access.User.Id, UserName = access.User.UserName!, Email = access.User.Email! };
         }
     }

@@ -24,12 +24,15 @@ namespace Inventra.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers(int inventoryId)
         {
-            var userId = _currentUserService.UserId;
-            if (userId == null) return Unauthorized();
-            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, inventoryId))
-                return Forbid();
-            var users = await _mediator.Send(new GetInventoryUsersQuery(inventoryId));
-            return Json(users);
+            try
+            {
+                var users = await _mediator.Send(new GetInventoryUsersQuery(inventoryId));
+                return Json(users);
+            }
+            catch (UnauthorizedAccessException) 
+            { 
+                return Forbid(); 
+            }
         }
 
         [HttpGet]
@@ -41,11 +44,11 @@ namespace Inventra.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AccessRequest request)
+        public async Task<IActionResult> Add([FromBody] AccessRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                AccessUserDto result = await _mediator.Send(new AddAccessCommand(request.InventoryId, request.UserId));
+                var result = await _mediator.Send(new AddAccessCommand(request.InventoryId, request.UserId), cancellationToken);
                 return Ok(new { success = true, userName = result.UserName, email = result.Email });
             }
             catch (InvalidOperationException ex) { return BadRequest(new { error = ex.Message }); }
@@ -53,11 +56,11 @@ namespace Inventra.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove([FromBody] AccessRequest request)
+        public async Task<IActionResult> Remove([FromBody] AccessRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                await _mediator.Send(new RemoveAccessCommand(request.InventoryId, request.UserId));
+                await _mediator.Send(new RemoveAccessCommand(request.InventoryId, request.UserId), cancellationToken);
                 return Ok(new { success = true });
             }
             catch (UnauthorizedAccessException) { return Forbid(); }

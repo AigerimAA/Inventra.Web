@@ -610,8 +610,10 @@
             });
             if (response.ok) {
                 const data = await response.json();
-                accessUsers.push({ id: selectedUserId, userName: data.userName, email: data.email });
-                renderAccessTable();
+                if (!accessUsers.some(u => u.id === selectedUserId)) {
+                    accessUsers.push({ id: selectedUserId, userName: data.userName, email: data.email });
+                    renderAccessTable();
+                }
                 document.getElementById('userSearchInput').value = '';
                 selectedUserId = null;
             } else {

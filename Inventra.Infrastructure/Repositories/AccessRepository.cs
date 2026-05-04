@@ -10,35 +10,37 @@ namespace Inventra.Infrastructure.Repositories
         private readonly AppDbContext _context;
         public AccessRepository(AppDbContext context) => _context = context;
 
-        public async Task<IEnumerable<InventoryAccess>> GetUsersWithAccessAsync(int inventoryId)
+        public async Task<IEnumerable<InventoryAccess>> GetUsersWithAccessAsync(int inventoryId, CancellationToken cancellationToken = default)
             => await _context.InventoryAccesses
                 .Where(a => a.InventoryId == inventoryId)
                 .Include(a => a.User)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
-        public async Task<InventoryAccess> AddAccessAsync(int inventoryId, string userId)
+        public async Task<InventoryAccess> AddAccessAsync(int inventoryId, string userId, CancellationToken cancellationToken = default)
         {
-            var exists = await _context.InventoryAccesses.AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId);
+            var exists = await _context.InventoryAccesses.AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId, cancellationToken);
             if (exists) throw new InvalidOperationException("User already has access");
             var access = new InventoryAccess { InventoryId = inventoryId, UserId = userId };
+            
             _context.InventoryAccesses.Add(access);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return await _context.InventoryAccesses
                 .Include(a => a.User)
-                .FirstAsync(a => a.InventoryId == inventoryId && a.UserId == userId);
+                .FirstAsync(a => a.InventoryId == inventoryId && a.UserId == userId, cancellationToken);
         }
 
-        public async Task RemoveAccessAsync(int inventoryId, string userId)
+        public async Task RemoveAccessAsync(int inventoryId, string userId, CancellationToken cancellationToken = default)
         {
             var access = await _context.InventoryAccesses
-                .FirstOrDefaultAsync(a => a.InventoryId == inventoryId && a.UserId == userId);
-            if (access != null) { _context.InventoryAccesses.Remove(access); await _context.SaveChangesAsync(); }
+                .FirstOrDefaultAsync(a => a.InventoryId == inventoryId && a.UserId == userId, cancellationToken);
+            if (access != null) { _context.InventoryAccesses.Remove(access); await _context.SaveChangesAsync(cancellationToken); }
         }
 
-        public async Task<IEnumerable<ApplicationUser>> SearchUsersAsync(string query)
+        public async Task<IEnumerable<(string Id, string UserName, string Email)>> SearchUsersAsync(string query, CancellationToken cancellationToken = default)
             => await _context.Users
-                .Where(u => EF.Functions.Like(u.UserName!, $"%{query}%") || EF.Functions.Like(u.Email!, $"%{query}%"))
-                .Take(10)
-                .ToListAsync();
+        .Where(u => EF.Functions.Like(u.UserName!, $"%{query}%") || EF.Functions.Like(u.Email!, $"%{query}%"))
+        .Take(10)
+        .Select(u => ValueTuple.Create(u.Id, u.UserName!, u.Email!))
+        .ToListAsync(cancellationToken);
     }
 }
