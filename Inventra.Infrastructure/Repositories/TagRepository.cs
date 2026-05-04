@@ -57,7 +57,6 @@ namespace Inventra.Infrastructure.Repositories
         public async Task<IEnumerable<TagWithCount>> GetTagsWithCountAsync(int maxTags = 50, CancellationToken cancellationToken = default)
             => await _context.InventoryTags
                 .AsNoTracking()
-                .Include(it => it.Tag)
                 .GroupBy(it => new { it.TagId, it.Tag.Name })
                 .Select(g => new TagWithCount { Name = g.Key.Name, Count = g.Count() })
                 .OrderByDescending(t => t.Count)

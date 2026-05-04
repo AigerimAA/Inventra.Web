@@ -89,13 +89,14 @@
             }
             else
             {
-                var maxCount = Model.TagCloud.Max(t => t.Count);
+                var maxCount = Math.Max(1, Model.TagCloud.Max(t => t.Count));
                 @foreach (var tag in Model.TagCloud)
                 {
-                    var fontSize = (0.8 + ((double)tag.Count / maxCount) * 1.2).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+                    var normalized = Math.Sqrt((double)tag.Count / maxCount);
+                    var fontSize = (0.8 + normalized * 1.2).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
                     <a asp-controller="Search" asp-action="Index" asp-route-q="@tag.Name"
                            class="badge bg-secondary text-decoration-none"
-                           style="font-size: @(fontSize)rem"
+                           style="font-size: @(fontSize + "rem")"
                            title="@tag.Count inventories">
                         @tag.Name
                     </a>
