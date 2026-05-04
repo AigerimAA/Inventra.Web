@@ -11,7 +11,7 @@ namespace Inventra.Application.Tags.Queries
 
         public async Task<IEnumerable<TagCloudItemDto>> Handle(GetTagCloudQuery request, CancellationToken cancellationToken)
         {
-            var tags = await _tagRepository.GetTagsWithCountAsync(request.MaxTags);
+            var tags = await _tagRepository.GetTagsWithCountAsync(request.MaxTags, cancellationToken);
             return tags.Select(t => new TagCloudItemDto { Name = t.Name, Count = t.Count });
         }
     }
