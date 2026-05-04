@@ -1,4 +1,5 @@
-﻿using Inventra.Application.Interfaces;
+﻿using Inventra.Application.Common.Exceptions;
+using Inventra.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Infrastructure.Persistence
@@ -11,7 +12,7 @@ namespace Inventra.Infrastructure.Persistence
         {
             _context = context;
         }
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             try
             {
@@ -19,7 +20,7 @@ namespace Inventra.Infrastructure.Persistence
             }
             catch (DbUpdateConcurrencyException)
             {
-                throw new DbUpdateConcurrencyException();
+                throw new ConcurrencyException();
             }
             
         }
