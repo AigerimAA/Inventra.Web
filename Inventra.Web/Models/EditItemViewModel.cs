@@ -7,5 +7,6 @@ namespace Inventra.Web.Models
     {
         public UpdateItemCommand Command { get; set; } = new();
         public InventoryDto Inventory { get; set; } = new();
+        public string VersionString { get; set; } = string.Empty;
     }
 }

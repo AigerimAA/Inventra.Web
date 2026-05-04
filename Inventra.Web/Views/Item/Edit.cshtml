@@ -21,7 +21,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Command.Id" />
             <input type="hidden" asp-for="Command.InventoryId" />
-            <input type="hidden" name="Command.Version" value="@cmd.Version" />
+            <input type="hidden" name="VersionString" value="@Model.VersionString" />
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
             @if (inventory.CustomString1Name != null)

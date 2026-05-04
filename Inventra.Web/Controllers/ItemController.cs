@@ -120,7 +120,6 @@ namespace Inventra.Web.Controllers
                 {
                     Id = item.Id,
                     InventoryId = item.InventoryId,
-                    Version = Convert.ToBase64String(item.Version),
                     CustomString1Value = item.CustomString1Value,
                     CustomString2Value = item.CustomString2Value,
                     CustomString3Value = item.CustomString3Value,
@@ -137,7 +136,8 @@ namespace Inventra.Web.Controllers
                     CustomLink2Value = item.CustomLink2Value,
                     CustomLink3Value = item.CustomLink3Value
                 },
-                Inventory = inventory
+                Inventory = inventory,
+                VersionString = Convert.ToBase64String(item.Version)
             };
 
             return View(model);
@@ -149,6 +149,15 @@ namespace Inventra.Web.Controllers
         {
             var userId = _currentUserService.UserId;
             if (userId == null) return Forbid();
+
+            try
+            {
+                model.Command.Version = Convert.FromBase64String(model.VersionString);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid version format");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -162,10 +171,7 @@ namespace Inventra.Web.Controllers
                 await _mediator.Send(model.Command);
                 return RedirectToAction(nameof(Details), new { id = model.Command.Id });
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Forbid();
-            }
+            catch (UnauthorizedAccessException) { return Forbid(); }
             catch (ConcurrencyException)
             {
                 ModelState.AddModelError(string.Empty, "Someone else modified this item. Please reload and try again");
