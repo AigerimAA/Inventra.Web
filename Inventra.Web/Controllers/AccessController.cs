@@ -1,0 +1,72 @@
+﻿using Inventra.Application.DTOs;
+using Inventra.Application.Access.Commands.AddAccess;
+using Inventra.Application.Access.Commands.RemoveAccess;
+using Inventra.Application.Access.Queries;
+using Inventra.Application.Interfaces;
+using Inventra.Domain.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Inventra.Web.Controllers
+{
+    [Authorize]
+    public class AccessController : Controller
+    {
+        private readonly IMediator _mediator;
+        private readonly IAccessRepository _accessRepository;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IInventoryPermissionService _permissionService;
+
+        public AccessController(IMediator mediator, IAccessRepository accessRepository, ICurrentUserService currentUserService, IInventoryPermissionService permissionService)
+        { _mediator = mediator; _accessRepository = accessRepository; _currentUserService = currentUserService; _permissionService = permissionService; }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers(int inventoryId)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Unauthorized();
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, inventoryId))
+                return Forbid();
+            var users = await _mediator.Send(new GetInventoryUsersQuery(inventoryId));
+            return Json(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query) || query.Length < 2) return Json(new List<object>());
+            var users = await _accessRepository.SearchUsersAsync(query);
+            return Json(users.Select(u => new { id = u.Id, userName = u.UserName, email = u.Email }));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] AccessRequest request)
+        {
+            try
+            {
+                AccessUserDto result = await _mediator.Send(new AddAccessCommand(request.InventoryId, request.UserId));
+                return Ok(new { success = true, userName = result.UserName, email = result.Email });
+            }
+            catch (InvalidOperationException ex) { return BadRequest(new { error = ex.Message }); }
+            catch (UnauthorizedAccessException) { return Forbid(); }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove([FromBody] AccessRequest request)
+        {
+            try
+            {
+                await _mediator.Send(new RemoveAccessCommand(request.InventoryId, request.UserId));
+                return Ok(new { success = true });
+            }
+            catch (UnauthorizedAccessException) { return Forbid(); }
+        }
+    }
+    public class AccessRequest
+    {
+        public int InventoryId { get; set; }
+        public string UserId { get; set; } = string.Empty;
+    }
+}
+

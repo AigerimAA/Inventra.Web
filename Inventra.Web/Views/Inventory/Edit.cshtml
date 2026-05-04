@@ -422,9 +422,29 @@
     </div>
 
     <div class="tab-pane fade" id="access">
-        <div class="alert alert-info">
-            Access management coming soon.
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <h5>Users with write access</h5>
+            <div class="position-relative">
+                <div class="d-flex gap-2" style="width:400px">
+                    <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or email..." autocomplete="off" />
+                    <button class="btn btn-primary btn-sm" onclick="addUser()">Add</button>
+                </div>
+                <ul id="userSearchDropdown" class="list-group position-absolute mt-1" style="z-index:1000;width:350px;display:none;"></ul>
+            </div>
         </div>
+        <div class="mb-2 d-flex gap-2">
+            <span class="text-muted small me-2">Sort by:</span>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortUsers('name')">Name</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="sortUsers('email')">Email</button>
+        </div>
+        <table class="table table-hover table-sm" id="accessTable">
+            <thead>
+                <tr><th>Username</th><th>Email</th><th></th></tr>
+            </thead>
+            <tbody id="accessTableBody">
+                <tr><td colspan="3" class="text-muted text-center">Loading...</td></tr>
+            </tbody>
+        </table>
     </div>
 
 </div>
@@ -449,7 +469,7 @@
         let isDirty = false;
         let currentVersion = '@Convert.ToBase64String(Model.Version)';
         let debounceTimer = null;
-        const inventoryId = @Model.Id;
+        const inventoryId = parseInt('@Model.Id');
         const autoSaveUrl = '/Inventory/AutoSave';
 
         function showStatus(text, cssClass) {
@@ -522,5 +542,102 @@
             .forEach(el => el.addEventListener('input', onFormChange));
         document.querySelectorAll('#settings input[type=checkbox], #fields input[type=checkbox]')
             .forEach(el => el.addEventListener('change', onFormChange));
+
+                document.getElementById('userSearchInput')?.addEventListener('input', function () {
+            selectedUserId = null;
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#userSearchInput') && !e.target.closest('#userSearchDropdown'))
+                document.getElementById('userSearchDropdown').style.display = 'none';
+        });
+    </script>
+
+    <script>
+        const inventoryIdForAccess = parseInt('@Model.Id');
+        let accessUsers = [];
+        let selectedUserId = null;
+
+        async function loadAccessUsers() {
+            const response = await fetch(`/Access/GetUsers?inventoryId=${inventoryIdForAccess}`);
+            accessUsers = await response.json();
+            renderAccessTable();
+        }
+
+        function renderAccessTable() {
+            const tbody = document.getElementById('accessTableBody');
+            if (accessUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center">No users with write access yet.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = accessUsers.map(u => `
+                <tr>
+                    <td>${u.userName}</td>
+                    <td>${u.email}</td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-danger" onclick="removeUser('${u.id}')">Remove</button></td>
+                </tr>`).join('');
+        }
+
+        function sortUsers(by) {
+            accessUsers.sort((a, b) => (a[by === 'name' ? 'userName' : 'email'] ?? '').localeCompare(b[by === 'name' ? 'userName' : 'email'] ?? ''));
+            renderAccessTable();
+        }
+
+        document.getElementById('userSearchInput')?.addEventListener('input', async function () {
+            selectedUserId = null;
+            const query = this.value.trim();
+            const dropdown = document.getElementById('userSearchDropdown');
+            if (query.length < 2) { dropdown.style.display = 'none'; return; }
+            const response = await fetch(`/Access/Search?query=${encodeURIComponent(query)}`);
+            const users = await response.json();
+            dropdown.innerHTML = users.map(u => `<li class="list-group-item list-group-item-action" style="cursor:pointer" onclick="selectUser('${u.id}','${u.userName}','${u.email}')">${u.userName} <small class="text-muted">${u.email}</small></li>`).join('');
+            dropdown.style.display = users.length > 0 ? 'block' : 'none';
+        });
+
+        function selectUser(id, name, email) {
+            selectedUserId = id;
+            document.getElementById('userSearchInput').value = `${name} (${email})`;
+            document.getElementById('userSearchDropdown').style.display = 'none';
+        }
+
+        async function addUser() {
+            if (!selectedUserId) return alert('Please select a user from the dropdown');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const response = await fetch('/Access/Add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token },
+                body: JSON.stringify({ inventoryId: inventoryIdForAccess, userId: selectedUserId })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                accessUsers.push({ id: selectedUserId, userName: data.userName, email: data.email });
+                renderAccessTable();
+                document.getElementById('userSearchInput').value = '';
+                selectedUserId = null;
+            } else {
+                const err = await response.json();
+                alert(err.error ?? 'Error adding user');
+            }
+        }
+
+        async function removeUser(userId) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const response = await fetch('/Access/Remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token },
+                body: JSON.stringify({ inventoryId: inventoryIdForAccess, userId })
+            });
+            if (response.ok) {
+                accessUsers = accessUsers.filter(u => u.id !== userId);
+                renderAccessTable();
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#userSearchInput') && !e.target.closest('#userSearchDropdown'))
+                document.getElementById('userSearchDropdown').style.display = 'none';
+        });
+
+        document.querySelector('[href="#access"]')?.addEventListener('shown.bs.tab', loadAccessUsers);
     </script>
 }

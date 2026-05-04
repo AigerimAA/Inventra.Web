@@ -34,6 +34,7 @@ namespace Inventra.Infrastructure
             services.AddScoped<ICustomIdGenerator, CustomIdGeneratorService>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IInventoryPermissionService, InventoryPermissionService>();
+            services.AddScoped<IAccessRepository, AccessRepository>();
             services.Configure<SearchOptions>(configuration.GetSection("Search"));
 
             var cloudName = configuration["Cloudinary:CloudName"];
