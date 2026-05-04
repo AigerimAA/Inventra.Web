@@ -5,7 +5,8 @@ namespace Inventra.Application.Items.Commands.UpdateItem
     public class UpdateItemCommand : IRequest
     {
         public int Id { get; init; }
-        public byte[] Version { get; init; } = [];
+        public int InventoryId { get; set; }
+        public byte[] Version { get; set; } = [];
 
         public string? CustomString1Value { get; init; }
         public string? CustomString2Value { get; init; }

@@ -1,8 +1,10 @@
-﻿@using Inventra.Application.Items.Commands.UpdateItem
-@using Inventra.Application.DTOs
-@model UpdateItemCommand
+﻿@using Inventra.Web.Models
+@model EditItemViewModel
+
 @{
-    ViewData["Title"] = "Edit Item"; var inventory = ViewBag.Inventory as InventoryDto;
+    ViewData["Title"] = "Edit Item";
+    var inventory = Model.Inventory;
+    var cmd = Model.Command;
 }
 
 <div class="row justify-content-center">
@@ -10,132 +12,134 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="mb-1">Edit Item</h2>
-                <p class="text-muted mb-0">in <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory?.Id">@inventory?.Title</a></p>
+                <p class="text-muted mb-0">in <a asp-controller="Inventory" asp-action="Details" asp-route-id="@inventory.Id">@inventory.Title</a></p>
             </div>
-            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">← Back</a>
+            <a asp-action="Details" asp-route-id="@cmd.Id" class="btn btn-outline-secondary btn-sm">← Back</a>
         </div>
 
         <form asp-action="Edit" method="post">
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Version" />
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Command.Id" />
+            <input type="hidden" asp-for="Command.InventoryId" />
+            <input type="hidden" name="Command.Version" value="@Convert.ToBase64String(cmd.Version)" />
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            @if (inventory?.CustomString1Name != null)
+            @if (inventory.CustomString1Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomString1Name</label>
-                    <input asp-for="CustomString1Value" class="form-control" />
+                    <input asp-for="Command.CustomString1Value" class="form-control" />
                 </div>
             }
-            @if (inventory?.CustomString2Name != null)
+            @if (inventory.CustomString2Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomString2Name</label>
-                    <input asp-for="CustomString2Value" class="form-control" />
+                    <input asp-for="Command.CustomString2Value" class="form-control" />
                 </div>
             }
-            @if (inventory?.CustomString3Name != null)
+            @if (inventory.CustomString3Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomString3Name</label>
-                    <input asp-for="CustomString3Value" class="form-control" />
+                    <input asp-for="Command.CustomString3Value" class="form-control" />
                 </div>
             }
-            @if (inventory?.CustomInt1Name != null)
+            @if (inventory.CustomInt1Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomInt1Name</label>
-                    <input asp-for="CustomInt1Value" class="form-control" type="number" step="0.01" />
+                    <input asp-for="Command.CustomInt1Value" class="form-control" type="number" step="0.01" />
                 </div>
             }
-            @if (inventory?.CustomInt2Name != null)
+            @if (inventory.CustomInt2Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomInt2Name</label>
-                    <input asp-for="CustomInt2Value" class="form-control" type="number" step="0.01" />
+                    <input asp-for="Command.CustomInt2Value" class="form-control" type="number" step="0.01" />
                 </div>
             }
-            @if (inventory?.CustomInt3Name != null)
+            @if (inventory.CustomInt3Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomInt3Name</label>
-                    <input asp-for="CustomInt3Value" class="form-control" type="number" step="0.01" />
+                    <input asp-for="Command.CustomInt3Value" class="form-control" type="number" step="0.01" />
                 </div>
             }
-            @if (inventory?.CustomText1Name != null)
+            @if (inventory.CustomText1Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomText1Name</label>
-                    <textarea asp-for="CustomText1Value" class="form-control" rows="3"></textarea>
+                    <textarea asp-for="Command.CustomText1Value" class="form-control" rows="3"></textarea>
                 </div>
             }
-            @if (inventory?.CustomText2Name != null)
+            @if (inventory.CustomText2Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomText2Name</label>
-                    <textarea asp-for="CustomText2Value" class="form-control" rows="3"></textarea>
+                    <textarea asp-for="Command.CustomText2Value" class="form-control" rows="3"></textarea>
                 </div>
             }
-            @if (inventory?.CustomText3Name != null)
+            @if (inventory.CustomText3Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomText3Name</label>
-                    <textarea asp-for="CustomText3Value" class="form-control" rows="3"></textarea>
+                    <textarea asp-for="Command.CustomText3Value" class="form-control" rows="3"></textarea>
                 </div>
             }
-            @if (inventory?.CustomBool1Name != null)
+            @if (inventory.CustomBool1Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="CustomBool1Value" />
+                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool1Value" />
                     <label class="form-check-label">@inventory.CustomBool1Name</label>
                 </div>
             }
-            @if (inventory?.CustomBool2Name != null)
+            @if (inventory.CustomBool2Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="CustomBool2Value" />
+                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool2Value" />
                     <label class="form-check-label">@inventory.CustomBool2Name</label>
                 </div>
             }
-            @if (inventory?.CustomBool3Name != null)
+            @if (inventory.CustomBool3Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="CustomBool3Value" />
+                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool3Value" />
                     <label class="form-check-label">@inventory.CustomBool3Name</label>
                 </div>
             }
-            @if (inventory?.CustomLink1Name != null)
+            @if (inventory.CustomLink1Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomLink1Name</label>
-                    <input asp-for="CustomLink1Value" class="form-control" placeholder="https://..." />
+                    <input asp-for="Command.CustomLink1Value" class="form-control" placeholder="https://..." />
                 </div>
             }
-            @if (inventory?.CustomLink2Name != null)
+            @if (inventory.CustomLink2Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomLink2Name</label>
-                    <input asp-for="CustomLink2Value" class="form-control" placeholder="https://..." />
+                    <input asp-for="Command.CustomLink2Value" class="form-control" placeholder="https://..." />
                 </div>
             }
-            @if (inventory?.CustomLink3Name != null)
+            @if (inventory.CustomLink3Name != null)
             {
                 <div class="mb-3">
                     <label class="form-label">@inventory.CustomLink3Name</label>
-                    <input asp-for="CustomLink3Value" class="form-control" placeholder="https://..." />
+                    <input asp-for="Command.CustomLink3Value" class="form-control" placeholder="https://..." />
                 </div>
             }
 
-            @if (inventory?.CustomString1Name == null && inventory?.CustomInt1Name == null &&
-                 inventory?.CustomText1Name == null && inventory?.CustomBool1Name == null &&
-                 inventory?.CustomLink1Name == null)
+            @if (inventory.CustomString1Name == null && inventory.CustomInt1Name == null &&
+                 inventory.CustomText1Name == null && inventory.CustomBool1Name == null &&
+                 inventory.CustomLink1Name == null)
             {
                 <div class="alert alert-info">This inventory has no custom fields.</div>
             }
 
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
-                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+                <a asp-action="Details" asp-route-id="@cmd.Id" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
     </div>

@@ -21,6 +21,7 @@
                 {
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm">Edit</a>
                     <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.Id" />
                         <input type="hidden" name="inventoryId" value="@Model.InventoryId" />
                         <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this item?')">Delete</button>
@@ -85,17 +86,56 @@
                     {
                         <tr><th>@inventory.CustomBool3Name</th><td>@(Model.CustomBool3Value == true ? "✓ Yes" : "✗ No")</td></tr>
                     }
-                    @if (inventory?.CustomLink1Name != null)
+                    @if (inventory?.CustomLink1Name != null && !string.IsNullOrEmpty(Model.CustomLink1Value))
                     {
-                        <tr><th>@inventory.CustomLink1Name</th><td><a href="@Model.CustomLink1Value" target="_blank">@Model.CustomLink1Value</a></td></tr>
+                        <tr>
+                            <th>@inventory.CustomLink1Name</th>
+                            <td>
+                                @if (Uri.TryCreate(Model.CustomLink1Value, UriKind.Absolute, out var uri1) && (uri1.Scheme == Uri.UriSchemeHttp || uri1.Scheme == Uri.UriSchemeHttps))
+                                {
+                                    <a href="@uri1" target="_blank" rel="noopener noreferrer">@uri1</a>
+                                }
+                                else
+                                {
+
+                                    <span class="text-muted">@Model.CustomLink1Value</span>
+                                }
+                            </td>
+                        </tr>
                     }
-                    @if (inventory?.CustomLink2Name != null)
+                    @if (inventory?.CustomLink2Name != null && !string.IsNullOrEmpty(Model.CustomLink2Value))
                     {
-                        <tr><th>@inventory.CustomLink2Name</th><td><a href="@Model.CustomLink2Value" target="_blank">@Model.CustomLink2Value</a></td></tr>
+                        <tr>
+                            <th>@inventory.CustomLink2Name</th>
+                            <td>
+                                @if (Uri.TryCreate(Model.CustomLink2Value, UriKind.Absolute, out var uri2) && (uri2.Scheme == Uri.UriSchemeHttp || uri2.Scheme == Uri.UriSchemeHttps))
+                                {
+                                    <a href="@uri2" target="_blank" rel="noopener noreferrer">@uri2</a>
+                                }
+                                else
+                                {
+
+                                    <span class="text-muted">@Model.CustomLink2Value</span>
+                                }
+                            </td>
+                        </tr>
                     }
-                    @if (inventory?.CustomLink3Name != null)
+                    @if (inventory?.CustomLink3Name != null && !string.IsNullOrEmpty(Model.CustomLink3Value))
                     {
-                        <tr><th>@inventory.CustomLink3Name</th><td><a href="@Model.CustomLink3Value" target="_blank">@Model.CustomLink3Value</a></td></tr>
+                        <tr>
+                            <th>@inventory.CustomLink3Name</th>
+                            <td>
+                                @if (Uri.TryCreate(Model.CustomLink3Value, UriKind.Absolute, out var uri3) && (uri3.Scheme == Uri.UriSchemeHttp || uri3.Scheme == Uri.UriSchemeHttps))
+                                {
+                                    <a href="@uri3" target="_blank" rel="noopener noreferrer">@uri3</a>
+                                }
+                                else
+                                {
+
+                                    <span class="text-muted">@Model.CustomLink3Value</span>
+                                }
+                            </td>
+                        </tr>
                     }
                     <tr>
                         <th>Likes</th>
