@@ -13,15 +13,15 @@ namespace Inventra.Web.Controllers
             _searchRepository = searchRepository;
         }
 
-        public async Task<IActionResult> Index(string q)
+        public async Task<IActionResult> Index(string q, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(q))
                 return View(new SearchResultViewModel());
 
             ViewData["SearchQuery"] = q;
 
-            var inventories = await _searchRepository.SearchInventoriesAsync(q);
-            var items = await _searchRepository.SearchItemsAsync(q);
+            var inventories = await _searchRepository.SearchInventoriesAsync(q, cancellationToken);
+            var items = await _searchRepository.SearchItemsAsync(q, cancellationToken);
 
             var result = new SearchResultViewModel
             {

@@ -22,38 +22,52 @@ namespace Inventra.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Inventory>> SearchInventoriesAsync(string query)
+        public async Task<IEnumerable<Inventory>> SearchInventoriesAsync(string query, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(query))
                 return Enumerable.Empty<Inventory>();
 
-            var baseQuery = _context.Inventories
-                .Include(i => i.Owner)
-                .Include(i => i.Category)
-                .Include(i => i.Items);
+            var queryable = _context.Inventories.AsNoTracking();
+            var pattern = $"%{query}%";
+
+            IQueryable<Inventory> filtered;
 
             if (_useFullText)
             {
                 try
                 {
-                    return await baseQuery
-                        .Where(i => EF.Functions.FreeText(i.Title, query)
-                                 || (i.Description != null && EF.Functions.FreeText(i.Description, query))
-                                 || i.InventoryTags.Any(t => t.Tag.Name == query))
-                        .ToListAsync();
+                    filtered = queryable.Where(i =>
+                        EF.Functions.FreeText(i.Title, query) ||
+                        (i.Description != null && EF.Functions.FreeText(i.Description, query)) ||
+                        i.InventoryTags.Any(t => t.Tag.Name == query)
+                    );
                 }
-                catch (Exception) { }
+                catch
+                {
+                    filtered = queryable.Where(i =>
+                        EF.Functions.Like(i.Title, pattern) ||
+                        (i.Description != null && EF.Functions.Like(i.Description, pattern)) ||
+                        i.InventoryTags.Any(t => EF.Functions.Like(t.Tag.Name, pattern))
+                    );
+                }
+            }
+            else
+            {
+                filtered = queryable.Where(i =>
+                    EF.Functions.Like(i.Title, pattern) ||
+                    (i.Description != null && EF.Functions.Like(i.Description, pattern)) ||
+                    i.InventoryTags.Any(t => EF.Functions.Like(t.Tag.Name, pattern))
+                );
             }
 
-            var pattern = $"%{query}%";
-            return await baseQuery
-                .Where(i => EF.Functions.Like(i.Title, pattern)
-                         || (i.Description != null && EF.Functions.Like(i.Description, pattern))
-                         || i.InventoryTags.Any(t => t.Tag.Name == query))
-                .ToListAsync();
+            return await filtered
+                .Include(i => i.Owner)
+                .Include(i => i.Category)
+                .Include(i => i.Items)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Item>> SearchItemsAsync(string query)
+        public async Task<IEnumerable<Item>> SearchItemsAsync(string query, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(query))
                 return Enumerable.Empty<Item>();
@@ -76,7 +90,7 @@ namespace Inventra.Infrastructure.Repositories
                             (i.CustomText1Value != null && EF.Functions.FreeText(i.CustomText1Value, query)) ||
                             (i.CustomText2Value != null && EF.Functions.FreeText(i.CustomText2Value, query)) ||
                             (i.CustomText3Value != null && EF.Functions.FreeText(i.CustomText3Value, query)))
-                        .ToListAsync();
+                        .ToListAsync(cancellationToken);
                 }
                 catch (SqlException ex)
                 {
@@ -94,7 +108,7 @@ namespace Inventra.Infrastructure.Repositories
                     (i.CustomText1Value != null && EF.Functions.Like(i.CustomText1Value, pattern)) ||
                     (i.CustomText2Value != null && EF.Functions.Like(i.CustomText2Value, pattern)) ||
                     (i.CustomText3Value != null && EF.Functions.Like(i.CustomText3Value, pattern)))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
     }
 }
