@@ -489,7 +489,7 @@
                 description: get('Description'),
                 imageUrl: get('ImageUrl'),
                 isPublic: getChecked('IsPublic'),
-                categoryId: parseInt(get('CategoryId') ?? '0'),
+                categoryId: parseInt(get('CategoryId') ?? '0') || @Model.CategoryId,
                 tags: [...document.querySelectorAll('.tag-item')].map(t => t.dataset.value),
                 customString1Name: get('CustomString1Name'), customString1Shown: getChecked('CustomString1Shown'),
                 customString2Name: get('CustomString2Name'), customString2Shown: getChecked('CustomString2Shown'),
