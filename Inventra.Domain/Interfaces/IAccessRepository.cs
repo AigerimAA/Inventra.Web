@@ -7,6 +7,6 @@ namespace Inventra.Domain.Interfaces
         Task<IEnumerable<InventoryAccess>> GetUsersWithAccessAsync(int inventoryId, CancellationToken cancellationToken = default);
         Task<InventoryAccess> AddAccessAsync(int inventoryId, string userId, CancellationToken cancellationToken = default);
         Task RemoveAccessAsync(int inventoryId, string userId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<(string Id, string UserName, string Email)>> SearchUsersAsync(string query, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UserLookup>> SearchUsersAsync(string query, CancellationToken cancellationToken = default);
     }
 }
