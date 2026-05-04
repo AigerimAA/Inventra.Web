@@ -28,7 +28,6 @@ namespace Inventra.Infrastructure.Repositories
                 return Enumerable.Empty<Inventory>();
 
             var baseQuery = _context.Inventories
-                .AsNoTracking()
                 .Include(i => i.Owner)
                 .Include(i => i.Category)
                 .Include(i => i.Items);
@@ -39,21 +38,18 @@ namespace Inventra.Infrastructure.Repositories
                 {
                     return await baseQuery
                         .Where(i => EF.Functions.FreeText(i.Title, query)
-                                 || (i.Description != null
-                                     && EF.Functions.FreeText(i.Description, query)))
+                                 || (i.Description != null && EF.Functions.FreeText(i.Description, query))
+                                 || i.InventoryTags.Any(t => t.Tag.Name == query))
                         .ToListAsync();
                 }
-                catch (SqlException ex)
-                {
-                    _logger.LogWarning(ex, "FullText search failed. Falling back to LIKE");
-                }
+                catch (Exception) { }
             }
 
             var pattern = $"%{query}%";
             return await baseQuery
                 .Where(i => EF.Functions.Like(i.Title, pattern)
-                         || (i.Description != null
-                             && EF.Functions.Like(i.Description, pattern)))
+                         || (i.Description != null && EF.Functions.Like(i.Description, pattern))
+                         || i.InventoryTags.Any(t => t.Tag.Name == query))
                 .ToListAsync();
         }
 
