@@ -1,4 +1,5 @@
-﻿using Inventra.Application.Interfaces;
+﻿using System.Security.Claims;
+using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
 using Inventra.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -118,7 +119,8 @@ namespace Inventra.Web.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Home");
 
-            var email = info.Principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value
+                    ?? info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value + "@facebook.com";
 
             if (email != null)
             {

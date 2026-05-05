@@ -55,6 +55,7 @@ namespace Inventra.Web
                     {
                         options.AppId = facebookAppId;
                         options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+                        options.Fields.Remove("email");
                     });
             }
 
