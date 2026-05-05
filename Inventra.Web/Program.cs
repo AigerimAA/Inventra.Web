@@ -20,6 +20,11 @@ namespace Inventra.Web
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "RequestVerificationToken";
+            });
+
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             builder.Services.AddSignalR();

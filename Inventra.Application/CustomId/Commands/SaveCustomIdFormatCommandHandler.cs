@@ -1,4 +1,5 @@
-﻿using Inventra.Application.Interfaces;
+﻿using Inventra.Application.DTOs;
+using Inventra.Application.Interfaces;
 using Inventra.Domain.Entities;
 using Inventra.Domain.Enums;
 using Inventra.Domain.Interfaces;
@@ -17,13 +18,10 @@ namespace Inventra.Application.CustomId.Commands
         }
         public async Task Handle(SaveCustomIdFormatCommand request, CancellationToken cancellationToken)
         {
-            var format = new CustomIdFormat
-            {
-                InventoryId = request.Format.InventoryId,
-                UpdatedAt = DateTime.UtcNow,
-                Elements = request.Format.Elements.Select((e, i) =>
+            var elements = (request.Format.Elements ?? Enumerable.Empty<CustomIdElementDto>())
+                .Select((e, i) =>
                 {
-                    if (!Enum.TryParse<CustomIdElementType>(e.ElementType, out var elementType))
+                    if (!Enum.TryParse<CustomIdElementType>(e.ElementType, ignoreCase: true, out var elementType))
                         throw new ArgumentException($"Invalid element type: {e.ElementType}");
                     return new CustomIdElement
                     {
@@ -32,8 +30,15 @@ namespace Inventra.Application.CustomId.Commands
                         FixedValue = e.FixedValue,
                         SortOrder = i
                     };
-                }).ToList()
+                }).ToList();
+
+            var format = new CustomIdFormat
+            {
+                InventoryId = request.Format.InventoryId,
+                UpdatedAt = DateTime.UtcNow,
+                Elements = elements
             };
+
             await _repository.SaveAsync(format, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }

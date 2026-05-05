@@ -20,14 +20,16 @@ namespace Inventra.Application.CustomId.Queries
             return new CustomIdFormatDto
             {
                 InventoryId = format.InventoryId,
-                Elements = format.Elements.Select(e => new CustomIdElementDto
-                {
-                    Id = e.Id,
-                    ElementType = e.ElementType.ToString("G"),
-                    FormatString = e.FormatString,
-                    FixedValue = e.FixedValue,
-                    SortOrder = e.SortOrder
-                }).ToList()
+                Elements = format.Elements
+                    .OrderBy(e => e.SortOrder)
+                    .Select(e => new CustomIdElementDto
+                    {
+                        Id = e.Id,
+                        ElementType = e.ElementType.ToString("G"),
+                        FormatString = e.FormatString,
+                        FixedValue = e.FixedValue,
+                        SortOrder = e.SortOrder
+                    }).ToList()
             };
         }
     }

@@ -15,7 +15,7 @@ namespace Inventra.Infrastructure.Repositories
         public async Task<CustomIdFormat?> GetByInventoryIdAsync(int inventoryId, CancellationToken cancellationToken = default)
             => await _context.CustomIdFormats
                 .AsNoTracking()
-                .Include(f => f.Elements.OrderBy(e => e.SortOrder))
+                .Include(f => f.Elements)
                 .FirstOrDefaultAsync(f => f.InventoryId == inventoryId, cancellationToken);
 
         public async Task SaveAsync(CustomIdFormat format, CancellationToken cancellationToken = default)
