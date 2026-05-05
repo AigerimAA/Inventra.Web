@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<Inventra.Web.Resources.SharedResource> L
+
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
@@ -26,9 +28,9 @@
                     <form class="d-flex mx-auto" style="width: 400px;"
                           asp-controller="Search" asp-action="Index" method="get">
                         <input class="form-control me-2" type="search" name="q"
-                               placeholder="Search inventories and items..."
+                               placeholder="@L["SearchPlaceholder"]"
                                value="@ViewData["SearchQuery"]" />
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                        <button class="btn btn-outline-primary" type="submit">@L["Search"]</button>
                     </form>
 
                     <ul class="navbar-nav ms-auto align-items-center gap-2">
@@ -37,7 +39,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Profile" asp-action="Index">
-                                    My Inventories
+                                    @L["MyInventories"]
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
@@ -46,20 +48,20 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profile</a>
+                                        <a class="dropdown-item" asp-controller="Profile" asp-action="Index">@L["Profile"]</a>
                                     </li>
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <li>
                                             <a class="dropdown-item" asp-controller="Admin"
-                                               asp-action="Index">Admin Panel</a>
+                                               asp-action="Index">@L["AdminPanel"]</a>
                                         </li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout"
                                               method="post">
-                                            <button class="dropdown-item text-danger">Logout</button>
+                                            <button class="dropdown-item text-danger">@L["Logout"]</button>
                                         </form>
                                     </li>
                                 </ul>
@@ -69,15 +71,24 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Account"
-                                   asp-action="Login">Login</a>
+                                   asp-action="Login">@L["Login"]</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-primary btn-sm"
-                                       asp-controller="Account" asp-action="Register">
-                                    Register
+                                   asp-action="Register">@L["Register"]
                                 </a>
                             </li>
                         }
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                🌐 @System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=en&returnUrl=@Context.Request.Path">🇬🇧 English</a></li>
+                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=ru&returnUrl=@Context.Request.Path">🇷🇺 Русский</a></li>
+                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=kk&returnUrl=@Context.Request.Path">🇰🇿 Қазақша</a></li>
+                            </ul>
+                        </li>
 
                         <li class="nav-item">
                             <button class="btn btn-outline-secondary btn-sm" id="themeToggle">
