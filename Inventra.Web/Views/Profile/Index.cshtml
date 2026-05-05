@@ -13,7 +13,7 @@
 <div class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h4>My Inventories (@Model.OwnedInventories.Count())</h4>
-        <a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-sm">+ New Inventory</a>
+        <a asp-controller="Inventory" asp-action="Create" class="btn btn-primary btn-sm">@L["NewInventory"]</a>
     </div>
     <table class="table table-hover table-sm">
         <thead>

@@ -6,7 +6,7 @@
 
 <div class="row justify-content-center">
     <div class="col-md-5">
-        <h2 class="mb-4">Login</h2>
+        <h2 class="mb-4">@L["Login"]</h2>
 
         <form asp-action="Login" method="post">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
@@ -36,13 +36,13 @@
                 <label asp-for="RememberMe" class="form-check-label"></label>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <button type="submit" class="btn btn-primary w-100">@L["Login"]</button>
         </form>
 
         <hr />
 
         <div class="text-center">
-            <p class="text-muted mb-3">Or login with</p>
+            <p class="text-muted mb-3">@L["OrLoginWith"]</p>
             <form asp-action="ExternalLogin" method="post">
                 <div class="d-flex justify-content-center gap-2">
                     <button type="submit" name="provider" value="Google"
@@ -67,7 +67,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <a asp-action="Register">Don't have an account? Register</a>
+            <a asp-action="Register">@L["DontHaveAccount"]</a>
         </div>
     </div>
 </div>

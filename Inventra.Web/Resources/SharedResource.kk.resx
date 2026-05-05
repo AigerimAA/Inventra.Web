@@ -135,8 +135,17 @@
   <data name="Cancel" xml:space="preserve">
     <value>Бас тарту</value>
   </data>
+  <data name="Category" xml:space="preserve">
+    <value>Санат</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Жасаушы</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Жою</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Сипаттама</value>
   </data>
   <data name="Discussion" xml:space="preserve">
     <value>Талқылау</value>
@@ -203,6 +212,9 @@
   </data>
   <data name="Stats" xml:space="preserve">
     <value>Статистика</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Тегтер</value>
   </data>
   <data name="TotalItems" xml:space="preserve">
     <value>Барлық элементтер</value>
