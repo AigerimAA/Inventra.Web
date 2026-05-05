@@ -63,14 +63,6 @@ namespace Inventra.Web
                     });
             }
 
-            builder.Services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[] { "en", "ru", "kk" };
-                options.SetDefaultCulture("en")
-                    .AddSupportedCultures(supportedCultures)
-                    .AddSupportedUICultures(supportedCultures);
-            });
-
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Account/Login";
@@ -111,14 +103,14 @@ namespace Inventra.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+            app.UseRouting();
+
             var supportedCultures = new[] { "en", "ru", "kk" };
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en")
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
             app.UseRequestLocalization(localizationOptions);
-            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
