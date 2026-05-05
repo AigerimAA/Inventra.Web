@@ -24,6 +24,9 @@
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#access">@L["Access"]</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#customid">Custom ID</a>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -447,6 +450,25 @@
         </table>
     </div>
 
+    <div class="tab-pane fade" id="customid">
+        <p class="text-muted mb-3">
+            Set up items with inventory numbers in your preferred format.
+            Add elements, edit them, drag to reorder, or drag outside to delete.
+        </p>
+
+        <div class="mb-3">
+            <strong>Example: </strong>
+            <code id="customIdPreview" class="fs-5">Loading...</code>
+        </div>
+
+        <div id="customIdElements" class="mb-3" style="min-height: 60px;">
+        </div>
+
+        <button type="button" class="btn btn-outline-primary mt-2" onclick="addElement()">
+            + Add element
+        </button>
+    </div>
+
 </div>
 
 @section Scripts {
@@ -641,5 +663,146 @@
         });
 
         document.querySelector('[href="#access"]')?.addEventListener('shown.bs.tab', loadAccessUsers);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        const inventoryIdForCustomId = @Model.Id;
+        let customIdFormat = { inventoryId: inventoryIdForCustomId, elements: [] };
+
+        const elementTypes = [
+        { value: 'Fixed', label: 'Fixed', hint: 'A piece of unchanging text. E.g., you can use Unicode emoji.' },
+        { value: 'Random20', label: '20-bit random', hint: 'A random value. E.g., format as 5-digit hex (X5).' },
+        { value: 'Random32', label: '32-bit random', hint: 'A random value. E.g., format as 8-digit hex (X8).' },
+        { value: 'Random6Digits', label: '6-digit random', hint: 'A random 6-digit number.' },
+        { value: 'Random9Digits', label: '9-digit random', hint: 'A random 9-digit number.' },
+        { value: 'Guid', label: 'GUID', hint: 'A globally unique identifier.' },
+        { value: 'DateTime', label: 'Date/time', hint: 'Item creation date. E.g., yyyy, MM, dd.' },
+        { value: 'Sequence', label: 'Sequence', hint: 'Sequential index. E.g., D3 for 3-digit with leading zeros.' }
+        ];
+
+        async function loadCustomIdFormat() {
+        const response = await fetch(`/Inventory/GetCustomIdFormat?inventoryId=${inventoryIdForCustomId}`);
+        const data = await response.json();
+        customIdFormat = data;
+        renderElements();
+        await updatePreview();
+        }
+
+        function renderElements() {
+        const container = document.getElementById('customIdElements');
+        container.innerHTML = '';
+
+        if (customIdFormat.elements.length === 0) {
+        container.innerHTML = '<p class="text-muted">No elements yet. Click "Add element" to start.</p>';
+        return;
+        }
+
+        customIdFormat.elements.forEach((el, index) => {
+        const div = document.createElement('div');
+        div.className = 'card mb-2 custom-id-element';
+        div.dataset.index = index;
+        div.innerHTML = `
+        <div class="card-body py-2 px-3">
+        <div class="row g-2 align-items-center">
+        <div class="col-auto">
+        <span class="drag-handle" style="cursor:grab;">↕</span>
+        </div>
+        <div class="col-md-4">
+        <select class="form-select form-select-sm" onchange="updateElementType(${index}, this.value)">
+        ${elementTypes.map(t => `<option value="${t.value}" ${el.elementType === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
+        </select>
+        <small class="text-muted">${elementTypes.find(t => t.value === el.elementType)?.hint ?? ''}</small>
+        </div>
+        <div class="col-md-4">
+        ${el.elementType === 'Fixed'
+        ? `<input type="text" class="form-control form-control-sm" placeholder="Fixed text..." value="${el.fixedValue ?? ''}" onchange="updateFixedValue(${index}, this.value)" />`
+        : `<input type="text" class="form-control form-control-sm" placeholder="Format (e.g. D3, X5, yyyy)..." value="${el.formatString ?? ''}" onchange="updateFormatString(${index}, this.value)" />`
+        }
+        </div>
+        <div class="col-auto ms-auto">
+        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeElement(${index})">✕</button>
+        </div>
+        </div>
+        </div>`;
+        container.appendChild(div);
+        });
+
+        Sortable.create(container, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd: function(evt) {
+        const moved = customIdFormat.elements.splice(evt.oldIndex, 1)[0];
+        customIdFormat.elements.splice(evt.newIndex, 0, moved);
+        customIdFormat.elements.forEach((el, i) => el.sortOrder = i);
+        renderElements();
+        updatePreview();
+        }
+        });
+        }
+
+        function addElement() {
+        customIdFormat.elements.push({
+        elementType: 'Fixed',
+        fixedValue: '',
+        formatString: '',
+        sortOrder: customIdFormat.elements.length
+        });
+        renderElements();
+        updatePreview();
+        saveCustomIdFormat();
+        }
+
+        function removeElement(index) {
+        customIdFormat.elements.splice(index, 1);
+        customIdFormat.elements.forEach((el, i) => el.sortOrder = i);
+        renderElements();
+        updatePreview();
+        saveCustomIdFormat();
+        }
+
+        function updateElementType(index, value) {
+        customIdFormat.elements[index].elementType = value;
+        customIdFormat.elements[index].fixedValue = '';
+        customIdFormat.elements[index].formatString = '';
+        renderElements();
+        updatePreview();
+        saveCustomIdFormat();
+        }
+
+        function updateFixedValue(index, value) {
+        customIdFormat.elements[index].fixedValue = value;
+        updatePreview();
+        saveCustomIdFormat();
+        }
+
+        function updateFormatString(index, value) {
+        customIdFormat.elements[index].formatString = value;
+        updatePreview();
+        saveCustomIdFormat();
+        }
+
+        async function updatePreview() {
+        try {
+        const response = await fetch(`/Inventory/PreviewCustomId?inventoryId=${inventoryIdForCustomId}`);
+        const data = await response.json();
+        document.getElementById('customIdPreview').textContent = data.preview;
+        } catch {
+        document.getElementById('customIdPreview').textContent = 'Preview unavailable';
+        }
+        }
+
+        async function saveCustomIdFormat() {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        await fetch('/Inventory/SaveCustomIdFormat', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': token
+        },
+        body: JSON.stringify(customIdFormat)
+        });
+        }
+
+        document.querySelector('[href="#customid"]')?.addEventListener('shown.bs.tab', loadCustomIdFormat);
     </script>
 }
