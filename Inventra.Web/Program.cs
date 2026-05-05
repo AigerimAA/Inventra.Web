@@ -16,7 +16,12 @@ namespace Inventra.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization();
+
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             builder.Services.AddSignalR();
 
             builder.Services.AddApplication();
@@ -58,7 +63,6 @@ namespace Inventra.Web
                     });
             }
 
-            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new[] { "en", "ru", "kk" };
@@ -108,7 +112,14 @@ namespace Inventra.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseRequestLocalization();
+
+            var supportedCultures = new[] { "en", "ru", "kk" };
+            var localizationOptions = new RequestLocalizationOptions()
+                .SetDefaultCulture("en")
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+            app.UseRequestLocalization(localizationOptions);
+
             app.UseAuthentication();
             app.UseAuthorization();
 

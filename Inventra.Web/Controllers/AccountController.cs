@@ -148,6 +148,9 @@ namespace Inventra.Web.Controllers
         [HttpGet]
         public IActionResult SetLanguage(string lang, string returnUrl ="/")
         {
+            if (!Url.IsLocalUrl(returnUrl))
+                returnUrl = "/";
+
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(lang)),

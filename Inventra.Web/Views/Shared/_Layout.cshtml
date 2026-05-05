@@ -84,9 +84,21 @@
                                 🌐 @System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=en&returnUrl=@Context.Request.Path">🇬🇧 English</a></li>
-                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=ru&returnUrl=@Context.Request.Path">🇷🇺 Русский</a></li>
-                                <li><a class="dropdown-item" href="/Account/SetLanguage?lang=kk&returnUrl=@Context.Request.Path">🇰🇿 Қазақша</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("SetLanguage", "Account", new { lang = "en", returnUrl = Context.Request.Path + Context.Request.QueryString })">
+                                        🇬🇧 English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("SetLanguage", "Account", new { lang = "ru", returnUrl = Context.Request.Path + Context.Request.QueryString })">
+                                        🇷🇺 Русский
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("SetLanguage", "Account", new { lang = "kk", returnUrl = Context.Request.Path + Context.Request.QueryString })">
+                                        🇰🇿 Қазақша
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
