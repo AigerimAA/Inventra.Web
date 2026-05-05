@@ -11,7 +11,7 @@
     @if (!User.Identity?.IsAuthenticated ?? true)
     {
         <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">@L["GetStarted"]</a>
-        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">Login</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">@L["Login"]</a>
     }
     else
     {
@@ -27,10 +27,10 @@
         <table class="table table-hover table-sm">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Creator</th>
-                    <th class="text-end">Items</th>
+                    <th>@L["Title"]</th>
+                    <th>@L["CategoryLabel"]</th>
+                    <th>@L["Creator"]</th>
+                    <th class="text-end">@L["Items"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,8 +59,8 @@
         <table class="table table-hover table-sm">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th class="text-end">Items</th>
+                    <th>@L["Title"]</th>
+                    <th class="text-end">@L["Items"]</th>
                 </tr>
             </thead>
             <tbody>

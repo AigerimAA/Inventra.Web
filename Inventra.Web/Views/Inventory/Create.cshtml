@@ -7,28 +7,28 @@
 
 <div class="row justify-content-center">
     <div class="col-md-7">
-        <h2 class="mb-4">New Inventory</h2>
+        <h2 class="mb-4">@L["NewInventory"]</h2>
 
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
             <div class="mb-3">
-                <label asp-for="Title" class="form-label">Title</label>
+                <label asp-for="Title" class="form-label">@L["Title"]</label>
                 <input asp-for="Title" class="form-control" placeholder="e.g. Office Equipment" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Description" class="form-label">Description</label>
+                <label asp-for="Description" class="form-label">@L["Description"]</label>
                 <textarea asp-for="Description" class="form-control" rows="3"
                           placeholder="Describe your inventory..."></textarea>
             </div>
 
             <div class="mb-3">
-                <label asp-for="CategoryId" class="form-label">Category</label>
+                <label asp-for="CategoryId" class="form-label">@L["CategoryLabel"]</label>
                 <select asp-for="CategoryId" class="form-select"
                         asp-items="ViewBag.Categories">
-                    <option value="0">-- Select category --</option>
+                    <option value="0">@L["SelectCategory"]</option>
                 </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
@@ -36,7 +36,7 @@
             <div class="mb-3 form-check">
                 <input asp-for="IsPublic" class="form-check-input" />
                 <label asp-for="IsPublic" class="form-check-label">
-                    Public (any authenticated user can add items)
+                    @L["Public"]
                 </label>
             </div>
 

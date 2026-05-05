@@ -247,7 +247,7 @@
     <value>Название</value>
   </data>
   <data name="Top5Popular" xml:space="preserve">
-    <value>Топ 5 танымал</value>
+    <value>Топ 5 популярных</value>
   </data>
   <data name="TotalItems" xml:space="preserve">
     <value>Всего элементов</value>
