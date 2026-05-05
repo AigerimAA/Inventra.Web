@@ -23,4 +23,23 @@
     <ProjectReference Include="..\Inventra.Infrastructure\Inventra.Infrastructure.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Update="SharedResource.resx">
+			<CustomToolNamespace>Inventra.Web.Resources</CustomToolNamespace>
+		</EmbeddedResource>
+		<EmbeddedResource Update="SharedResource.en.resx">
+			<CustomToolNamespace>Inventra.Web.Resources</CustomToolNamespace>
+		</EmbeddedResource>
+		<EmbeddedResource Update="SharedResource.kk.resx">
+			<CustomToolNamespace>Inventra.Web.Resources</CustomToolNamespace>
+		</EmbeddedResource>
+		<EmbeddedResource Update="SharedResource.ru.resx">
+			<CustomToolNamespace>Inventra.Web.Resources</CustomToolNamespace>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\" />
+	</ItemGroup>
+
 </Project>

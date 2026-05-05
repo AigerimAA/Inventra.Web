@@ -121,7 +121,7 @@
     <value>Access</value>
   </data>
   <data name="AdminPanel" xml:space="preserve">
-    <value>Admin Panel</value>
+    <value>AdminPanel</value>
   </data>
   <data name="AlreadyHaveAccount" xml:space="preserve">
     <value>Already have an account? Login</value>
@@ -175,7 +175,7 @@
     <value>Min</value>
   </data>
   <data name="MostFrequent" xml:space="preserve">
-    <value>Most frequent</value>
+    <value>Most Frequent</value>
   </data>
   <data name="MyInventories" xml:space="preserve">
     <value>My Inventories</value>

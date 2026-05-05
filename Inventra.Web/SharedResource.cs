@@ -1,4 +1,4 @@
-﻿namespace Inventra.Web.Resources
+﻿namespace Inventra.Web
 {
     public class SharedResource
     {
