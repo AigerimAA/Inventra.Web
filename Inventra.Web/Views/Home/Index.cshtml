@@ -7,10 +7,10 @@
 
 <div class="px-4 py-5 text-center">
     <h1 class="display-5 fw-bold">📦 Inventra</h1>
-    <p class="lead mb-4">Create and manage custom inventories for anything — office equipment, books, documents, and more.</p>
+    <p class="lead mb-4">@L["Tagline"]</p>
     @if (!User.Identity?.IsAuthenticated ?? true)
     {
-        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">@L["GetStarted"]</a>
         <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">Login</a>
     }
     else
@@ -23,7 +23,7 @@
 
 <div class="row mt-4">
     <div class="col-md-8">
-        <h4>Latest Inventories</h4>
+        <h4>@L["LatestInventories"]</h4>
         <table class="table table-hover table-sm">
             <thead>
                 <tr>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="col-md-4">
-        <h4>Top 5 Popular</h4>
+        <h4>@L["Top5Popular"]</h4>
         <table class="table table-hover table-sm">
             <thead>
                 <tr>
@@ -81,11 +81,11 @@
             </tbody>
         </table>
 
-        <h4 class="mt-4">Tags</h4>
+        <h4 class="mt-4">@L["Tags"]</h4>
         <div class="d-flex flex-wrap gap-2">
             @if (!Model.TagCloud.Any())
             {
-                <span class="text-muted">No tags yet.</span>
+                <span class="text-muted">@L["NoTagsYet"]</span>
             }
             else
             {

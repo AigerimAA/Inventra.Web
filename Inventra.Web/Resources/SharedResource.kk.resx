@@ -138,6 +138,12 @@
   <data name="Category" xml:space="preserve">
     <value>Санат</value>
   </data>
+  <data name="CategoryLabel" xml:space="preserve">
+    <value>Санат</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Жасау</value>
+  </data>
   <data name="Creator" xml:space="preserve">
     <value>Жасаушы</value>
   </data>
@@ -159,8 +165,14 @@
   <data name="Fields" xml:space="preserve">
     <value>Өрістер</value>
   </data>
+  <data name="GetStarted" xml:space="preserve">
+    <value>Бастау</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Элементтер</value>
+  </data>
+  <data name="LatestInventories" xml:space="preserve">
+    <value>Соңғы инвентарлар</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Кіру</value>
@@ -183,8 +195,14 @@
   <data name="NewInventory" xml:space="preserve">
     <value>+ Жаңа инвентарь</value>
   </data>
+  <data name="NoInventoriesYet" xml:space="preserve">
+    <value>Әлі инвентарлар жоқ. Бірінші болыңыз!</value>
+  </data>
   <data name="NoItemsYet" xml:space="preserve">
     <value>Әлі элементтер жоқ</value>
+  </data>
+  <data name="NoTagsYet" xml:space="preserve">
+    <value>Әлі тегтер жоқ</value>
   </data>
   <data name="OrLoginWith" xml:space="preserve">
     <value>Немесе арқылы кіріңіз</value>
@@ -194,6 +212,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Жалпыға ортақ (кез келген авторизацияланған пайдаланушы элементтер қоса алады)</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Тіркелу</value>
@@ -207,14 +228,26 @@
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Инвентарлар мен элементтерді іздеу...</value>
   </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>-- Санатты таңдаңыз --</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Баптаулар</value>
   </data>
   <data name="Stats" xml:space="preserve">
     <value>Статистика</value>
   </data>
+  <data name="Tagline" xml:space="preserve">
+    <value>Кез келген нәрсе үшін инвентарларды жасаңыз және басқарыңыз — жабдықтар, кітаптар, құжаттар және т.б.</value>
+  </data>
   <data name="Tags" xml:space="preserve">
     <value>Тегтер</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Атауы</value>
+  </data>
+  <data name="Top5Popular" xml:space="preserve">
+    <value>Топ 5 популярных</value>
   </data>
   <data name="TotalItems" xml:space="preserve">
     <value>Барлық элементтер</value>

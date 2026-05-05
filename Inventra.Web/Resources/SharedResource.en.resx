@@ -138,6 +138,12 @@
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
+  <data name="CategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
   <data name="Creator" xml:space="preserve">
     <value>Creator</value>
   </data>
@@ -159,8 +165,14 @@
   <data name="Fields" xml:space="preserve">
     <value>Fields</value>
   </data>
+  <data name="GetStarted" xml:space="preserve">
+    <value>Get Started</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Items</value>
+  </data>
+  <data name="LatestInventories" xml:space="preserve">
+    <value>Latest Inventories</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
@@ -183,8 +195,14 @@
   <data name="NewInventory" xml:space="preserve">
     <value>+ New Inventory</value>
   </data>
+  <data name="NoInventoriesYet" xml:space="preserve">
+    <value>No inventories yet. Be the first to create one!</value>
+  </data>
   <data name="NoItemsYet" xml:space="preserve">
     <value>No items yet</value>
+  </data>
+  <data name="NoTagsYet" xml:space="preserve">
+    <value>No tags yet</value>
   </data>
   <data name="OrLoginWith" xml:space="preserve">
     <value>Or login with</value>
@@ -194,6 +212,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public (any authenticated user can add items)</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
@@ -207,14 +228,26 @@
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Search inventories and items</value>
   </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>-- Select category --</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="Stats" xml:space="preserve">
     <value>Stats</value>
   </data>
+  <data name="Tagline" xml:space="preserve">
+    <value>Create and manage custom inventories for anything — office equipment, books, documents and more</value>
+  </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Top5Popular" xml:space="preserve">
+    <value>Top 5 Popular</value>
   </data>
   <data name="TotalItems" xml:space="preserve">
     <value>Total Items</value>
