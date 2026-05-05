@@ -247,15 +247,9 @@
             var stats = ViewBag.Stats as Inventra.Application.DTOs.InventoryStatsDto;
             var inv = Model;
         }
-        <div class="row mt-2">
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h2 class="display-4 fw-bold text-primary">@stats?.TotalItems</h2>
-                        <p class="text-muted mb-0">Total Items</p>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-2 mb-4">
+            <span class="fw-semibold">Total Items:</span>
+            <span class="ms-2 fs-5 text-primary fw-bold">@stats?.TotalItems</span>
         </div>
 
         @if (stats?.TotalItems > 0)
