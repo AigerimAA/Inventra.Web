@@ -36,7 +36,7 @@ namespace Inventra.Web
             .AddDefaultTokenProviders();
 
             var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
-            var facebookAppId = builder.Configuration["Authentication:Facebook:AppId"];
+            var githubClientId = builder.Configuration["Authentication:GitHub:ClientId"];
 
             if (!string.IsNullOrEmpty(googleClientId))
             {
@@ -48,7 +48,7 @@ namespace Inventra.Web
                     });
             }
 
-            if (!string.IsNullOrEmpty(facebookAppId))
+            if (!string.IsNullOrEmpty(githubClientId))
             {
                 builder.Services.AddAuthentication()
                     .AddGitHub(options =>
