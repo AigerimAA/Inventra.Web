@@ -169,7 +169,7 @@
     <value>Бастау</value>
   </data>
   <data name="InventoriesWithAccess" xml:space="preserve">
-    <value>Жазу рұқсаты бар инвентарлар</value>
+    <value>Өңдеу құқығы бар инвентарлар</value>
   </data>
   <data name="Items" xml:space="preserve">
     <value>Элементтер</value>

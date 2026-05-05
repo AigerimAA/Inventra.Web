@@ -169,7 +169,7 @@
     <value>Начать</value>
   </data>
   <data name="InventoriesWithAccess" xml:space="preserve">
-    <value>Инвентари с доступом на запись</value>
+    <value>Инвентари с правом редактирования</value>
   </data>
   <data name="Items" xml:space="preserve">
     <value>Элементы</value>

@@ -1,5 +1,7 @@
 ﻿using Inventra.Application.Categories.Queries.GetAllCategories;
 using Inventra.Application.Common.Exceptions;
+using Inventra.Application.CustomId.Commands;
+using Inventra.Application.CustomId.Queries;
 using Inventra.Application.DTOs;
 using Inventra.Application.Interfaces;
 using Inventra.Application.Inventories.Commands.CreateInventory;
@@ -24,14 +26,16 @@ namespace Inventra.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ICustomIdGenerator _customIdGenerator;
 
         public InventoryController(IMediator mediator, UserManager<ApplicationUser> userManager,
-            IInventoryPermissionService permissionService, ICurrentUserService currentService)
+            IInventoryPermissionService permissionService, ICurrentUserService currentService, ICustomIdGenerator customIdGenerator)
         {
             _mediator = mediator;
             _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentService;
+            _customIdGenerator = customIdGenerator;
         }
 
         public async Task<IActionResult> Index()
@@ -272,6 +276,39 @@ namespace Inventra.Web.Controllers
             {
                 return Conflict(new { success = false, error = "conflict" });
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCustomIdFormat(int inventoryId)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Unauthorized();
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, inventoryId))
+                return Forbid();
+            var format = await _mediator.Send(new GetCustomIdFormatQuery(inventoryId));
+            return Json(format);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCustomIdFormat([FromBody] CustomIdFormatDto format, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Unauthorized();
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, format.InventoryId))
+                return Forbid();
+            await _mediator.Send(new SaveCustomIdFormatCommand(format), cancellationToken);
+            return Ok(new { success = true });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PreviewCustomId([FromQuery] int inventoryId, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.UserId;
+            if (userId == null) return Unauthorized();
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, inventoryId))
+                return Forbid();
+            var preview = await _customIdGenerator.GenerateAsync(inventoryId, cancellationToken);
+            return Ok(new { preview });
         }
 
         [Authorize]
