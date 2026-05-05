@@ -32,7 +32,7 @@ namespace Inventra.Web.Controllers
                 AccessibleInventories = await _mediator.Send(new GetInventoriesWithAccessQuery(userId))
             };
 
-            return View();
+            return View(model);
         }
     }
 }

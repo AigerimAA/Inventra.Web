@@ -168,6 +168,9 @@
   <data name="GetStarted" xml:space="preserve">
     <value>Get Started</value>
   </data>
+  <data name="InventoriesWithAccess" xml:space="preserve">
+    <value>Inventories with Write Access</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Items</value>
   </data>
@@ -192,6 +195,9 @@
   <data name="MyInventories" xml:space="preserve">
     <value>My Inventories</value>
   </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
   <data name="NewInventory" xml:space="preserve">
     <value>+ New Inventory</value>
   </data>
@@ -209,6 +215,9 @@
   </data>
   <data name="OrRegisterWith" xml:space="preserve">
     <value>Or register with</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Private</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>

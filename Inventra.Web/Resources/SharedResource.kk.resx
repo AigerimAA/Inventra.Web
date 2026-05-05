@@ -168,6 +168,9 @@
   <data name="GetStarted" xml:space="preserve">
     <value>Бастау</value>
   </data>
+  <data name="InventoriesWithAccess" xml:space="preserve">
+    <value>Жазу рұқсаты бар инвентарлар</value>
+  </data>
   <data name="Items" xml:space="preserve">
     <value>Элементтер</value>
   </data>
@@ -192,6 +195,9 @@
   <data name="MyInventories" xml:space="preserve">
     <value>Менің инвентарларым</value>
   </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>Менің профилім</value>
+  </data>
   <data name="NewInventory" xml:space="preserve">
     <value>+ Жаңа инвентарь</value>
   </data>
@@ -209,6 +215,9 @@
   </data>
   <data name="OrRegisterWith" xml:space="preserve">
     <value>Немесе арқылы тіркеліңіз</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Жеке</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
