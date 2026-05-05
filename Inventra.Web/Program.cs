@@ -51,11 +51,10 @@ namespace Inventra.Web
             if (!string.IsNullOrEmpty(facebookAppId))
             {
                 builder.Services.AddAuthentication()
-                    .AddFacebook(options =>
+                    .AddGitHub(options =>
                     {
-                        options.AppId = facebookAppId;
-                        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
-                        options.Fields.Remove("email");
+                        options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
+                        options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]!;
                     });
             }
 
