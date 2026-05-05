@@ -7,6 +7,7 @@ using Inventra.Application.Inventories.Commands.DeleteInventory;
 using Inventra.Application.Inventories.Commands.UpdateInventory;
 using Inventra.Application.Inventories.Queries.GetAllInventories;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
+using Inventra.Application.Inventories.Queries.GetInventoryStats;
 using Inventra.Application.Items.Queries.GetItemsByInventoryId;
 using Inventra.Domain.Entities;
 using Inventra.Web.Models;
@@ -44,7 +45,10 @@ namespace Inventra.Web.Controllers
             if (inventory == null) return NotFound();
 
             var items = await _mediator.Send(new GetItemsByInventoryIdQuery(id));
+            var stats = await _mediator.Send(new GetInventoryStatsQuery(id));
+
             ViewBag.Items = items;
+            ViewBag.Stats = stats;
 
             return View(inventory);
         }

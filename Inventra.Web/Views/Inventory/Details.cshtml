@@ -34,6 +34,9 @@
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#settings">Settings</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#stats">Stats</a>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -238,6 +241,84 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="tab-pane fade" id="stats">
+        @{
+            var stats = ViewBag.Stats as Inventra.Application.DTOs.InventoryStatsDto;
+            var inv = Model;
+        }
+        <div class="row mt-2">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h2 class="display-4 fw-bold text-primary">@stats?.TotalItems</h2>
+                        <p class="text-muted mb-0">Total Items</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (stats?.TotalItems > 0)
+        {
+            @if (inv.CustomInt1Name != null && stats.Int1Avg.HasValue)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomInt1Name</h5>
+                    <table class="table table-sm table-bordered w-auto">
+                        <tr><th>Average</th><td>@stats.Int1Avg?.ToString("N2")</td></tr>
+                        <tr><th>Min</th><td>@stats.Int1Min?.ToString("N2")</td></tr>
+                        <tr><th>Max</th><td>@stats.Int1Max?.ToString("N2")</td></tr>
+                    </table>
+                </div>
+            }
+            @if (inv.CustomInt2Name != null && stats.Int2Avg.HasValue)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomInt2Name</h5>
+                    <table class="table table-sm table-bordered w-auto">
+                        <tr><th>Average</th><td>@stats.Int2Avg?.ToString("N2")</td></tr>
+                        <tr><th>Min</th><td>@stats.Int2Min?.ToString("N2")</td></tr>
+                        <tr><th>Max</th><td>@stats.Int2Max?.ToString("N2")</td></tr>
+                    </table>
+                </div>
+            }
+            @if (inv.CustomInt3Name != null && stats.Int3Avg.HasValue)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomInt3Name</h5>
+                    <table class="table table-sm table-bordered w-auto">
+                        <tr><th>Average</th><td>@stats.Int3Avg?.ToString("N2")</td></tr>
+                        <tr><th>Min</th><td>@stats.Int3Min?.ToString("N2")</td></tr>
+                        <tr><th>Max</th><td>@stats.Int3Max?.ToString("N2")</td></tr>
+                    </table>
+                </div>
+            }
+            @if (inv.CustomString1Name != null && stats.String1TopValue != null)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomString1Name — Most frequent</h5>
+                    <p><span class="badge bg-primary">@stats.String1TopValue</span> — @stats.String1TopCount times</p>
+                </div>
+            }
+            @if (inv.CustomString2Name != null && stats.String2TopValue != null)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomString2Name — Most frequent</h5>
+                    <p><span class="badge bg-primary">@stats.String2TopValue</span> — @stats.String2TopCount times</p>
+                </div>
+            }
+            @if (inv.CustomString3Name != null && stats.String3TopValue != null)
+            {
+                <div class="mt-4">
+                    <h5>@inv.CustomString3Name — Most frequent</h5>
+                    <p><span class="badge bg-primary">@stats.String3TopValue</span> — @stats.String3TopCount times</p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info mt-3">No items yet — add some items to see statistics.</div>
+        }
     </div>
 
 </div>
