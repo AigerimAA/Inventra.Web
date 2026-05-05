@@ -168,6 +168,9 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="EditTitle" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="Example" xml:space="preserve">
     <value>Example</value>
   </data>

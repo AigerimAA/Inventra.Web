@@ -168,6 +168,9 @@
   <data name="Edit" xml:space="preserve">
     <value>Өңдеу</value>
   </data>
+  <data name="EditTitle" xml:space="preserve">
+    <value>Өңдеу</value>
+  </data>
   <data name="Example" xml:space="preserve">
     <value>Мысал</value>
   </data>
