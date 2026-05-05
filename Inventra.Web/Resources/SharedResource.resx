@@ -120,6 +120,9 @@
   <data name="Access" xml:space="preserve">
     <value>Access</value>
   </data>
+  <data name="AddElement" xml:space="preserve">
+    <value>AddElement</value>
+  </data>
   <data name="AdminPanel" xml:space="preserve">
     <value>AdminPanel</value>
   </data>
@@ -147,6 +150,9 @@
   <data name="Creator" xml:space="preserve">
     <value>Creator</value>
   </data>
+  <data name="CustomIdDescription" xml:space="preserve">
+    <value>Set up items with inventory numbers in your preferred format. Add elements, edit them, drag to reorder, or drag outside to delete.</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -161,6 +167,9 @@
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Example</value>
   </data>
   <data name="Fields" xml:space="preserve">
     <value>Fields</value>
@@ -200,6 +209,9 @@
   </data>
   <data name="NewInventory" xml:space="preserve">
     <value>+ New Inventory</value>
+  </data>
+  <data name="NoElementsYet" xml:space="preserve">
+    <value>No elements yet. Click "Add element" to start</value>
   </data>
   <data name="NoInventoriesYet" xml:space="preserve">
     <value>No inventories yet. Be the first to create one!</value>

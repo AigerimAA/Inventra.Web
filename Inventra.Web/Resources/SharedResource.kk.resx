@@ -120,6 +120,9 @@
   <data name="Access" xml:space="preserve">
     <value>Қол жеткізу</value>
   </data>
+  <data name="AddElement" xml:space="preserve">
+    <value>+ Элемент қосу</value>
+  </data>
   <data name="AdminPanel" xml:space="preserve">
     <value>Әкімші панелі</value>
   </data>
@@ -147,6 +150,9 @@
   <data name="Creator" xml:space="preserve">
     <value>Жасаушы</value>
   </data>
+  <data name="CustomIdDescription" xml:space="preserve">
+    <value>Инвентарлық нөмірлер форматын баптаңыз. Элементтерді қосыңыз, өңдеңіз, ретін өзгертіңіз</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Жою</value>
   </data>
@@ -161,6 +167,9 @@
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Өңдеу</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Мысал</value>
   </data>
   <data name="Fields" xml:space="preserve">
     <value>Өрістер</value>
@@ -200,6 +209,9 @@
   </data>
   <data name="NewInventory" xml:space="preserve">
     <value>+ Жаңа инвентарь</value>
+  </data>
+  <data name="NoElementsYet" xml:space="preserve">
+    <value>Әлі элементтер жоқ. "Элемент қосу" батырмасын басыңыз</value>
   </data>
   <data name="NoInventoriesYet" xml:space="preserve">
     <value>Әлі инвентарлар жоқ. Бірінші болыңыз!</value>
