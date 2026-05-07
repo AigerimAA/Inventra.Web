@@ -2,6 +2,12 @@
 @model InventoryDto
 @Html.AntiForgeryToken()
 
+<style>
+.edit-section-title { font-size: 13px; font-weight: 600; color: #0097a7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; margin-top: 24px; }
+.edit-field-card { border: 0.5px solid var(--bs-border-color); border-radius: 8px; padding: 16px; margin-bottom: 12px; transition: border-color 0.15s; }
+.edit-field-card:hover { border-color: #0097a7; }
+</style>
+
 @{
     ViewData["Title"] = "Edit - " + Model.Title;
 }
@@ -65,7 +71,7 @@
                         </label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                    <button type="submit" class="btn btn-primary">@L["Save"] Settings</button>
                 </form>
             </div>
         </div>
@@ -75,12 +81,12 @@
         <form asp-action="EditFields" method="post">
             <input type="hidden" asp-for="Id" />
 
-            <h5 class="mb-3">String Fields (up to 3)</h5>
+            <h5 class="edit-section-title">String Fields (up to 3)</h5>
             <p class="text-muted small mb-3">
                 Single-line text. Leave name empty to disable the field.
             </p>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">String Field 1</label>
@@ -101,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">String Field 2</label>
@@ -122,7 +128,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">String Field 3</label>
@@ -143,12 +149,12 @@
                 </div>
             </div>
 
-            <h5 class="mb-3 mt-4">Number Fields (up to 3)</h5>
+            <h5 class="edit-section-title">Number Fields (up to 3)</h5>
             <p class="text-muted small mb-3">
                 Decimal numbers. Good for prices, quantities, measurements.
             </p>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Number Field 1</label>
@@ -169,7 +175,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Number Field 2</label>
@@ -190,7 +196,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Number Field 3</label>
@@ -211,12 +217,12 @@
                 </div>
             </div>
 
-            <h5 class="mb-3 mt-4">Text Fields (up to 3)</h5>
+            <h5 class="edit-section-title">Text Fields (up to 3)</h5>
             <p class="text-muted small mb-3">
                 Multi-line text. Good for descriptions, notes, annotations.
             </p>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Text Field 1</label>
@@ -237,7 +243,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Text Field 2</label>
@@ -258,7 +264,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Text Field 3</label>
@@ -279,12 +285,12 @@
                 </div>
             </div>
 
-            <h5 class="mb-3 mt-4">Boolean Fields (up to 3)</h5>
+            <h5 class="edit-section-title">Boolean Fields (up to 3)</h5>
             <p class="text-muted small mb-3">
                 True/false checkboxes. Good for flags like Available, Active, Verified.
             </p>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Boolean Field 1</label>
@@ -305,7 +311,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Boolean Field 2</label>
@@ -326,7 +332,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Boolean Field 3</label>
@@ -347,12 +353,12 @@
                 </div>
             </div>
 
-            <h5 class="mb-3 mt-4">Link Fields (up to 3)</h5>
+            <h5 class="edit-section-title">Link Fields (up to 3)</h5>
             <p class="text-muted small mb-3">
                 URL links. Good for datasheets, documentation, references.
             </p>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Link Field 1</label>
@@ -373,7 +379,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Link Field 2</label>
@@ -394,7 +400,7 @@
                 </div>
             </div>
 
-            <div class="mb-3 border rounded p-3">
+            <div class="edit-field-card">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Link Field 3</label>
@@ -415,8 +421,8 @@
                 </div>
             </div>
 
-            <div class="d-flex gap-2 mt-4">
-                <button type="submit" class="btn btn-primary">Save Fields</button>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">@L["Save"] Fields</button>
                 <a asp-action="Details" asp-route-id="@Model.Id"
                    class="btn btn-outline-secondary">Cancel</a>
             </div>
@@ -440,7 +446,11 @@
             <button class="btn btn-sm btn-outline-secondary" onclick="sortUsers('name')">Name</button>
             <button class="btn btn-sm btn-outline-secondary" onclick="sortUsers('email')">Email</button>
         </div>
-        <table class="table table-hover table-sm" id="accessTable">
+        <table class="table table-hover table-sm" id="accessTable" style="border-collapse:collapse;">
+        <style>
+        #accessTable thead th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--bs-secondary-color); font-weight:500; }
+        #accessTable tbody tr:hover { background: rgba(0,151,167,0.06); }
+        </style>
             <thead>
                 <tr><th>Username</th><th>Email</th><th></th></tr>
             </thead>

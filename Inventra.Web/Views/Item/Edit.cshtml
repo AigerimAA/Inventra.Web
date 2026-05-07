@@ -90,21 +90,30 @@
             @if (inventory.CustomBool1Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool1Value" />
+                    <input type="checkbox" class="form-check-input"
+                           name="Command.CustomBool1Value"
+                           value="true"
+                    @(Model.Command.CustomBool1Value == true ? "checked" : "") />
                     <label class="form-check-label">@inventory.CustomBool1Name</label>
                 </div>
             }
             @if (inventory.CustomBool2Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool2Value" />
+                    <input type="checkbox" class="form-check-input"
+                           name="Command.CustomBool1Value"
+                           value="true"
+                    @(Model.Command.CustomBool1Value == true ? "checked" : "") />
                     <label class="form-check-label">@inventory.CustomBool2Name</label>
                 </div>
             }
             @if (inventory.CustomBool3Name != null)
             {
                 <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" asp-for="Command.CustomBool3Value" />
+                    <input type="checkbox" class="form-check-input"
+                           name="Command.CustomBool1Value"
+                           value="true"
+                    @(Model.Command.CustomBool1Value == true ? "checked" : "") />
                     <label class="form-check-label">@inventory.CustomBool3Name</label>
                 </div>
             }
