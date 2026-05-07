@@ -2,89 +2,107 @@
 @model IEnumerable<AdminUserViewModel>
 
 @{
-	ViewData["Title"] = "Admin Panel";
+    ViewData["Title"] = "Admin Panel";
 }
 
+<style>
+.inv-card { border-radius: 12px; overflow: hidden; border: 0.5px solid var(--bs-border-color); margin-bottom: 20px; }
+.inv-card-header { background: #0097a7; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+.inv-card-header span { color: white; font-size: 15px; font-weight: 500; }
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table thead tr { border-bottom: 0.5px solid var(--bs-border-color); }
+.inv-table thead th { padding: 10px 16px; font-size: 12px; font-weight: 500; color: var(--bs-secondary-color); text-transform: uppercase; letter-spacing: 0.05em; }
+.inv-table tbody tr { border-bottom: 0.5px solid var(--bs-border-color); }
+.inv-table tbody tr:last-child { border-bottom: none; }
+.inv-table tbody td { padding: 12px 16px; font-size: 14px; }
+.inv-table tbody tr:hover { background: rgba(0,151,167,0.06); }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Admin Panel</h2>
-    <span class="badge bg-danger">Admin</span>
+    <h2>@L["AdminPanel"]</h2>
+    <span class="badge" style="background:#0097a7;">Admin</span>
 </div>
 
-<table class="table table-hover table-sm">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Created</th>
-            <th>Status</th>
-            <th>Role</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
+<div class="inv-card">
+    <div class="inv-card-header">
+        <span>Users (@Model.Count())</span>
+    </div>
+    <table class="inv-table">
+        <thead>
             <tr>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>@user.CreatedAt.ToString("dd.MM.yyyy")</td>
-                <td>
-                    @if (user.IsBlocked)
-                    {
-                        <span class="badge bg-danger">Blocked</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">Active</span>
-                    }
-                </td>
-                <td>
-                    @if (user.IsAdmin)
-                    {
-                        <span class="badge bg-primary">Admin</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">User</span>
-                    }
-                </td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                data-bs-toggle="dropdown">
-                            Actions
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <form asp-action="ToggleBlock" method="post">
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button class="dropdown-item">
-                                        @(user.IsBlocked ? "Unblock" : "Block")
-                                    </button>
-                                </form>
-                            </li>
-                            <li>
-                                <form asp-action="ToggleAdmin" method="post">
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button class="dropdown-item">
-                                        @(user.IsAdmin ? "Remove Admin" : "Make Admin")
-                                    </button>
-                                </form>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form asp-action="Delete" method="post">
-                                    <input type="hidden" name="userId" value="@user.Id" />
-                                    <button class="dropdown-item text-danger"
-                                            onclick="return confirm('Delete user @user.UserName?')">
-                                        Delete
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>Role</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td style="font-weight:500;">@user.UserName</td>
+                    <td style="color:var(--bs-secondary-color);">@user.Email</td>
+                    <td style="color:var(--bs-secondary-color);">@user.CreatedAt.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        @if (user.IsBlocked)
+                        {
+                            <span class="badge bg-danger">Blocked</span>
+                        }
+                        else
+                        {
+                            <span class="badge" style="background:#0097a7;">Active</span>
+                        }
+                    </td>
+                    <td>
+                        @if (user.IsAdmin)
+                        {
+                            <span class="badge" style="background:#0097a7;">Admin</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">User</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                    data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <form asp-action="ToggleBlock" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button class="dropdown-item">
+                                            @(user.IsBlocked ? "Unblock" : "Block")
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-action="ToggleAdmin" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button class="dropdown-item">
+                                            @(user.IsAdmin ? "Remove Admin" : "Make Admin")
+                                        </button>
+                                    </form>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-action="Delete" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button class="dropdown-item text-danger"
+                                                onclick="return confirm('Delete user @user.UserName?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
