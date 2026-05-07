@@ -2,78 +2,96 @@
 @model SearchResultViewModel
 
 @{
-	ViewData["Title"] = "Search Results";
+    ViewData["Title"] = "Search Results";
 }
 
+<style>
+.inv-card { border-radius: 12px; overflow: hidden; border: 0.5px solid var(--bs-border-color); margin-bottom: 20px; }
+.inv-card-header { background: #0097a7; padding: 14px 20px; }
+.inv-card-header span { color: white; font-size: 15px; font-weight: 500; }
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table thead tr { border-bottom: 0.5px solid var(--bs-border-color); }
+.inv-table thead th { padding: 10px 16px; font-size: 12px; font-weight: 500; color: var(--bs-secondary-color); text-transform: uppercase; letter-spacing: 0.05em; }
+.inv-table tbody tr { border-bottom: 0.5px solid var(--bs-border-color); transition: background 0.15s; cursor: pointer; }
+.inv-table tbody tr:hover { background: rgba(0,151,167,0.06); }
+.inv-table tbody tr:last-child { border-bottom: none; }
+.inv-table tbody td { padding: 12px 16px; font-size: 14px; }
+.inv-badge { display: inline-block; background: rgba(0,151,167,0.12); color: #0097a7; font-size: 12px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.inv-count { font-weight: 500; color: #0097a7; }
+</style>
+
 <h2 class="mb-4">
-    Search results for: <em>"@Model.Query"</em>
+    Search results for: <em style="color:#0097a7;">"@Model.Query"</em>
 </h2>
 
-<h4>Inventories (@Model.Inventories.Count)</h4>
-<table class="table table-hover table-sm mb-5">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Creator</th>
-            <th class="text-end">Items</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Inventories.Any())
-        {
+<div class="inv-card">
+    <div class="inv-card-header">
+        <span>@L["LatestInventories"] (@Model.Inventories.Count)</span>
+    </div>
+    <table class="inv-table">
+        <thead>
             <tr>
-                <td colspan="4" class="text-center text-muted">No inventories found.</td>
+                <th>@L["Title"]</th>
+                <th>@L["CategoryLabel"]</th>
+                <th>@L["Creator"]</th>
+                <th class="text-end">@L["Items"]</th>
             </tr>
-        }
-        else
-        {
-            @foreach (var inv in Model.Inventories)
+        </thead>
+        <tbody>
+            @if (!Model.Inventories.Any())
             {
-                <tr style="cursor:pointer"
-                    onclick="window.location='/Inventory/Details/@inv.Id'">
-                    <td>@inv.Title</td>
-                    <td>@inv.CategoryName</td>
-                    <td>@inv.OwnerName</td>
-                    <td class="text-end">@inv.ItemsCount</td>
-                </tr>
+                <tr><td colspan="4" class="text-center" style="padding:24px; color:var(--bs-secondary-color);">No inventories found.</td></tr>
             }
-        }
-    </tbody>
-</table>
+            else
+            {
+                @foreach (var inv in Model.Inventories)
+                {
+                    <tr onclick="window.location='/Inventory/Details/@inv.Id'">
+                        <td style="font-weight:500;">@inv.Title</td>
+                        <td><span class="inv-badge">@inv.CategoryName</span></td>
+                        <td style="color:var(--bs-secondary-color);">@inv.OwnerName</td>
+                        <td class="text-end inv-count">@inv.ItemsCount</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
 
-<h4>Items (@Model.Items.Count)</h4>
-<table class="table table-hover table-sm">
-    <thead>
-        <tr>
-            <th>Custom ID</th>
-            <th>Inventory</th>
-            <th>Created By</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Items.Any())
-        {
+<div class="inv-card">
+    <div class="inv-card-header">
+        <span>@L["Items"] (@Model.Items.Count)</span>
+    </div>
+    <table class="inv-table">
+        <thead>
             <tr>
-                <td colspan="3" class="text-center text-muted">No items found.</td>
+                <th>Custom ID</th>
+                <th>Inventory</th>
+                <th>@L["Creator"]</th>
             </tr>
-        }
-        else
-        {
-            @foreach (var item in Model.Items)
+        </thead>
+        <tbody>
+            @if (!Model.Items.Any())
             {
-                <tr style="cursor:pointer"
-                    onclick="window.location='/Item/Details/@item.Id'">
-                    <td>@item.CustomId</td>
-                    <td>
-                        <a asp-controller="Inventory" asp-action="Details"
-                               asp-route-id="@item.InventoryId">
-                            @item.InventoryTitle
-                        </a>
-                    </td>
-                    <td>@item.CreatedByName</td>
-                </tr>
+                <tr><td colspan="3" class="text-center" style="padding:24px; color:var(--bs-secondary-color);">No items found.</td></tr>
             }
-        }
-    </tbody>
-</table>
+            else
+            {
+                @foreach (var item in Model.Items)
+                {
+                    <tr onclick="window.location='/Item/Details/@item.Id'">
+                        <td class="inv-count">@item.CustomId</td>
+                        <td>
+                            <a asp-controller="Inventory" asp-action="Details"
+                               asp-route-id="@item.InventoryId"
+                               style="color:#0097a7; text-decoration:none;">
+                                @item.InventoryTitle
+                            </a>
+                        </td>
+                        <td style="color:var(--bs-secondary-color);">@item.CreatedByName</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
