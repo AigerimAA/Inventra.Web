@@ -57,32 +57,50 @@
 </script>
 
 
-<div class="row mt-4">
-    <div class="col-md-8">
-        <h4>@L["LatestInventories"]</h4>
-        <table class="table table-hover table-sm">
+<style>
+.inv-card { border-radius: 12px; overflow: hidden; border: 0.5px solid var(--bs-border-color); margin-top: 24px; }
+.inv-card-header { background: #0097a7; padding: 14px 20px; }
+.inv-card-header span { color: white; font-size: 15px; font-weight: 500; }
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table thead tr { border-bottom: 0.5px solid var(--bs-border-color); }
+.inv-table thead th { padding: 10px 16px; font-size: 12px; font-weight: 500; color: var(--bs-secondary-color); text-transform: uppercase; letter-spacing: 0.05em; }
+.inv-table tbody tr { border-bottom: 0.5px solid var(--bs-border-color); transition: background 0.15s; cursor: pointer; }
+.inv-table tbody tr:hover { background: rgba(0,151,167,0.06); }
+.inv-table tbody tr:last-child { border-bottom: none; }
+.inv-table tbody td { padding: 12px 16px; font-size: 14px; }
+.inv-badge { display: inline-block; background: rgba(0,151,167,0.12); color: #0097a7; font-size: 12px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.inv-count { font-weight: 500; color: #0097a7; }
+</style>
+
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 8px 0 24px;">
+
+    <div class="inv-card">
+        <div class="inv-card-header">
+            <span>@L["LatestInventories"]</span>
+        </div>
+        <table class="inv-table">
             <thead>
                 <tr>
                     <th>@L["Title"]</th>
                     <th>@L["CategoryLabel"]</th>
                     <th>@L["Creator"]</th>
-                    <th class="text-end">@L["Items"]</th>
+                    <th style="text-align:right;">@L["Items"]</th>
                 </tr>
             </thead>
             <tbody>
                 @if (!Model.LatestInventories.Any())
                 {
-                    <tr><td colspan="4" class="text-muted text-center">No inventories yet. Be the first to create one!</td></tr>
+                    <tr><td colspan="4" style="text-align:center; padding:24px; color:var(--bs-secondary-color);">@L["NoInventoriesYet"]</td></tr>
                 }
                 else
                 {
                     @foreach (var inv in Model.LatestInventories)
                     {
-                        <tr style="cursor:pointer" onclick="window.location='/Inventory/Details/@inv.Id'">
-                            <td>@inv.Title</td>
-                            <td>@inv.CategoryName</td>
-                            <td>@inv.OwnerName</td>
-                            <td class="text-end">@inv.ItemsCount</td>
+                        <tr onclick="window.location='/Inventory/Details/@inv.Id'">
+                            <td style="font-weight:500;">@inv.Title</td>
+                            <td><span class="inv-badge">@inv.CategoryName</span></td>
+                            <td style="color:var(--bs-secondary-color);">@inv.OwnerName</td>
+                            <td style="text-align:right;" class="inv-count">@inv.ItemsCount</td>
                         </tr>
                     }
                 }
@@ -90,54 +108,63 @@
         </table>
     </div>
 
-    <div class="col-md-4">
-        <h4>@L["Top5Popular"]</h4>
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>@L["Title"]</th>
-                    <th class="text-end">@L["Items"]</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!Model.PopularInventories.Any())
+    <div>
+        <div class="inv-card">
+            <div class="inv-card-header">
+                <span>@L["Top5Popular"]</span>
+            </div>
+            <table class="inv-table">
+                <thead>
+                    <tr>
+                        <th>@L["Title"]</th>
+                        <th style="text-align:right;">@L["Items"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.PopularInventories.Any())
+                    {
+                        <tr><td colspan="2" style="text-align:center; padding:24px; color:var(--bs-secondary-color);">@L["NoInventoriesYet"]</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var inv in Model.PopularInventories)
+                        {
+                            <tr onclick="window.location='/Inventory/Details/@inv.Id'">
+                                <td style="font-weight:500;">@inv.Title</td>
+                                <td style="text-align:right;" class="inv-count">@inv.ItemsCount</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="inv-card" style="margin-top:20px;">
+            <div class="inv-card-header">
+                <span>@L["Tags"]</span>
+            </div>
+            <div style="padding:16px; display:flex; flex-wrap:wrap; gap:8px;">
+                @if (!Model.TagCloud.Any())
                 {
-                    <tr><td colspan="2" class="text-muted text-center">No data yet.</td></tr>
+                    <span style="color:var(--bs-secondary-color); font-size:14px;">@L["NoTagsYet"]</span>
                 }
                 else
                 {
-                    @foreach (var inv in Model.PopularInventories)
+                    var maxCount = Math.Max(1, Model.TagCloud.Max(t => t.Count));
+                    @foreach (var tag in Model.TagCloud)
                     {
-                        <tr style="cursor:pointer" onclick="window.location='/Inventory/Details/@inv.Id'">
-                            <td>@inv.Title</td>
-                            <td class="text-end">@inv.ItemsCount</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-
-        <h4 class="mt-4">@L["Tags"]</h4>
-        <div class="d-flex flex-wrap gap-2">
-            @if (!Model.TagCloud.Any())
-            {
-                <span class="text-muted">@L["NoTagsYet"]</span>
-            }
-            else
-            {
-                var maxCount = Math.Max(1, Model.TagCloud.Max(t => t.Count));
-                @foreach (var tag in Model.TagCloud)
-                {
-                    var normalized = Math.Sqrt((double)tag.Count / maxCount);
-                    var fontSize = (0.8 + normalized * 1.2).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
-                    <a asp-controller="Search" asp-action="Index" asp-route-q="@tag.Name"
-                           class="badge bg-secondary text-decoration-none"
+                        var normalized = Math.Sqrt((double)tag.Count / maxCount);
+                        var fontSize = (0.8 + normalized * 1.2).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+                        <a asp-controller="Search" asp-action="Index" asp-route-q="@tag.Name"
+                           class="inv-badge text-decoration-none"
                            style="font-size: @(fontSize + "rem")"
                            title="@tag.Count inventories">
-                        @tag.Name
-                    </a>
+                            @tag.Name
+                        </a>
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
+
 </div>
