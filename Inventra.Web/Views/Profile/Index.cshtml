@@ -31,11 +31,12 @@
     <div class="inv-card-header">
         <span>@L["MyInventories"] (@Model.OwnedInventories.Count())</span>
         <a asp-controller="Inventory" asp-action="Create"
+           class="profile-btn"
            style="background:white; color:#0097a7; padding:6px 16px; border-radius:6px; font-size:13px; font-weight:500; text-decoration:none;">
             @L["NewInventory"]
         </a>
     </div>
-    <table class="inv-table">
+    <table class="inv-table profile-table">
         <thead>
             <tr>
                 <th>@L["Title"]</th>
@@ -73,7 +74,7 @@
     <div class="inv-card-header">
         <span>@L["InventoriesWithAccess"] (@Model.AccessibleInventories.Count())</span>
     </div>
-    <table class="inv-table">
+    <table class="inv-table profile-table">
         <thead>
             <tr>
                 <th>@L["Title"]</th>

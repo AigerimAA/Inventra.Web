@@ -115,3 +115,14 @@ a:hover {
 .btn-oauth:hover {
     background-color: rgba(0,151,167,0.08) !important;
 }
+
+.profile-btn {
+    transition: all 0.2s;
+}
+
+.profile-btn:hover {
+    background: rgba(255,255,255,0.85) !important;
+    transform: translateY(-1px);
+}
+.profile-table { table-layout: fixed; width: 100%; }
+.profile-table th, .profile-table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
