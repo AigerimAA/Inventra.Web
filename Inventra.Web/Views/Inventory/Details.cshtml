@@ -245,7 +245,7 @@
     </div>
 
     <div class="tab-pane fade" id="settings">
-    <div class="inv-card" style="max-width:500px; margin-top:8px;">
+    <div class="inv-card" style="max-width:700px; margin-top:8px;">
         <div class="inv-card-header">
             <span>@L["Settings"]</span>
         </div>
@@ -288,7 +288,7 @@
         var inv = Model;
     }
 
-    <div class="inv-card" style="max-width:500px; margin-top:8px;">
+    <div class="inv-card" style="max-width:700px; margin-top:8px;">
         <div class="inv-card-header">
             <span>@L["Stats"]</span>
         </div>
@@ -306,7 +306,7 @@
     {
         @if (inv.CustomInt1Name != null && stats.Int1Avg.HasValue)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomInt1Name</span></div>
                 <table class="inv-table">
                     <tbody>
@@ -319,7 +319,7 @@
         }
         @if (inv.CustomInt2Name != null && stats.Int2Avg.HasValue)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomInt2Name</span></div>
                 <table class="inv-table">
                     <tbody>
@@ -332,7 +332,7 @@
         }
         @if (inv.CustomInt3Name != null && stats.Int3Avg.HasValue)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomInt3Name</span></div>
                 <table class="inv-table">
                     <tbody>
@@ -345,7 +345,7 @@
         }
         @if (inv.CustomString1Name != null && stats.String1TopValue != null)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomString1Name — @L["MostFrequent"]</span></div>
                 <table class="inv-table">
                     <tbody>
@@ -356,7 +356,7 @@
         }
         @if (inv.CustomString2Name != null && stats.String2TopValue != null)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomString2Name — @L["MostFrequent"]</span></div>
                 <table class="inv-table">
                     <tbody>
@@ -367,7 +367,7 @@
         }
         @if (inv.CustomString3Name != null && stats.String3TopValue != null)
         {
-            <div class="inv-card" style="max-width:500px;">
+            <div class="inv-card" style="max-width:700px;">
                 <div class="inv-card-header"><span>@inv.CustomString3Name — @L["MostFrequent"]</span></div>
                 <table class="inv-table">
                     <tbody>

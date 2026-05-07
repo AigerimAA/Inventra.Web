@@ -81,8 +81,16 @@ a:hover {
 
 .nav-tabs .nav-link.active {
     color: #0097a7 !important;
+    border-color: var(--bs-border-color) var(--bs-border-color) #fff !important;
     border-bottom-color: #0097a7 !important;
-    font-weight: 500;
+}
+
+.nav-tabs .nav-link:not(.active) {
+    color: var(--bs-secondary-color) !important;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #0097a7 !important;
 }
 
 .nav-tabs .nav-link:hover {
