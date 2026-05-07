@@ -11,5 +11,6 @@
   <Project Path="Inventra.Application/Inventra.Application.csproj" />
   <Project Path="Inventra.Domain/Inventra.Domain.csproj" />
   <Project Path="Inventra.Infrastructure/Inventra.Infrastructure.csproj" />
+  <Project Path="Inventra.Tests/Inventra.Tests.csproj" Id="40962e59-e4a1-4ab0-97aa-2a666ffa86c2" />
   <Project Path="Inventra.Web/Inventra.Web.csproj" />
 </Solution>
