@@ -78,7 +78,10 @@ namespace Inventra.Web
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Database.Migrate();
+                if (db.Database.IsRelational())
+                    db.Database.Migrate();
+                else
+                    db.Database.EnsureCreated();
 
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 if (!await roleManager.RoleExistsAsync("Admin"))
@@ -130,3 +133,4 @@ namespace Inventra.Web
         }
     }
 }
+public partial class Program { }

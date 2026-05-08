@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="FluentAssertions" Version="8.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
@@ -26,6 +27,7 @@
     <ProjectReference Include="..\Inventra.Application\Inventra.Application.csproj" />
     <ProjectReference Include="..\Inventra.Domain\Inventra.Domain.csproj" />
     <ProjectReference Include="..\Inventra.Infrastructure\Inventra.Infrastructure.csproj" />
+    <ProjectReference Include="..\Inventra.Web\Inventra.Web.csproj" />
   </ItemGroup>
 
 </Project>
