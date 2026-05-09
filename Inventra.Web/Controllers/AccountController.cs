@@ -140,7 +140,7 @@ namespace Inventra.Web.Controllers
                 EmailConfirmed = true
             };
 
-            var createResult = await _identityService.CreateUserAsync(user, Guid.NewGuid().ToString());
+            var createResult = await _identityService.CreateUserAsync(user, "OAuth1_" + Guid.NewGuid().ToString());
 
             if (createResult.Succeeded)
             {
