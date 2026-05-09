@@ -1,11 +1,13 @@
 ﻿using Inventra.Domain.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventra.Infrastructure.Persistence
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDbContext : IdentityDbContext<ApplicationUser>, IDataProtectionKeyContext
     {
+        public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Inventory> Inventories => Set<Inventory>();

@@ -5,6 +5,7 @@ using Inventra.Infrastructure;
 using Inventra.Infrastructure.Persistence;
 using Inventra.Web.Hubs;
 using Inventra.Web.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,8 @@ namespace Inventra.Web
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             builder.Services.AddSignalR();
+            builder.Services.AddDataProtection()
+                .PersistKeysToDbContext<AppDbContext>();
 
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
