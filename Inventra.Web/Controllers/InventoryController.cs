@@ -332,20 +332,39 @@ namespace Inventra.Web.Controllers
             var existing = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
             if (existing == null) return NotFound();
 
-            var command = new UpdateInventoryCommand
+            try
             {
-                Id = existing.Id,
-                Title = existing.Title,
-                Description = existing.Description,
-                ImageUrl = request.ImageUrl,
-                IsPublic = existing.IsPublic,
-                CategoryId = existing.CategoryId,
-                Tags = existing.Tags,
-                Version = existing.Version
-            };
+                await _mediator.Send(new UpdateInventoryCommand
+                {
+                    Id = existing.Id,
+                    Title = existing.Title,
+                    Description = existing.Description,
+                    ImageUrl = request.ImageUrl,
+                    IsPublic = existing.IsPublic,
+                    CategoryId = existing.CategoryId,
+                    Tags = existing.Tags,
+                    Version = existing.Version
+                });
+                return Ok(new { success = true });
+            }
+            catch (ConcurrencyException)
+            {
+                var fresh = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
+                if (fresh == null) return NotFound();
 
-            await _mediator.Send(command);
-            return Ok(new { success = true });
+                await _mediator.Send(new UpdateInventoryCommand
+                {
+                    Id = fresh.Id,
+                    Title = fresh.Title,
+                    Description = fresh.Description,
+                    ImageUrl = request.ImageUrl,
+                    IsPublic = fresh.IsPublic,
+                    CategoryId = fresh.CategoryId,
+                    Tags = fresh.Tags,
+                    Version = fresh.Version
+                });
+                return Ok(new { success = true });
+            }
         }
 
         [Authorize]
