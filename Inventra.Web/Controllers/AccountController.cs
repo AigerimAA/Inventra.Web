@@ -112,7 +112,7 @@ namespace Inventra.Web.Controllers
         {
             var info = await _identityService.GetExternalLoginInfoAsync();
             if (info == null)
-                return Content("DEBUG: info is null - cookie problem");
+                return Content("DEBUG: info is null");
 
             var result = await _identityService.ExternalLoginSignInAsync(
                 info.LoginProvider, info.ProviderKey, isPersistent: false);
@@ -121,40 +121,14 @@ namespace Inventra.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value;
-
-            return Content($"DEBUG: provider={info.LoginProvider}, email={email}, result={result}");
+            if (email == null)
+                return Content("DEBUG: no email from provider");
 
             var existingUser = await _identityService.FindByEmailAsync(email);
-
             if (existingUser != null)
-            {
-                if (existingUser.IsBlocked)
-                    return RedirectToAction("Login", new { error = "blocked" });
+                return Content($"DEBUG: user exists, userName={existingUser.UserName}, isBlocked={existingUser.IsBlocked}");
 
-                await _identityService.AddLoginAsync(existingUser, info);
-                await _identityService.SignInAsync(existingUser, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-            }
-
-            var userName = email.Split('@')[0];
-            var user = new ApplicationUser
-            {
-                UserName = userName,
-                Email = email,
-                EmailConfirmed = true
-            };
-
-            var createResult = await _identityService.CreateUserAsync(user, Guid.NewGuid().ToString());
-
-            if (createResult.Succeeded)
-            {
-                await _identityService.AddLoginAsync(user, info);
-                await _identityService.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-            }
-
-            var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
-            return RedirectToAction("Login", new { error = errors });
+            return Content($"DEBUG: user not found for email={email}, will create new");
         }
 
         [HttpGet]
