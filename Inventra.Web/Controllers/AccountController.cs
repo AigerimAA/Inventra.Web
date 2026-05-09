@@ -112,7 +112,7 @@ namespace Inventra.Web.Controllers
         {
             var info = await _identityService.GetExternalLoginInfoAsync();
             if (info == null)
-                return Content("DEBUG: info is null");
+                return RedirectToAction("Login");
 
             var result = await _identityService.ExternalLoginSignInAsync(
                 info.LoginProvider, info.ProviderKey, isPersistent: false);
@@ -122,13 +122,34 @@ namespace Inventra.Web.Controllers
 
             var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value;
             if (email == null)
-                return Content("DEBUG: no email from provider");
+                return RedirectToAction("Login");
 
             var existingUser = await _identityService.FindByEmailAsync(email);
             if (existingUser != null)
-                return Content($"DEBUG: user exists, userName={existingUser.UserName}, isBlocked={existingUser.IsBlocked}");
+            {
+                await _identityService.AddLoginAsync(existingUser, info);
+                await _identityService.SignInAsync(existingUser, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
 
-            return Content($"DEBUG: user not found for email={email}, will create new");
+            var userName = email.Split('@')[0];
+            var user = new ApplicationUser
+            {
+                UserName = userName,
+                Email = email,
+                EmailConfirmed = true
+            };
+
+            var createResult = await _identityService.CreateUserAsync(user, Guid.NewGuid().ToString());
+
+            if (createResult.Succeeded)
+            {
+                await _identityService.AddLoginAsync(user, info);
+                await _identityService.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
