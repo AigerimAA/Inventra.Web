@@ -48,24 +48,24 @@ namespace Inventra.Web
             var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
             var githubClientId = builder.Configuration["Authentication:GitHub:ClientId"];
 
+            var authBuilder = builder.Services.AddAuthentication();
+
             if (!string.IsNullOrEmpty(googleClientId))
             {
-                builder.Services.AddAuthentication()
-                    .AddGoogle(options =>
-                    {
-                        options.ClientId = googleClientId;
-                        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-                    });
+                authBuilder.AddGoogle(options =>
+                {
+                    options.ClientId = googleClientId;
+                    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+                });
             }
 
             if (!string.IsNullOrEmpty(githubClientId))
             {
-                builder.Services.AddAuthentication()
-                    .AddGitHub(options =>
-                    {
-                        options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
-                        options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]!;
-                    });
+                authBuilder.AddGitHub(options =>
+                {
+                    options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
+                    options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]!;
+                });
             }
 
             builder.Services.ConfigureApplicationCookie(options =>
