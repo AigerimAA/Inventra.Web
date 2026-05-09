@@ -614,15 +614,28 @@
     
         if (response.ok) {
             const data = await response.json();
-            document.getElementById('ImageUrl').value = data.url;
-            isDirty = true;
-            clearTimeout(debounceTimer);
-            await autoSave();
-            showStatus('Image saved!', 'text-success');
+            showStatus('Image uploaded! Saving...', 'text-warning');
+    
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const saveResponse = await fetch('/Inventory/SaveImageUrl', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token 
+                },
+                body: JSON.stringify({ 
+                    inventoryId: inventoryId, 
+                    imageUrl: data.url 
+                })
+            });
+    
+            if (saveResponse.ok) {
+                showStatus('Image saved!', 'text-success');
+                setTimeout(() => window.location.reload(), 1000);
+            }
         } else {
             showStatus('Upload failed', 'text-danger');
         }
-        });
     </script>
 
     <script>

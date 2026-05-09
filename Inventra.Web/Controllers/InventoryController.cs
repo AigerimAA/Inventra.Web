@@ -327,6 +327,29 @@ namespace Inventra.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        public async Task<IActionResult> SaveImageUrl([FromBody] SaveImageUrlRequest request)
+        {
+            var existing = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
+            if (existing == null) return NotFound();
+
+            var command = new UpdateInventoryCommand
+            {
+                Id = existing.Id,
+                Title = existing.Title,
+                Description = existing.Description,
+                ImageUrl = request.ImageUrl,
+                IsPublic = existing.IsPublic,
+                CategoryId = existing.CategoryId,
+                Tags = existing.Tags,
+                Version = existing.Version
+            };
+
+            await _mediator.Send(command);
+            return Ok(new { success = true });
+        }
+
+        [Authorize]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
