@@ -112,6 +112,20 @@ namespace Inventra.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            else
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.Use(async (context, next) =>
+            {
+                try { await next(); }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync($"Error: {ex.Message}\n\n{ex.StackTrace}");
+                }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
