@@ -50,7 +50,7 @@ namespace Inventra.Infrastructure
                     configuration["Cloudinary:ApiKey"],
                     configuration["Cloudinary:ApiSecret"]);
                 services.AddSingleton(new Cloudinary(cloudinaryAccount));
-                services.AddScoped<CloudStorageService>();
+                services.AddScoped<ICloudStorageService, CloudStorageService>();
             }
             return services;
         }

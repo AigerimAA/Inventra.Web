@@ -1,10 +1,11 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Inventra.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Inventra.Infrastructure.Services
 {
-    public class CloudStorageService
+    public class CloudStorageService : ICloudStorageService
     {
         private readonly Cloudinary _cloudinary;
 

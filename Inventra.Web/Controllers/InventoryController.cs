@@ -27,15 +27,18 @@ namespace Inventra.Web.Controllers
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
         private readonly ICustomIdGenerator _customIdGenerator;
+        private readonly ICloudStorageService _cloudStorageService;
 
         public InventoryController(IMediator mediator, UserManager<ApplicationUser> userManager,
-            IInventoryPermissionService permissionService, ICurrentUserService currentService, ICustomIdGenerator customIdGenerator)
+            IInventoryPermissionService permissionService, ICurrentUserService currentService, 
+            ICustomIdGenerator customIdGenerator, ICloudStorageService cloudStorageService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentService;
             _customIdGenerator = customIdGenerator;
+            _cloudStorageService = cloudStorageService;
         }
 
         public async Task<IActionResult> Index()
@@ -309,6 +312,17 @@ namespace Inventra.Web.Controllers
                 return Forbid();
             var preview = await _customIdGenerator.GenerateAsync(inventoryId, cancellationToken);
             return Ok(new { preview });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { error = "No file" });
+
+            var url = await _cloudStorageService.UploadImageAsync(file);
+            return Ok(new { url });
         }
 
         [Authorize]
