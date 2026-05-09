@@ -68,6 +68,7 @@ namespace Inventra.Web
                 {
                     options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
                     options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]!;
+                    options.Scope.Add("user:email");
                 });
             }
 

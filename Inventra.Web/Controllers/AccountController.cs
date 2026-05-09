@@ -120,7 +120,8 @@ namespace Inventra.Web.Controllers
             if (result.Succeeded)
                 return RedirectToAction("Index", "Home");
 
-            var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value;
+            var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value
+                ?? info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value + "@github.com";
             if (email == null)
                 return RedirectToAction("Login");
 
