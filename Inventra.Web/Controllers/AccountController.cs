@@ -149,7 +149,9 @@ namespace Inventra.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Login");
+            var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+            return Content($"DEBUG create failed: {errors}");
+            //return RedirectToAction("Login");
         }
 
         [HttpGet]
