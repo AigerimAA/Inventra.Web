@@ -154,7 +154,7 @@
                     @foreach (var tag in Model.TagCloud)
                     {
                         var normalized = Math.Sqrt((double)tag.Count / maxCount);
-                        var fontSize = (0.8 + normalized * 1.2).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+                        var fontSize = (0.7 + normalized * 0.5).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
                         <a asp-controller="Search" asp-action="Index" asp-route-q="@tag.Name"
                            class="inv-badge text-decoration-none"
                            style="font-size: @(fontSize + "rem")"
