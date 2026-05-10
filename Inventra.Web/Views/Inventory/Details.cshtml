@@ -171,8 +171,28 @@
             </table>
         </div>
     </div>
-</div>
 
+
+    @{
+            var itemsWithPhotos = items?.Where(i => !string.IsNullOrEmpty(i.ImageUrl)).ToList();
+        }
+        @if (itemsWithPhotos != null && itemsWithPhotos.Any())
+        {
+            <div class="mt-3">
+                <h6 style="color:#0097a7; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Photos</h6>
+                <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                    @foreach (var item in itemsWithPhotos)
+                    {
+                        <div style="cursor:pointer;" onclick="window.location='/Item/Details/@item.Id'">
+                            <img src="@item.ImageUrl" style="height:120px; width:120px; object-fit:cover; border-radius:8px;" />
+                            <div style="font-size:12px; color:#0097a7; text-align:center; margin-top:4px;">@item.CustomId</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+</div>
 
     <div class="tab-pane fade" id="discussion">
     <div class="inv-card">

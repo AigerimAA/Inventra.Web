@@ -145,6 +145,17 @@
             {
                 <div class="alert alert-info">This inventory has no custom fields.</div>
             }
+            <div class="mb-3">
+                <label class="form-label">Photo</label>
+                <input type="file" id="itemImageUpload" class="form-control" accept="image/*" />
+                @if (!string.IsNullOrEmpty(Model.Command.ImageUrl))
+                {
+                    <div class="mt-2">
+                        <img src="@Model.Command.ImageUrl" style="max-height:150px; border-radius:8px;" />
+                    </div>
+                }
+                <input type="hidden" asp-for="Command.ImageUrl" id="ItemImageUrl" />
+            </div>
 
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -156,4 +167,26 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.getElementById('itemImageUpload')?.addEventListener('change', async function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            const response = await fetch('/Inventory/UploadImage', {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': token },
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('ItemImageUrl').value = data.url;
+            }
+        });
+    </script>
 }
+

@@ -33,5 +33,6 @@
 
         public int LikesCount { get; set; }
         public bool IsLikedByCurrentUser { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

@@ -53,7 +53,8 @@ namespace Inventra.Application.Items.Commands.CreateItem
 
                 CustomLink1Value = request.CustomLink1Value,
                 CustomLink2Value = request.CustomLink2Value,
-                CustomLink3Value = request.CustomLink3Value
+                CustomLink3Value = request.CustomLink3Value,
+                ImageUrl = request.ImageUrl
             };
 
             await _itemRepository.AddAsync(item);

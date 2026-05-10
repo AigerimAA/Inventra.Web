@@ -53,6 +53,12 @@
             <span style="background:white; color:#0097a7; padding:4px 12px; border-radius:6px; font-size:13px;">@Model.CustomId</span>
         }
     </div>
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <div style="padding:16px; text-align:center;">
+        <img src="@Model.ImageUrl" style="max-height:250px; border-radius:8px; max-width:100%;" />
+    </div>
+}
     <table class="inv-table">
         <tbody>
             @if (inventory?.CustomString1Name != null)

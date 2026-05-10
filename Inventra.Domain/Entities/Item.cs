@@ -42,5 +42,7 @@ namespace Inventra.Domain.Entities
         public Inventory Inventory { get; set; } = null!;
         public ApplicationUser CreatedBy { get; set; } = null!;
         public ICollection<Like> Likes { get; set; } = new List<Like>();
+
+        [MaxLength(2000)] public string? ImageUrl { get; set; }
     }
 }

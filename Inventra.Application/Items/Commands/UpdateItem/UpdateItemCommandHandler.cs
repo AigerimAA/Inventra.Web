@@ -50,6 +50,7 @@ namespace Inventra.Application.Items.Commands.UpdateItem
             item.CustomLink1Value = request.CustomLink1Value;
             item.CustomLink2Value = request.CustomLink2Value;
             item.CustomLink3Value = request.CustomLink3Value;
+            item.ImageUrl = request.ImageUrl;
 
             await _itemRepository.UpdateAsync(item);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -67,6 +67,7 @@ namespace Inventra.Web.Controllers
             {
                 InventoryId = command.InventoryId,
                 CreatedById = userId,   
+                ImageUrl = command.ImageUrl,
                 CustomString1Value = command.CustomString1Value,
                 CustomString2Value = command.CustomString2Value,
                 CustomString3Value = command.CustomString3Value,
@@ -120,6 +121,7 @@ namespace Inventra.Web.Controllers
                 {
                     Id = item.Id,
                     InventoryId = item.InventoryId,
+                    ImageUrl = item.ImageUrl,
                     CustomString1Value = item.CustomString1Value,
                     CustomString2Value = item.CustomString2Value,
                     CustomString3Value = item.CustomString3Value,

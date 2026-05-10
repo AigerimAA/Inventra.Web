@@ -27,5 +27,6 @@ namespace Inventra.Application.Items.Commands.UpdateItem
         public string? CustomLink1Value { get; init; }
         public string? CustomLink2Value { get; init; }
         public string? CustomLink3Value { get; init; }
+        public string? ImageUrl { get; set; }
     }
 }
