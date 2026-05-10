@@ -33,9 +33,10 @@ namespace Inventra.Infrastructure.Repositories
         {
             await _context.Items.AddAsync(item);
         }
-        public async Task UpdateAsync(Item item)
+        public Task UpdateAsync(Item item)
         {
             _context.Items.Update(item);
+            return Task.CompletedTask;
         }
         public Task SetOriginalVersionAsync(Item item, byte[] expectedVersion)
         {

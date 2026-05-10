@@ -42,8 +42,9 @@ namespace Inventra.Infrastructure.Repositories
                         i.InventoryTags.Any(t => t.Tag.Name == query)
                     );
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogWarning(ex, "FullText search failed for inventories, falling back to LIKE");
                     filtered = queryable.Where(i =>
                         EF.Functions.Like(i.Title, pattern) ||
                         (i.Description != null && EF.Functions.Like(i.Description, pattern)) ||
