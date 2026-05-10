@@ -168,6 +168,13 @@ namespace Inventra.Web.Controllers
                 return View(model);
             }
 
+            if (string.IsNullOrEmpty(model.Command.ImageUrl))
+            {
+                var imageUrlFromForm = Request.Form["Command.ImageUrl"].ToString();
+                if (!string.IsNullOrEmpty(imageUrlFromForm))
+                    model.Command.ImageUrl = imageUrlFromForm;
+            }
+
             try
             {
                 await _mediator.Send(model.Command);
