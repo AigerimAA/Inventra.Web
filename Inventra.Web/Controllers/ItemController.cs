@@ -168,13 +168,10 @@ namespace Inventra.Web.Controllers
                 return View(model);
             }
             var imageUrl = model.Command.ImageUrl;
+            if (string.IsNullOrEmpty(imageUrl))
+                imageUrl = Request.Form["Command.ImageUrl"].ToString();
 
-            if (string.IsNullOrEmpty(model.Command.ImageUrl))
-            {
-                var imageUrlFromForm = Request.Form["Command.ImageUrl"].ToString();
-                if (!string.IsNullOrEmpty(imageUrlFromForm))
-                    model.Command.ImageUrl = imageUrlFromForm;
-            }
+            return Content($"ImageUrl from model: '{model.Command.ImageUrl}' | from form: '{Request.Form["Command.ImageUrl"]}' | final: '{imageUrl}'");
 
             var command = new UpdateItemCommand
             {
