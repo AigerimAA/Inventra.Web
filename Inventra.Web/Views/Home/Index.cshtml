@@ -70,6 +70,13 @@
 .inv-table tbody td { padding: 12px 16px; font-size: 14px; }
 .inv-badge { display: inline-block; background: rgba(0,151,167,0.12); color: #0097a7; font-size: 12px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
 .inv-count { font-weight: 500; color: #0097a7; }
+.tag-track { overflow: hidden; height: 32px; position: relative; }
+.tag-row { display: flex; gap: 8px; position: absolute; white-space: nowrap; }
+.tag-row a { font-size: 12px !important; }
+.tag-row-1 { animation: scrollRight 20s linear infinite; }
+.tag-row-2 { animation: scrollLeft 25s linear infinite; }
+.tag-row-3 { animation: scrollRight 22s linear infinite; }
+
 </style>
 
 <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 8px 0 24px;">
@@ -143,28 +150,56 @@
             <div class="inv-card-header">
                 <span>@L["Tags"]</span>
             </div>
-            <div style="padding:16px; display:flex; flex-wrap:wrap; gap:8px;">
-                @if (!Model.TagCloud.Any())
+            
+
+<div style="padding:12px 16px;">
+    @if (!Model.TagCloud.Any())
+    {
+        <span style="color:var(--bs-secondary-color); font-size:14px;">@L["NoTagsYet"]</span>
+    }
+    else
+    {
+        var tags = Model.TagCloud.ToList();
+        var third = Math.Max(1, tags.Count / 3);
+        var row1 = tags.Take(third).ToList();
+        var row2 = tags.Skip(third).Take(third).ToList();
+        var row3 = tags.Skip(third * 2).ToList();
+
+        string RenderTags(List<Inventra.Application.DTOs.TagCloudItemDto> items, int repeat = 3)
+        {
+            var sb = new System.Text.StringBuilder();
+            for (int r = 0; r < repeat; r++)
+            {
+                foreach (var tag in items)
                 {
-                    <span style="color:var(--bs-secondary-color); font-size:14px;">@L["NoTagsYet"]</span>
+                    sb.Append($"<a href='/Search/Index?q={Uri.EscapeDataString(tag.Name)}' class='inv-badge text-decoration-none' title='{tag.Count} inventories'>{tag.Name}</a>");
                 }
-                else
-                {
-                    var maxCount = Math.Max(1, Model.TagCloud.Max(t => t.Count));
-                    @foreach (var tag in Model.TagCloud)
-                    {
-                        var normalized = Math.Sqrt((double)tag.Count / maxCount);
-                        var fontSize = (0.7 + normalized * 0.5).ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
-                        <a asp-controller="Search" asp-action="Index" asp-route-q="@tag.Name"
-                           class="inv-badge text-decoration-none"
-                           style="font-size: @(fontSize + "rem")"
-                           title="@tag.Count inventories">
-                            @tag.Name
-                        </a>
-                    }
-                }
+            }
+            return sb.ToString();
+        }
+
+        <div class="tag-track">
+            <div class="tag-row tag-row-1">@Html.Raw(RenderTags(row1))</div>
+        </div>
+        <div class="tag-track" style="margin-top:6px;">
+            <div class="tag-row tag-row-2">@Html.Raw(RenderTags(row2))</div>
+        </div>
+        @if (row3.Any())
+        {
+            <div class="tag-track" style="margin-top:6px;">
+                <div class="tag-row tag-row-3">@Html.Raw(RenderTags(row3))</div>
+            </div>
+        }
+    }
             </div>
         </div>
     </div>
-
 </div>
+<script>
+    const at = String.fromCharCode(64);
+    const style = document.createElement('style');
+    style.textContent = 
+        at + 'keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } } ' +
+        at + 'keyframes scrollLeft { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }';
+    document.head.appendChild(style);
+</script>
