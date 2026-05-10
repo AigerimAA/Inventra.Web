@@ -1,5 +1,6 @@
 ﻿using Inventra.Domain.Entities;
 using Inventra.Domain.Interfaces;
+using Inventra.Domain.ValueObjects;
 using Inventra.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

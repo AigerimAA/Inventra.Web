@@ -27,39 +27,17 @@ namespace Inventra.Application.Items.Commands.CreateItem
         {
             var customId = await _customIdGenerator.GenerateAsync(request.InventoryId, cancellationToken);
 
-            var item = new Item
-            {
-                InventoryId = request.InventoryId,
-                CreatedById = request.CreatedById,
-                CustomId = customId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-
-                CustomString1Value = request.CustomString1Value,
-                CustomString2Value = request.CustomString2Value,
-                CustomString3Value = request.CustomString3Value,
-
-                CustomInt1Value = request.CustomInt1Value,
-                CustomInt2Value = request.CustomInt2Value,
-                CustomInt3Value = request.CustomInt3Value,
-
-                CustomText1Value = request.CustomText1Value,
-                CustomText2Value = request.CustomText2Value,
-                CustomText3Value = request.CustomText3Value,
-
-                CustomBool1Value = request.CustomBool1Value,
-                CustomBool2Value = request.CustomBool2Value,
-                CustomBool3Value = request.CustomBool3Value,
-
-                CustomLink1Value = request.CustomLink1Value,
-                CustomLink2Value = request.CustomLink2Value,
-                CustomLink3Value = request.CustomLink3Value,
-                ImageUrl = request.ImageUrl
-            };
+            var item = new Item(request.InventoryId, request.CreatedById, customId);
+            item.UpdateValues(
+                request.CustomString1Value, request.CustomString2Value, request.CustomString3Value,
+                request.CustomInt1Value, request.CustomInt2Value, request.CustomInt3Value,
+                request.CustomText1Value, request.CustomText2Value, request.CustomText3Value,
+                request.CustomBool1Value, request.CustomBool2Value, request.CustomBool3Value,
+                request.CustomLink1Value, request.CustomLink2Value, request.CustomLink3Value,
+                request.ImageUrl);
 
             await _itemRepository.AddAsync(item);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
             return _mapper.Map<ItemDto>(item);
         }
     }

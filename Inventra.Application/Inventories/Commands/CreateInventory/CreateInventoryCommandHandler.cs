@@ -22,21 +22,15 @@ namespace Inventra.Application.Inventories.Commands.CreateInventory
 
         public async Task<InventoryDto> Handle(CreateInventoryCommand request, CancellationToken cancellationToken)
         {
-            var inventory = new Inventory
-            {
-                Title = request.Title,
-                Description = request.Description,
-                ImageUrl = request.ImageUrl,
-                IsPublic = request.IsPublic,
-                CategoryId = request.CategoryId,
-                OwnerId = request.OwnerId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+            var inventory = new Inventory(
+                request.Title,
+                request.CategoryId,
+                request.OwnerId,
+                request.Description,
+                request.ImageUrl);
 
             await _inventoryRepository.AddAsync(inventory);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
             return _mapper.Map<InventoryDto>(inventory);
         }
     }

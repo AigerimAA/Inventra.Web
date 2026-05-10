@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Inventra.Application.Items.Commands.CreateItem
 {
-    public class CreateItemCommand : IRequest<ItemDto>
+    public record CreateItemCommand : IRequest<ItemDto>
     {
         public int InventoryId { get; init; }
         public string CreatedById { get; init; } = string.Empty;

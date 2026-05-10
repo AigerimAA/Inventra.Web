@@ -2,7 +2,7 @@
 
 namespace Inventra.Application.Items.Commands.UpdateItem
 {
-    public class UpdateItemCommand : IRequest
+    public record UpdateItemCommand : IRequest
     {
         public int Id { get; init; }
         public int InventoryId { get; set; }

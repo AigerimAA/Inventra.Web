@@ -1,4 +1,5 @@
 ﻿using Inventra.Domain.Entities;
+using Inventra.Domain.ValueObjects;
 
 namespace Inventra.Domain.Interfaces
 {
