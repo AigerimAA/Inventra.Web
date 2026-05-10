@@ -100,11 +100,16 @@
                 </div>
             }
 
-            <div class="mb-3">
-                <label class="form-label">Photo</label>
-                <input type="file" id="itemImageUpload" class="form-control" accept="image/*" />
-                <input type="hidden" name="ImageUrl" id="ItemImageUrl" />
-            </div>
+            @if (inventory?.CustomString1Name != null || inventory?.CustomInt1Name != null ||
+                inventory?.CustomText1Name != null || inventory?.CustomBool1Name != null ||
+                inventory?.CustomLink1Name != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Photo</label>
+                    <input type="file" id="itemImageUpload" class="form-control" accept="image/*" />
+                    <input type="hidden" name="ImageUrl" id="ItemImageUrl" />
+                </div>
+            }
 
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" id="saveBtn" class="btn btn-primary">Add Item</button>
@@ -140,7 +145,6 @@
             if (response.ok) {
                 const data = await response.json();
                 document.getElementById('ItemImageUrl').value = data.url;
-                document.getElementById('photoUrlDebug').textContent = 'Photo ready: ' + data.url;
                 saveBtn.textContent = 'Add Item';
                 saveBtn.disabled = false;
             } else {
