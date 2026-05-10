@@ -155,6 +155,7 @@
                     </div>
                 }
                 <input type="hidden" asp-for="Command.ImageUrl" id="ItemImageUrl" />
+                <small id="photoUrlDebug" class="text-muted"></small>
             </div>
 
             <div class="d-flex gap-2 mt-3">
@@ -189,6 +190,7 @@
             if (response.ok) {
                 const data = await response.json();
                 document.getElementById('ItemImageUrl').value = data.url;
+                document.getElementById('photoUrlDebug').textContent = 'URL: ' + data.url;
                 saveBtn.textContent = 'Save Changes';
                 saveBtn.disabled = false;
             } else {
