@@ -27,18 +27,16 @@ namespace Inventra.Web.Controllers
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
         private readonly ICustomIdGenerator _customIdGenerator;
-        private readonly ICloudStorageService _cloudStorageService;
 
         public InventoryController(IMediator mediator, UserManager<ApplicationUser> userManager,
             IInventoryPermissionService permissionService, ICurrentUserService currentService, 
-            ICustomIdGenerator customIdGenerator, ICloudStorageService cloudStorageService)
+            ICustomIdGenerator customIdGenerator)
         {
             _mediator = mediator;
             _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentService;
             _customIdGenerator = customIdGenerator;
-            _cloudStorageService = cloudStorageService;
         }
 
         public async Task<IActionResult> Index()
@@ -314,122 +312,122 @@ namespace Inventra.Web.Controllers
             return Ok(new { preview });
         }
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return BadRequest(new { error = "No file" });
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<IActionResult> UploadImage(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //        return BadRequest(new { error = "No file" });
 
-            await using var stream = file.OpenReadStream();
-            var url = await _cloudStorageService.UploadImageAsync(stream, file.FileName, file.ContentType);
-            return Ok(new { url });
-        }
+        //    await using var stream = file.OpenReadStream();
+        //    var url = await _cloudStorageService.UploadImageAsync(stream, file.FileName, file.ContentType);
+        //    return Ok(new { url });
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> SaveImageUrl([FromBody] SaveImageUrlRequest request)
-        {
-            var existing = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
-            if (existing == null) return NotFound();
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<IActionResult> SaveImageUrl([FromBody] SaveImageUrlRequest request)
+        //{
+        //    var existing = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
+        //    if (existing == null) return NotFound();
 
-            try
-            {
-                await _mediator.Send(new UpdateInventoryCommand
-                {
-                    Id = existing.Id,
-                    Title = existing.Title,
-                    Description = existing.Description,
-                    ImageUrl = request.ImageUrl,
-                    IsPublic = existing.IsPublic,
-                    CategoryId = existing.CategoryId,
-                    Tags = existing.Tags,
-                    Version = existing.Version,
+        //    try
+        //    {
+        //        await _mediator.Send(new UpdateInventoryCommand
+        //        {
+        //            Id = existing.Id,
+        //            Title = existing.Title,
+        //            Description = existing.Description,
+        //            ImageUrl = request.ImageUrl,
+        //            IsPublic = existing.IsPublic,
+        //            CategoryId = existing.CategoryId,
+        //            Tags = existing.Tags,
+        //            Version = existing.Version,
 
-                    CustomString1Name = existing.CustomString1Name,
-                    CustomString1Shown = existing.CustomString1Shown,
-                    CustomString2Name = existing.CustomString2Name,
-                    CustomString2Shown = existing.CustomString2Shown,
-                    CustomString3Name = existing.CustomString3Name,
-                    CustomString3Shown = existing.CustomString3Shown,
-                    CustomInt1Name = existing.CustomInt1Name,
-                    CustomInt1Shown = existing.CustomInt1Shown,
-                    CustomInt2Name = existing.CustomInt2Name,
-                    CustomInt2Shown = existing.CustomInt2Shown,
-                    CustomInt3Name = existing.CustomInt3Name,
-                    CustomInt3Shown = existing.CustomInt3Shown,
-                    CustomText1Name = existing.CustomText1Name,
-                    CustomText1Shown = existing.CustomText1Shown,
-                    CustomText2Name = existing.CustomText2Name,
-                    CustomText2Shown = existing.CustomText2Shown,
-                    CustomText3Name = existing.CustomText3Name,
-                    CustomText3Shown = existing.CustomText3Shown,
-                    CustomBool1Name = existing.CustomBool1Name,
-                    CustomBool1Shown = existing.CustomBool1Shown,
-                    CustomBool2Name = existing.CustomBool2Name,
-                    CustomBool2Shown = existing.CustomBool2Shown,
-                    CustomBool3Name = existing.CustomBool3Name,
-                    CustomBool3Shown = existing.CustomBool3Shown,
-                    CustomLink1Name = existing.CustomLink1Name,
-                    CustomLink1Shown = existing.CustomLink1Shown,
-                    CustomLink2Name = existing.CustomLink2Name,
-                    CustomLink2Shown = existing.CustomLink2Shown,
-                    CustomLink3Name = existing.CustomLink3Name,
-                    CustomLink3Shown = existing.CustomLink3Shown,
+        //            CustomString1Name = existing.CustomString1Name,
+        //            CustomString1Shown = existing.CustomString1Shown,
+        //            CustomString2Name = existing.CustomString2Name,
+        //            CustomString2Shown = existing.CustomString2Shown,
+        //            CustomString3Name = existing.CustomString3Name,
+        //            CustomString3Shown = existing.CustomString3Shown,
+        //            CustomInt1Name = existing.CustomInt1Name,
+        //            CustomInt1Shown = existing.CustomInt1Shown,
+        //            CustomInt2Name = existing.CustomInt2Name,
+        //            CustomInt2Shown = existing.CustomInt2Shown,
+        //            CustomInt3Name = existing.CustomInt3Name,
+        //            CustomInt3Shown = existing.CustomInt3Shown,
+        //            CustomText1Name = existing.CustomText1Name,
+        //            CustomText1Shown = existing.CustomText1Shown,
+        //            CustomText2Name = existing.CustomText2Name,
+        //            CustomText2Shown = existing.CustomText2Shown,
+        //            CustomText3Name = existing.CustomText3Name,
+        //            CustomText3Shown = existing.CustomText3Shown,
+        //            CustomBool1Name = existing.CustomBool1Name,
+        //            CustomBool1Shown = existing.CustomBool1Shown,
+        //            CustomBool2Name = existing.CustomBool2Name,
+        //            CustomBool2Shown = existing.CustomBool2Shown,
+        //            CustomBool3Name = existing.CustomBool3Name,
+        //            CustomBool3Shown = existing.CustomBool3Shown,
+        //            CustomLink1Name = existing.CustomLink1Name,
+        //            CustomLink1Shown = existing.CustomLink1Shown,
+        //            CustomLink2Name = existing.CustomLink2Name,
+        //            CustomLink2Shown = existing.CustomLink2Shown,
+        //            CustomLink3Name = existing.CustomLink3Name,
+        //            CustomLink3Shown = existing.CustomLink3Shown,
 
-                });
-                return Ok(new { success = true });
-            }
-            catch (ConcurrencyException)
-            {
-                var fresh = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
-                if (fresh == null) return NotFound();
+        //        });
+        //        return Ok(new { success = true });
+        //    }
+        //    catch (ConcurrencyException)
+        //    {
+        //        var fresh = await _mediator.Send(new GetInventoryByIdQuery(request.InventoryId));
+        //        if (fresh == null) return NotFound();
 
-                await _mediator.Send(new UpdateInventoryCommand
-                {
-                    Id = fresh.Id,
-                    Title = fresh.Title,
-                    Description = fresh.Description,
-                    ImageUrl = request.ImageUrl,
-                    IsPublic = fresh.IsPublic,
-                    CategoryId = fresh.CategoryId,
-                    Tags = fresh.Tags,
-                    Version = fresh.Version,
+        //        await _mediator.Send(new UpdateInventoryCommand
+        //        {
+        //            Id = fresh.Id,
+        //            Title = fresh.Title,
+        //            Description = fresh.Description,
+        //            ImageUrl = request.ImageUrl,
+        //            IsPublic = fresh.IsPublic,
+        //            CategoryId = fresh.CategoryId,
+        //            Tags = fresh.Tags,
+        //            Version = fresh.Version,
 
-                    CustomString1Name = existing.CustomString1Name,
-                    CustomString1Shown = existing.CustomString1Shown,
-                    CustomString2Name = existing.CustomString2Name,
-                    CustomString2Shown = existing.CustomString2Shown,
-                    CustomString3Name = existing.CustomString3Name,
-                    CustomString3Shown = existing.CustomString3Shown,
-                    CustomInt1Name = existing.CustomInt1Name,
-                    CustomInt1Shown = existing.CustomInt1Shown,
-                    CustomInt2Name = existing.CustomInt2Name,
-                    CustomInt2Shown = existing.CustomInt2Shown,
-                    CustomInt3Name = existing.CustomInt3Name,
-                    CustomInt3Shown = existing.CustomInt3Shown,
-                    CustomText1Name = existing.CustomText1Name,
-                    CustomText1Shown = existing.CustomText1Shown,
-                    CustomText2Name = existing.CustomText2Name,
-                    CustomText2Shown = existing.CustomText2Shown,
-                    CustomText3Name = existing.CustomText3Name,
-                    CustomText3Shown = existing.CustomText3Shown,
-                    CustomBool1Name = existing.CustomBool1Name,
-                    CustomBool1Shown = existing.CustomBool1Shown,
-                    CustomBool2Name = existing.CustomBool2Name,
-                    CustomBool2Shown = existing.CustomBool2Shown,
-                    CustomBool3Name = existing.CustomBool3Name,
-                    CustomBool3Shown = existing.CustomBool3Shown,
-                    CustomLink1Name = existing.CustomLink1Name,
-                    CustomLink1Shown = existing.CustomLink1Shown,
-                    CustomLink2Name = existing.CustomLink2Name,
-                    CustomLink2Shown = existing.CustomLink2Shown,
-                    CustomLink3Name = existing.CustomLink3Name,
-                    CustomLink3Shown = existing.CustomLink3Shown,
-                });
-                return Ok(new { success = true });
-            }
-        }
+        //            CustomString1Name = existing.CustomString1Name,
+        //            CustomString1Shown = existing.CustomString1Shown,
+        //            CustomString2Name = existing.CustomString2Name,
+        //            CustomString2Shown = existing.CustomString2Shown,
+        //            CustomString3Name = existing.CustomString3Name,
+        //            CustomString3Shown = existing.CustomString3Shown,
+        //            CustomInt1Name = existing.CustomInt1Name,
+        //            CustomInt1Shown = existing.CustomInt1Shown,
+        //            CustomInt2Name = existing.CustomInt2Name,
+        //            CustomInt2Shown = existing.CustomInt2Shown,
+        //            CustomInt3Name = existing.CustomInt3Name,
+        //            CustomInt3Shown = existing.CustomInt3Shown,
+        //            CustomText1Name = existing.CustomText1Name,
+        //            CustomText1Shown = existing.CustomText1Shown,
+        //            CustomText2Name = existing.CustomText2Name,
+        //            CustomText2Shown = existing.CustomText2Shown,
+        //            CustomText3Name = existing.CustomText3Name,
+        //            CustomText3Shown = existing.CustomText3Shown,
+        //            CustomBool1Name = existing.CustomBool1Name,
+        //            CustomBool1Shown = existing.CustomBool1Shown,
+        //            CustomBool2Name = existing.CustomBool2Name,
+        //            CustomBool2Shown = existing.CustomBool2Shown,
+        //            CustomBool3Name = existing.CustomBool3Name,
+        //            CustomBool3Shown = existing.CustomBool3Shown,
+        //            CustomLink1Name = existing.CustomLink1Name,
+        //            CustomLink1Shown = existing.CustomLink1Shown,
+        //            CustomLink2Name = existing.CustomLink2Name,
+        //            CustomLink2Shown = existing.CustomLink2Shown,
+        //            CustomLink3Name = existing.CustomLink3Name,
+        //            CustomLink3Shown = existing.CustomLink3Shown,
+        //        });
+        //        return Ok(new { success = true });
+        //    }
+        //}
 
         [Authorize]
         [HttpPost]

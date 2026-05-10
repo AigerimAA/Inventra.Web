@@ -181,7 +181,7 @@
             formData.append('file', file);
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-            const response = await fetch('/Inventory/UploadImage', {
+            const response = await fetch('/Item/UploadImage', {
                 method: 'POST',
                 headers: { 'RequestVerificationToken': token },
                 body: formData

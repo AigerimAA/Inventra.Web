@@ -20,14 +20,16 @@ namespace Inventra.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ICloudStorageService _cloudStorageService;
 
         public ItemController(IMediator mediator, UserManager<ApplicationUser> userManager,
-            IInventoryPermissionService permissionService, ICurrentUserService currentUserService)
+            IInventoryPermissionService permissionService, ICurrentUserService currentUserService, ICloudStorageService cloudStorageService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentUserService;
+            _cloudStorageService = cloudStorageService;
         }
         public async Task<IActionResult> Create(int inventoryId)
         {
@@ -207,6 +209,17 @@ namespace Inventra.Web.Controllers
                 model.Inventory = inventory;
                 return View(model);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { error = "No file" });
+
+            await using var stream = file.OpenReadStream();
+            var url = await _cloudStorageService.UploadImageAsync(
+                stream, file.FileName, file.ContentType);
+            return Ok(new { url });
         }
 
         [HttpPost]
