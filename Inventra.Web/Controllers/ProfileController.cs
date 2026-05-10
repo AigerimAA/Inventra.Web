@@ -1,5 +1,4 @@
-﻿using Inventra.Application.Inventories.Queries.GetAllInventories;
-using Inventra.Application.Inventories.Queries.GetInventoriesByUserId;
+﻿using Inventra.Application.Inventories.Queries.GetInventoriesByUserId;
 using Inventra.Application.Inventories.Queries.GetInventoriesWithAccess;
 using Inventra.Domain.Entities;
 using Inventra.Web.Models;

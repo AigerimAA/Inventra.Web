@@ -3,7 +3,7 @@ using Inventra.Application.Interfaces;
 using Inventra.Domain.Interfaces;
 using MediatR;
 
-namespace Inventra.Application.Access.Queries
+namespace Inventra.Application.Access.Queries.GetInventoryUsers
 {
     public class GetInventoryUsersQueryHandler : IRequestHandler<GetInventoryUsersQuery, IEnumerable<AccessUserDto>>
     {

@@ -2,7 +2,7 @@
 using Inventra.Domain.Interfaces;
 using MediatR;
 
-namespace Inventra.Application.Tags.Queries
+namespace Inventra.Application.Tags.Queries.GetTagCloud
 {
     public class GetTagCloudQueryHandler : IRequestHandler<GetTagCloudQuery, IEnumerable<TagCloudItemDto>>
     {

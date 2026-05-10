@@ -1,7 +1,7 @@
-﻿using Inventra.Application.DTOs;
-using Inventra.Application.Access.Commands.AddAccess;
+﻿using Inventra.Application.Access.Commands.AddAccess;
 using Inventra.Application.Access.Commands.RemoveAccess;
-using Inventra.Application.Access.Queries;
+using Inventra.Application.Access.Queries.GetInventoryUsers;
+using Inventra.Application.Access.Queries.SearchUsers;
 using Inventra.Application.Interfaces;
 using Inventra.Domain.Interfaces;
 using MediatR;
@@ -14,12 +14,15 @@ namespace Inventra.Web.Controllers
     public class AccessController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IAccessRepository _accessRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IInventoryPermissionService _permissionService;
 
         public AccessController(IMediator mediator, IAccessRepository accessRepository, ICurrentUserService currentUserService, IInventoryPermissionService permissionService)
-        { _mediator = mediator; _accessRepository = accessRepository; _currentUserService = currentUserService; _permissionService = permissionService; }
+        { 
+            _mediator = mediator; 
+            _currentUserService = currentUserService; 
+            _permissionService = permissionService; 
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers(int inventoryId)
@@ -38,10 +41,11 @@ namespace Inventra.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string query)
         {
-            if (string.IsNullOrWhiteSpace(query) || query.Length < 2) return Json(new List<object>());
-            var users = await _accessRepository.SearchUsersAsync(query);
+            if (string.IsNullOrWhiteSpace(query) || query.Length < 2)
+                return Json(new List<object>());
+            var users = await _mediator.Send(new SearchUsersQuery(query));
             return Json(users.Select(u => new { id = u.Id, userName = u.UserName, email = u.Email }));
-        }
+        }        
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AccessRequest request, CancellationToken cancellationToken)

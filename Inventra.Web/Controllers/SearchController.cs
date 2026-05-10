@@ -1,17 +1,15 @@
-﻿using Inventra.Domain.Interfaces;
+﻿using Inventra.Application.Search.Queries;
+using Inventra.Domain.Interfaces;
 using Inventra.Web.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventra.Web.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly ISearchRepository _searchRepository;
-
-        public SearchController(ISearchRepository searchRepository)
-        {
-            _searchRepository = searchRepository;
-        }
+        private readonly IMediator _mediator;
+        public SearchController(IMediator mediator) => _mediator = mediator;
 
         public async Task<IActionResult> Index(string q, CancellationToken cancellationToken)
         {
@@ -19,35 +17,30 @@ namespace Inventra.Web.Controllers
                 return View(new SearchResultViewModel());
 
             ViewData["SearchQuery"] = q;
+            var result = await _mediator.Send(new SearchQuery(q), cancellationToken);
 
-            var inventories = await _searchRepository.SearchInventoriesAsync(q, cancellationToken);
-            var items = await _searchRepository.SearchItemsAsync(q, cancellationToken);
-
-            var result = new SearchResultViewModel
+            var viewModel = new SearchResultViewModel
             {
                 Query = q,
-                Inventories = inventories.Select(i => new SearchInventoryResult
+                Inventories = result.Inventories.Select(i => new SearchInventoryResult
                 {
                     Id = i.Id,
                     Title = i.Title,
                     Description = i.Description,
-                    CategoryName = i.Category?.Name,
-                    OwnerName = i.Owner?.UserName,
-                    ItemsCount = i.Items.Count
+                    CategoryName = i.CategoryName,
+                    OwnerName = i.OwnerName,
+                    ItemsCount = i.ItemsCount
                 }).ToList(),
-
-                Items = items.Select(i => new SearchItemResult
+                Items = result.Items.Select(i => new SearchItemResult
                 {
                     Id = i.Id,
                     CustomId = i.CustomId,
                     InventoryId = i.InventoryId,
-                    InventoryTitle = i.Inventory?.Title,
-                    CreatedByName = i.CreatedBy?.UserName
+                    InventoryTitle = i.InventoryTitle,
+                    CreatedByName = i.CreatedByName
                 }).ToList()
             };
-
-            return View(result);
-
+            return View(viewModel);
         }
     }
 }
