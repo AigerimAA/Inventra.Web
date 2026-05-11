@@ -161,7 +161,13 @@ namespace Inventra.Domain.Entities
         public void AddTag(Tag tag)
         {
             if (_inventoryTags.Any(t => t.TagId == tag.Id)) return;
-            _inventoryTags.Add(new InventoryTag { Tag = tag, Inventory = this });
+            _inventoryTags.Add(new InventoryTag
+            {
+                TagId = tag.Id,
+                InventoryId = Id,
+                Tag = tag,
+                Inventory = this
+            });
         }
 
         public void ReplaceTags(IEnumerable<Tag> newTags)
