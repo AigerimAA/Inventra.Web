@@ -11,13 +11,24 @@ namespace Inventra.Application.CustomId.Commands
     {
         private readonly ICustomIdRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
-        public SaveCustomIdFormatCommandHandler(ICustomIdRepository repository, IUnitOfWork unitOfWork)
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IInventoryPermissionService _permissionService;
+        public SaveCustomIdFormatCommandHandler(ICustomIdRepository repository, IUnitOfWork unitOfWork,
+            ICurrentUserService currentUserService, IInventoryPermissionService permissionService)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
+            _permissionService = permissionService;
         }
         public async Task Handle(SaveCustomIdFormatCommand request, CancellationToken cancellationToken)
         {
+            var userId = _currentUserService.UserId
+        ?? throw new UnauthorizedAccessException("User is not authenticated");
+
+            if (!await _permissionService.CanManageAsync(userId, _currentUserService.IsAdmin, request.Format.InventoryId))
+                throw new UnauthorizedAccessException("Only the inventory owner or an admin can edit custom ID format");
+
             var elements = (request.Format.Elements ?? Enumerable.Empty<CustomIdElementDto>())
                 .Select((e, i) =>
                 {
