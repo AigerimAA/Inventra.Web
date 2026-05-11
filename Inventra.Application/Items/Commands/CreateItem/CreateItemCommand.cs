@@ -6,8 +6,6 @@ namespace Inventra.Application.Items.Commands.CreateItem
     public record CreateItemCommand : IRequest<ItemDto>
     {
         public int InventoryId { get; init; }
-        public string CreatedById { get; init; } = string.Empty;
-
         public string? CustomString1Value { get; init; }
         public string? CustomString2Value { get; init; }
         public string? CustomString3Value { get; init; }

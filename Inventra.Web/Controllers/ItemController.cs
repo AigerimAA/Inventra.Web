@@ -5,11 +5,9 @@ using Inventra.Application.Items.Commands.CreateItem;
 using Inventra.Application.Items.Commands.DeleteItem;
 using Inventra.Application.Items.Commands.UpdateItem;
 using Inventra.Application.Items.Queries.GetItemById;
-using Inventra.Domain.Entities;
 using Inventra.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace Inventra.Web.Controllers
 {
@@ -17,16 +15,14 @@ namespace Inventra.Web.Controllers
     public class ItemController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
         private readonly ICloudStorageService _cloudStorageService;
 
-        public ItemController(IMediator mediator, UserManager<ApplicationUser> userManager,
-            IInventoryPermissionService permissionService, ICurrentUserService currentUserService, ICloudStorageService cloudStorageService)
+        public ItemController(IMediator mediator, IInventoryPermissionService permissionService,
+            ICurrentUserService currentUserService, ICloudStorageService cloudStorageService)
         {
             _mediator = mediator;
-            _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentUserService;
             _cloudStorageService = cloudStorageService;
@@ -64,32 +60,8 @@ namespace Inventra.Web.Controllers
                 ViewBag.Inventory = inv;
                 return View(command);
             }
-
-            var commandWithUser = new CreateItemCommand
-            {
-                InventoryId = command.InventoryId,
-                CreatedById = userId,   
-                ImageUrl = command.ImageUrl,
-                CustomString1Value = command.CustomString1Value,
-                CustomString2Value = command.CustomString2Value,
-                CustomString3Value = command.CustomString3Value,
-                CustomInt1Value = command.CustomInt1Value,
-                CustomInt2Value = command.CustomInt2Value,
-                CustomInt3Value = command.CustomInt3Value,
-                CustomText1Value = command.CustomText1Value,
-                CustomText2Value = command.CustomText2Value,
-                CustomText3Value = command.CustomText3Value,
-                CustomBool1Value = command.CustomBool1Value,
-                CustomBool2Value = command.CustomBool2Value,
-                CustomBool3Value = command.CustomBool3Value,
-                CustomLink1Value = command.CustomLink1Value,
-                CustomLink2Value = command.CustomLink2Value,
-                CustomLink3Value = command.CustomLink3Value
-            };
-
-            await _mediator.Send(commandWithUser);
-            return RedirectToAction("Details", "Inventory",
-                new { id = command.InventoryId });
+            await _mediator.Send(command);
+            return RedirectToAction("Details", "Inventory", new { id = command.InventoryId });
         }
 
         [AllowAnonymous]

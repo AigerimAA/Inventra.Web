@@ -8,9 +8,6 @@ namespace Inventra.Application.Items.Commands.CreateItem
         {
             RuleFor(x => x.InventoryId)
                 .GreaterThan(0).WithMessage("Inventory ID is required");
-
-            RuleFor(x => x.CreatedById)
-                .NotEmpty().WithMessage("Creator ID is required");
         }
     }
 }
