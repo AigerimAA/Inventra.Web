@@ -188,8 +188,19 @@ namespace Inventra.Web.Controllers
                 CustomLink3Name = dto.CustomLink3Name,
                 CustomLink3Shown = dto.CustomLink3Shown
             };
-
-            var _ = await _mediator.Send(command);
+            try
+            {
+                var _ = await _mediator.Send(command);
+            }
+            catch (ConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Someone else modified this inventory. Please reload and try again");
+                var categories = await _mediator.Send(new GetAllCategoriesQuery());
+                ViewBag.Categories = new Microsoft.AspNetCore.Mvc.Rendering
+                    .SelectList(categories, "Id", "Name");
+                return View("Edit", dto);
+            }
             return RedirectToAction(nameof(Details), new { id = dto.Id });
         }
 
