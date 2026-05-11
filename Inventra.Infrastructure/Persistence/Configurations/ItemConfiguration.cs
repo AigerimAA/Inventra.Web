@@ -44,6 +44,8 @@ namespace Inventra.Infrastructure.Persistence.Configurations
 
             builder.Navigation(i => i.Likes)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Property(i => i.ImageUrl).HasMaxLength(2000);
         }
     }
 }
