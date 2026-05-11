@@ -23,6 +23,10 @@
         <div class="d-flex gap-2">
             <a asp-action="Edit" asp-route-id="@Model.Id"
                class="btn btn-outline-primary btn-sm">@L["Edit"]</a>
+            <a asp-controller="Inventory" asp-action="ExportToCsv" asp-route-id="@Model.Id"
+               class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-download"></i> Export CSV
+            </a>
             <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                 <button type="submit" class="btn btn-outline-danger btn-sm"
                         onclick="return confirm('Delete this inventory?')">
