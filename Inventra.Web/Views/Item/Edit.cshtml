@@ -24,125 +24,68 @@
             <input type="hidden" name="VersionString" value="@Model.VersionString" />
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            @if (inventory.CustomString1Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomString1Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomString1Name</label>
-                    <input asp-for="Command.CustomString1Value" class="form-control" />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomString1Name</label><input asp-for="Command.CustomString1Value" class="form-control" /></div>
             }
-            @if (inventory.CustomString2Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomString2Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomString2Name</label>
-                    <input asp-for="Command.CustomString2Value" class="form-control" />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomString2Name</label><input asp-for="Command.CustomString2Value" class="form-control" /></div>
             }
-            @if (inventory.CustomString3Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomString3Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomString3Name</label>
-                    <input asp-for="Command.CustomString3Value" class="form-control" />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomString3Name</label><input asp-for="Command.CustomString3Value" class="form-control" /></div>
             }
-            @if (inventory.CustomInt1Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomInt1Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomInt1Name</label>
-                    <input asp-for="Command.CustomInt1Value" class="form-control" type="number" step="any" />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomInt1Name</label><input asp-for="Command.CustomInt1Value" class="form-control" type="number" step="any" /></div>
             }
-            @if (inventory.CustomInt2Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomInt2Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomInt2Name</label>
-                    <input asp-for="Command.CustomInt2Value" class="form-control" type="number" step="any" />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomInt2Name</label><input asp-for="Command.CustomInt2Value" class="form-control" type="number" step="any" /></div>
             }
-            @if (inventory.CustomInt3Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomInt3Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomInt3Name</label>
-                    <input asp-for="Command.CustomInt3Value" class="form-control" type="number" step="any"
-                    />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomInt3Name</label><input asp-for="Command.CustomInt3Value" class="form-control" type="number" step="any" /></div>
             }
-            @if (inventory.CustomText1Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomText1Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomText1Name</label>
-                    <textarea asp-for="Command.CustomText1Value" class="form-control" rows="3"></textarea>
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomText1Name</label><textarea asp-for="Command.CustomText1Value" class="form-control" rows="3"></textarea></div>
             }
-            @if (inventory.CustomText2Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomText2Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomText2Name</label>
-                    <textarea asp-for="Command.CustomText2Value" class="form-control" rows="3"></textarea>
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomText2Name</label><textarea asp-for="Command.CustomText2Value" class="form-control" rows="3"></textarea></div>
             }
-            @if (inventory.CustomText3Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomText3Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomText3Name</label>
-                    <textarea asp-for="Command.CustomText3Value" class="form-control" rows="3"></textarea>
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomText3Name</label><textarea asp-for="Command.CustomText3Value" class="form-control" rows="3"></textarea></div>
             }
-            @if (inventory.CustomBool1Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomBool1Name))
             {
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input"
-                           name="Command.CustomBool1Value"
-                           value="true"
-                    @(Model.Command.CustomBool1Value == true ? "checked" : "") />
-                    <label class="form-check-label">@inventory.CustomBool1Name</label>
-                </div>
+                <div class="mb-3 form-check"><input type="checkbox" class="form-check-input" name="Command.CustomBool1Value" value="true" @(Model.Command.CustomBool1Value == true ? "checked" : "") /><label class="form-check-label">@inventory.CustomBool1Name</label></div>
             }
-            @if (inventory.CustomBool2Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomBool2Name))
             {
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input"
-                           name="Command.CustomBool2Value"
-                           value="true"
-                    @(Model.Command.CustomBool2Value == true ? "checked" : "") />
-                    <label class="form-check-label">@inventory.CustomBool2Name</label>
-                </div>
+                <div class="mb-3 form-check"><input type="checkbox" class="form-check-input" name="Command.CustomBool2Value" value="true" @(Model.Command.CustomBool2Value == true ? "checked" : "") /><label class="form-check-label">@inventory.CustomBool2Name</label></div>
             }
-            @if (inventory.CustomBool3Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomBool3Name))
             {
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input"
-                           name="Command.CustomBool3Value"
-                           value="true"
-                    @(Model.Command.CustomBool3Value == true ? "checked" : "") />
-                    <label class="form-check-label">@inventory.CustomBool3Name</label>
-                </div>
+                <div class="mb-3 form-check"><input type="checkbox" class="form-check-input" name="Command.CustomBool3Value" value="true" @(Model.Command.CustomBool3Value == true ? "checked" : "") /><label class="form-check-label">@inventory.CustomBool3Name</label></div>
             }
-            @if (inventory.CustomLink1Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomLink1Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomLink1Name</label>
-                    <input asp-for="Command.CustomLink1Value" class="form-control" placeholder="https://..." />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomLink1Name</label><input asp-for="Command.CustomLink1Value" class="form-control" placeholder="https://..." /></div>
             }
-            @if (inventory.CustomLink2Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomLink2Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomLink2Name</label>
-                    <input asp-for="Command.CustomLink2Value" class="form-control" placeholder="https://..." />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomLink2Name</label><input asp-for="Command.CustomLink2Value" class="form-control" placeholder="https://..." /></div>
             }
-            @if (inventory.CustomLink3Name != null)
+            @if (!string.IsNullOrEmpty(inventory.CustomLink3Name))
             {
-                <div class="mb-3">
-                    <label class="form-label">@inventory.CustomLink3Name</label>
-                    <input asp-for="Command.CustomLink3Value" class="form-control" placeholder="https://..." />
-                </div>
+                <div class="mb-3"><label class="form-label">@inventory.CustomLink3Name</label><input asp-for="Command.CustomLink3Value" class="form-control" placeholder="https://..." /></div>
             }
 
-            @if (inventory.CustomString1Name == null && inventory.CustomInt1Name == null &&
-                 inventory.CustomText1Name == null && inventory.CustomBool1Name == null &&
-                 inventory.CustomLink1Name == null)
+            @if (string.IsNullOrEmpty(inventory.CustomString1Name) && string.IsNullOrEmpty(inventory.CustomInt1Name) && string.IsNullOrEmpty(inventory.CustomText1Name) && string.IsNullOrEmpty(inventory.CustomBool1Name) && string.IsNullOrEmpty(inventory.CustomLink1Name))
             {
                 <div class="alert alert-info">This inventory has no custom fields.</div>
             }
