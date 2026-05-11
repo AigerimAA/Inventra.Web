@@ -58,7 +58,6 @@ namespace Inventra.Infrastructure
             }
 
             var brevoLogin = configuration["Brevo:Login"];
-            Console.WriteLine($"DEBUG: Brevo:Login = '{brevoLogin}'");
             if (!string.IsNullOrEmpty(brevoLogin))
             {
                 Console.WriteLine("DEBUG: Registering BrevoEmailService");

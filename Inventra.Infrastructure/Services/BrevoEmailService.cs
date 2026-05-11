@@ -37,11 +37,14 @@ namespace Inventra.Infrastructure.Services
                     Subject = "Confirm your Inventra account",
                     IsBodyHtml = true,
                     Body = $"""
-                        <h2>Welcome to Inventra, {userName}!</h2>
-                        <p>Please confirm your email address by clicking the link below:</p>
-                        <p><a href="{confirmationLink}" style="background:#0097a7;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;">Confirm Email</a></p>
-                        <p>If you didn't register, ignore this email.</p>
-                        """
+                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+                        <h2 style="color: #0097a7;">Welcome to Inventra, {userName}!</h2>
+                        <p style="font-size: 16px; color: #333;">Thank you for registering. Please confirm your email address to get started.</p>
+                        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Click the button below to confirm your email:</p>
+                        <a href="{confirmationLink}" style="display: inline-block; background: #0097a7; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 16px;">Confirm Email</a>
+                        <p style="font-size: 12px; color: #999; margin-top: 20px;">If you didn't register on Inventra, you can safely ignore this email.</p>
+                    </div>
+                    """
                 };
                 message.To.Add(new MailAddress(toEmail, userName));
                 await client.SendMailAsync(message);
@@ -68,11 +71,13 @@ namespace Inventra.Infrastructure.Services
                     Subject = "Reset your Inventra password",
                     IsBodyHtml = true,
                     Body = $"""
-                        <h2>Password Reset</h2>
-                        <p>Hi {userName}, click below to reset your password:</p>
-                        <p><a href="{resetLink}" style="background:#0097a7;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;">Reset Password</a></p>
-                        <p>If you didn't request this, ignore this email.</p>
-                        """
+                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+                        <h2 style="color: #0097a7;">Password Reset</h2>
+                        <p style="font-size: 16px; color: #333;">Hi {userName}, click below to reset your password:</p>
+                        <a href="{resetLink}" style="display: inline-block; background: #0097a7; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 16px;">Reset Password</a>
+                        <p style="font-size: 12px; color: #999; margin-top: 20px;">If you didn't request this, ignore this email.</p>
+                    </div>
+                    """
                 };
                 message.To.Add(new MailAddress(toEmail, userName));
                 await client.SendMailAsync(message);
