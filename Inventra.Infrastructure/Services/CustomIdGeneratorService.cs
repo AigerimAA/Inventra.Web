@@ -136,23 +136,22 @@ namespace Inventra.Infrastructure.Services
         private async Task<string> BuildSequenceAsync(
             int inventoryId, string? fmt, CancellationToken cancellationToken)
         {
-            var newValue = await _context.Database.ExecuteSqlRawAsync(
-            """
-            MERGE INTO InventorySequence WITH (HOLDLOCK) AS target
-            USING (SELECT {0} AS InventoryId) AS source
-            ON target.InventoryId = source.InventoryId
-            WHEN MATCHED THEN
-                UPDATE SET CurrentValue = CurrentValue + 1
-            WHEN NOT MATCHED THEN
-                INSERT (InventoryId, CurrentValue) VALUES ({0}, 1);
-            """,
-            inventoryId);
+            var result = await _context.Database
+            .SqlQuery<int>(
+                $"""
+                MERGE INTO InventorySequence WITH (HOLDLOCK) AS target
+                USING (SELECT {inventoryId} AS InventoryId) AS source
+                ON target.InventoryId = source.InventoryId
+                WHEN MATCHED THEN
+                    UPDATE SET CurrentValue = CurrentValue + 1
+                WHEN NOT MATCHED THEN
+                    INSERT (InventoryId, CurrentValue) VALUES ({inventoryId}, 1)
+                OUTPUT inserted.CurrentValue;
+                """)
+            .ToListAsync(cancellationToken);
 
-            var seq = await _context.InventorySequence
-                .AsNoTracking()
-                .FirstAsync(s => s.InventoryId == inventoryId, cancellationToken);
-
-            return FormatSequenceValue(seq.CurrentValue, fmt);
+            var newValue = result.First();
+            return FormatSequenceValue(newValue, fmt);
         }
 
         private static string FormatSequenceValue(int value, string? fmt)
