@@ -74,12 +74,15 @@
     <div class="tab-pane fade show active" id="items">
     <div class="d-flex justify-content-end mb-2 gap-2">
     
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a asp-controller="Item" asp-action="Create"
-           asp-route-inventoryId="@Model.Id"
-           class="btn btn-primary btn-sm">+ Add Item</a>
-    }
+    @if (User.Identity?.IsAuthenticated == true &&
+     (Model.IsPublic ||
+      Model.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ||
+      User.IsInRole("Admin")))
+{
+    <a asp-controller="Item" asp-action="Create"
+       asp-route-inventoryId="@Model.Id"
+       class="btn btn-primary btn-sm">+ Add Item</a>
+}
  </div>   
 
     <div class="inv-card">
