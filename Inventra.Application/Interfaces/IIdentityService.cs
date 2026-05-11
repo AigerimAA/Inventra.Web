@@ -1,7 +1,5 @@
 using Inventra.Application.DTOs;
 using Inventra.Domain.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 
 namespace Inventra.Application.Interfaces
 {
@@ -21,5 +19,7 @@ namespace Inventra.Application.Interfaces
         Task SignOutAsync();
         Task<string> GetExternalLoginRedirectUrlAsync(string provider, string redirectUrl);
         Task<(AuthResult Result, ApplicationUser? User)> ExternalLoginAsync();
+        Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);
+        Task<bool> ConfirmEmailAsync(string userId, string token);
     }
 }

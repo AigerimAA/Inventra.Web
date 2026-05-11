@@ -174,5 +174,20 @@ namespace Inventra.Infrastructure.Services
             if (result.IsLockedOut) return AuthResult.LockedOut();
             return AuthResult.Failure(["Invalid login attempt"]);
         }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return System.Web.HttpUtility.UrlEncode(token);
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+            var decodedToken = System.Web.HttpUtility.UrlDecode(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+            return result.Succeeded;
+        }
     }
 }

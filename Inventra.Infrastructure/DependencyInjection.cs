@@ -56,6 +56,11 @@ namespace Inventra.Infrastructure
             {
                 services.AddScoped<ICloudStorageService, NullCloudStorageService>();
             }
+
+            var sendGridKey = configuration["SendGrid:ApiKey"];
+            if (!string.IsNullOrEmpty(sendGridKey))
+                services.AddScoped<IEmailService, SendGridEmailService>();
+
             return services;
         }
     }

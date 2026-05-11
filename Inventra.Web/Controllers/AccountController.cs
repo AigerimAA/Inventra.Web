@@ -11,11 +11,13 @@ namespace Inventra.Web.Controllers
     {
         private readonly IIdentityService _identityService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailService _emailService;
         public AccountController(IIdentityService identityService,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, IEmailService emailService)
         {
             _identityService = identityService;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -38,8 +40,14 @@ namespace Inventra.Web.Controllers
 
             if (result.Succeeded)
             {
-                await _identityService.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                var token = await _identityService.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                    new { userId = user.Id, token }, Request.Scheme)!;
+
+                await _emailService.SendEmailConfirmationAsync(user.Email!, user.UserName!, confirmationLink);
+
+                TempData["Info"] = "Registration successful! Please check your email to confirm your account.";
+                return RedirectToAction("Login");
             }
 
             foreach (var error in result.Errors)
@@ -140,6 +148,20 @@ namespace Inventra.Web.Controllers
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
 
             return LocalRedirect(returnUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+                return RedirectToAction("Login");
+
+            var success = await _identityService.ConfirmEmailAsync(userId, token);
+            TempData[success ? "Success" : "Error"] = success
+                ? "Email confirmed! You can now log in."
+                : "Email confirmation failed. The link may have expired.";
+
+            return RedirectToAction("Login");
         }
     }
 }

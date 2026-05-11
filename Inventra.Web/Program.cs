@@ -40,7 +40,7 @@ namespace Inventra.Web
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
@@ -104,6 +104,11 @@ namespace Inventra.Web
                     };
                     await userManager.CreateAsync(adminUser, "Admin1234!");
                     await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+                else if (!adminUser.EmailConfirmed)
+                {
+                    adminUser.EmailConfirmed = true;
+                    await userManager.UpdateAsync(adminUser);
                 }
             }
 

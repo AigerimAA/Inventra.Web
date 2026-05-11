@@ -6,6 +6,20 @@
 
 <div class="row justify-content-center">
     <div class="col-md-5">
+
+        @if (TempData["Info"] != null)
+        {
+            <div class="alert alert-info">@TempData["Info"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
         <h2 class="mb-4">@L["Login"]</h2>
 
         <form asp-action="Login" method="post">
