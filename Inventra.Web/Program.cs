@@ -92,17 +92,25 @@ namespace Inventra.Web
                     await roleManager.CreateAsync(new IdentityRole("Admin"));
 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var adminEmail = "admin@inventra.com";
+                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+                var adminEmail = configuration["AdminSettings:Email"]
+                    ?? throw new InvalidOperationException("AdminSettings:Email is not configured");
+                var adminUserName = configuration["AdminSettings:UserName"]
+                    ?? throw new InvalidOperationException("AdminSettings:UserName is not configured");
+                var adminPassword = configuration["AdminSettings:Password"]
+                    ?? throw new InvalidOperationException("AdminSettings:Password is not configured");
+
                 var adminUser = await userManager.FindByEmailAsync(adminEmail);
                 if (adminUser == null)
                 {
                     adminUser = new ApplicationUser
                     {
-                        UserName = "admin",
+                        UserName = adminUserName,
                         Email = adminEmail,
                         EmailConfirmed = true
                     };
-                    await userManager.CreateAsync(adminUser, "Admin1234!");
+                    await userManager.CreateAsync(adminUser, adminPassword);
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
                 else if (!adminUser.EmailConfirmed)
