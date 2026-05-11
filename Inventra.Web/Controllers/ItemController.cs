@@ -100,6 +100,18 @@ namespace Inventra.Web.Controllers
 
             var inventory = await _mediator.Send(new GetInventoryByIdQuery(item.InventoryId));
             ViewBag.Inventory = inventory;
+
+            var userId = _currentUserService.UserId;
+            if (userId != null)
+            {
+                ViewBag.HasWriteAccess = await _permissionService.CanWriteAsync(
+                    userId, _currentUserService.IsAdmin, item.InventoryId);
+            }
+            else
+            {
+                ViewBag.HasWriteAccess = false;
+            }
+
             return View(item);
         }
 

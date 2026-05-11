@@ -313,6 +313,7 @@ namespace Inventra.Web.Controllers
             return Ok(new { preview });
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}/export")]
         public async Task<IActionResult> ExportToCsv(int id)
         {
