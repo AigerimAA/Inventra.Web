@@ -1,7 +1,6 @@
 ﻿using Inventra.Application.Categories.Queries.GetAllCategories;
 using Inventra.Application.Common.Exceptions;
 using Inventra.Application.CustomId.Commands;
-using Inventra.Application.CustomId.Queries;
 using Inventra.Application.CustomId.Queries.GetCustomIdFormat;
 using Inventra.Application.CustomId.Queries.PreviewCustomId;
 using Inventra.Application.DTOs;

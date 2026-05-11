@@ -12,10 +12,6 @@ namespace Inventra.Application.Inventories.Commands.CreateInventory
 
             RuleFor(x => x.CategoryId)
                 .GreaterThan(0).WithMessage("Category is required");
-
-            RuleFor(x => x.OwnerId)
-                .NotEmpty().WithMessage("Owner is required");
-
         }
     }
 }

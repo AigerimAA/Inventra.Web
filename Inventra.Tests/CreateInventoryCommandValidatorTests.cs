@@ -11,10 +11,8 @@ namespace Inventra.Tests
         [Fact]
         public void Title_Empty_ShouldHaveValidationError()
         {
-            var command = new CreateInventoryCommand { Title = "", OwnerId = "user-1", CategoryId = 1 };
-
+            var command = new CreateInventoryCommand { Title = "", CategoryId = 1 };
             var result = _validator.TestValidate(command);
-
             result.ShouldHaveValidationErrorFor(x => x.Title);
         }
 
@@ -24,33 +22,18 @@ namespace Inventra.Tests
             var command = new CreateInventoryCommand
             {
                 Title = new string('A', 201),
-                OwnerId = "user-1",
                 CategoryId = 1
             };
-
             var result = _validator.TestValidate(command);
-
             result.ShouldHaveValidationErrorFor(x => x.Title);
         }
 
         [Fact]
         public void CategoryId_Zero_ShouldHaveValidationError()
         {
-            var command = new CreateInventoryCommand { Title = "Test", OwnerId = "user-1", CategoryId = 0 };
-
+            var command = new CreateInventoryCommand { Title = "Test", CategoryId = 0 };
             var result = _validator.TestValidate(command);
-
             result.ShouldHaveValidationErrorFor(x => x.CategoryId);
-        }
-
-        [Fact]
-        public void OwnerId_Empty_ShouldHaveValidationError()
-        {
-            var command = new CreateInventoryCommand { Title = "Test", OwnerId = "", CategoryId = 1 };
-
-            var result = _validator.TestValidate(command);
-
-            result.ShouldHaveValidationErrorFor(x => x.OwnerId);
         }
 
         [Fact]
@@ -59,12 +42,9 @@ namespace Inventra.Tests
             var command = new CreateInventoryCommand
             {
                 Title = "My Inventory",
-                OwnerId = "user-123",
                 CategoryId = 1
             };
-
             var result = _validator.TestValidate(command);
-
             result.ShouldNotHaveAnyValidationErrors();
         }
 
@@ -74,12 +54,9 @@ namespace Inventra.Tests
             var command = new CreateInventoryCommand
             {
                 Title = new string('A', 200),
-                OwnerId = "user-1",
                 CategoryId = 1
             };
-
             var result = _validator.TestValidate(command);
-
             result.ShouldNotHaveValidationErrorFor(x => x.Title);
         }
     }
