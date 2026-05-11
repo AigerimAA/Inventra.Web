@@ -8,10 +8,8 @@ namespace Inventra.Domain.Entities
         public int Id { get; set; }
         public CustomIdElementType ElementType { get; set; } = CustomIdElementType.Fixed;
 
-        [MaxLength(200)]
         public string? FormatString { get; set; }
 
-        [MaxLength(200)]
         public string? FixedValue { get; set; }
         public int SortOrder { get; set; }
 
