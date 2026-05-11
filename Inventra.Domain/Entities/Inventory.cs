@@ -72,7 +72,7 @@ namespace Inventra.Domain.Entities
         public IReadOnlyCollection<Comment> Comments => _comments;
 
         public Inventory(string title, int categoryId, string ownerId,
-            string? description = null, string? imageUrl = null)
+            string? description = null, string? imageUrl = null, bool isPublic = false)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new DomainException("Title cannot be empty");
@@ -86,6 +86,7 @@ namespace Inventra.Domain.Entities
             OwnerId = ownerId;
             Description = description;
             ImageUrl = imageUrl;
+            IsPublic = isPublic;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }

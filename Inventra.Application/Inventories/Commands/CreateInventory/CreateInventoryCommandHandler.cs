@@ -27,7 +27,8 @@ namespace Inventra.Application.Inventories.Commands.CreateInventory
                 request.CategoryId,
                 request.OwnerId,
                 request.Description,
-                request.ImageUrl);
+                request.ImageUrl,
+                request.IsPublic);
 
             await _inventoryRepository.AddAsync(inventory);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
