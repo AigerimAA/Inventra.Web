@@ -10,7 +10,6 @@ namespace Inventra.Application.Inventories.Commands.CreateInventory
         public string? ImageUrl { get; init; }
         public bool IsPublic { get; init; }
         public int CategoryId { get; init; }
-        public string OwnerId { get; init; } = string.Empty;
         public IList<string> Tags { get; init; } = new List<string>();
     }
 }

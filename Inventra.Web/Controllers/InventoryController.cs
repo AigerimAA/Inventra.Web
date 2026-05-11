@@ -12,11 +12,9 @@ using Inventra.Application.Inventories.Queries.GetAllInventories;
 using Inventra.Application.Inventories.Queries.GetInventoryById;
 using Inventra.Application.Inventories.Queries.GetInventoryStats;
 using Inventra.Application.Items.Queries.GetItemsByInventoryId;
-using Inventra.Domain.Entities;
 using Inventra.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventra.Web.Controllers
@@ -24,17 +22,14 @@ namespace Inventra.Web.Controllers
     public class InventoryController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInventoryPermissionService _permissionService;
         private readonly ICurrentUserService _currentUserService;
         private readonly ICustomIdGenerator _customIdGenerator;
 
-        public InventoryController(IMediator mediator, UserManager<ApplicationUser> userManager,
-            IInventoryPermissionService permissionService, ICurrentUserService currentService, 
-            ICustomIdGenerator customIdGenerator)
+        public InventoryController(IMediator mediator, IInventoryPermissionService permissionService, 
+            ICurrentUserService currentService, ICustomIdGenerator customIdGenerator)
         {
             _mediator = mediator;
-            _userManager = userManager;
             _permissionService = permissionService;
             _currentUserService = currentService;
             _customIdGenerator = customIdGenerator;
@@ -75,20 +70,7 @@ namespace Inventra.Web.Controllers
             if (!ModelState.IsValid)
                 return View(command);
 
-            var userId = _userManager.GetUserId(User)!;
-
-            var commandWithOwner = new CreateInventoryCommand
-            {
-                Title = command.Title,
-                Description = command.Description,
-                ImageUrl = command.ImageUrl,
-                IsPublic = command.IsPublic,
-                CategoryId = command.CategoryId,
-                OwnerId = userId,
-                Tags = command.Tags
-            };
-
-            var result = await _mediator.Send(commandWithOwner);
+            var result = await _mediator.Send(command);
             return RedirectToAction(nameof(Details), new { id = result.Id });
         }
 
