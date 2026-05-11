@@ -52,6 +52,10 @@ namespace Inventra.Infrastructure
                 services.AddSingleton(new Cloudinary(cloudinaryAccount));
                 services.AddScoped<ICloudStorageService, CloudStorageService>();
             }
+            else
+            {
+                services.AddScoped<ICloudStorageService, NullCloudStorageService>();
+            }
             return services;
         }
     }
