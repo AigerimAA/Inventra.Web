@@ -23,10 +23,7 @@
         <div class="d-flex gap-2">
             <a asp-action="Edit" asp-route-id="@Model.Id"
                class="btn btn-outline-primary btn-sm">@L["Edit"]</a>
-            <a asp-controller="Inventory" asp-action="ExportToCsv" asp-route-id="@Model.Id"
-               class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-download"></i> Export CSV
-            </a>
+            
             <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                 <button type="submit" class="btn btn-outline-danger btn-sm"
                         onclick="return confirm('Delete this inventory?')">
@@ -49,6 +46,9 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#stats">@L["Stats"]</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#export">Export</a>
     </li>
 </ul>
 
@@ -73,17 +73,14 @@
 <div class="tab-content">
     <div class="tab-pane fade show active" id="items">
     <div class="d-flex justify-content-end mb-2 gap-2">
-    <a asp-controller="Inventory" asp-action="ExportToCsv" asp-route-id="@Model.Id"
-       class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-download"></i> Export CSV
-    </a>
+    
     @if (User.Identity?.IsAuthenticated == true)
     {
         <a asp-controller="Item" asp-action="Create"
            asp-route-inventoryId="@Model.Id"
            class="btn btn-primary btn-sm">+ Add Item</a>
     }
-</div>
+ </div>   
 
     <div class="inv-card">
         <div class="inv-card-header">
@@ -415,8 +412,26 @@
     {
         <div class="alert alert-info mt-3">@L["NoItemsYet"]</div>
     }
+    </div>
+
+    <div class="tab-pane fade" id="export">
+        <div class="inv-card" style="max-width:400px; margin-top:8px;">
+            <div class="inv-card-header">
+                <span>Export</span>
+            </div>
+            <div style="padding:20px;">
+                <p style="color:var(--bs-body-color); margin-bottom:16px;">
+                    Download all items from this inventory as a CSV file.
+                </p>
+                <a asp-controller="Inventory" asp-action="ExportToCsv" asp-route-id="@Model.Id"
+                   class="btn btn-primary">
+                    <i class="bi bi-download"></i> Download CSV
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+
 
 @section Scripts {
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
