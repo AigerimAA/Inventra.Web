@@ -136,22 +136,44 @@ namespace Inventra.Infrastructure.Services
         private async Task<string> BuildSequenceAsync(
             int inventoryId, string? fmt, CancellationToken cancellationToken)
         {
-            var result = await _context.Database
-            .SqlQuery<int>(
-                $"""
-                MERGE INTO InventorySequence WITH (HOLDLOCK) AS target
-                USING (SELECT {inventoryId} AS InventoryId) AS source
-                ON target.InventoryId = source.InventoryId
-                WHEN MATCHED THEN
-                    UPDATE SET CurrentValue = CurrentValue + 1
-                WHEN NOT MATCHED THEN
-                    INSERT (InventoryId, CurrentValue) VALUES ({inventoryId}, 1)
-                OUTPUT inserted.CurrentValue;
-                """)
-            .ToListAsync(cancellationToken);
+            while (true)
+            {
+                var seq = await _context.InventorySequence
+                    .FirstOrDefaultAsync(s => s.InventoryId == inventoryId, cancellationToken);
 
-            var newValue = result.First();
-            return FormatSequenceValue(newValue, fmt);
+                if (seq == null)
+                {
+                    seq = new InventorySequence
+                    {
+                        InventoryId = inventoryId,
+                        CurrentValue = 1
+                    };
+                    _context.InventorySequence.Add(seq);
+
+                    try
+                    {
+                        await _context.SaveChangesAsync(cancellationToken);
+                        return FormatSequenceValue(1, fmt);
+                    }
+                    catch (DbUpdateException)
+                    {
+                        _context.Entry(seq).State = EntityState.Detached;
+                        continue;
+                    }
+                }
+
+                seq.CurrentValue += 1;
+
+                try
+                {
+                    await _context.SaveChangesAsync(cancellationToken);
+                    return FormatSequenceValue(seq.CurrentValue, fmt);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    await _context.Entry(seq).ReloadAsync(cancellationToken);
+                }
+            }
         }
 
         private static string FormatSequenceValue(int value, string? fmt)
