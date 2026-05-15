@@ -14,24 +14,24 @@ namespace Inventra.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ApplicationUser?> GetByIdAsync(string id)
+        public async Task<ApplicationUser?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
-        public async Task<ApplicationUser?> GetByEmailAsync(string email)
+        public async Task<ApplicationUser?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
-        public async Task<IEnumerable<ApplicationUser>> SearchByNameOrEmailAsync(string query)
+        public async Task<IEnumerable<ApplicationUser>> SearchByNameOrEmailAsync(string query, CancellationToken cancellationToken = default)
         {
             return await _context.Users
                 .Where(u =>
                     EF.Functions.Like(u.UserName!, query + "%") ||
                     EF.Functions.Like(u.Email!, query + "%"))
                 .Take(10)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public Task UpdateAsync(ApplicationUser user)
+        public Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken = default)
         {
             _context.Users.Update(user);
             return Task.CompletedTask;

@@ -14,10 +14,9 @@ namespace Inventra.Application.Comments.Queries
             _commentRepository = commentRepository;
         }
 
-        public async Task<IEnumerable<CommentDto>> Handle(
-            GetCommentsByInventoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CommentDto>> Handle(GetCommentsByInventoryIdQuery request, CancellationToken cancellationToken)
         {
-            var comments = await _commentRepository.GetByInventoryIdAsync(request.InventoryId);
+            var comments = await _commentRepository.GetByInventoryIdAsync(request.InventoryId, cancellationToken);
             return comments.Select(c => new CommentDto
             {
                 AuthorName = c.Author?.UserName ?? "Unknown",

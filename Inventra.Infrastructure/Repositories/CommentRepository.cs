@@ -13,18 +13,18 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Comment>> GetByInventoryIdAsync(int inventoryId)
+        public async Task<IEnumerable<Comment>> GetByInventoryIdAsync(int inventoryId, CancellationToken cancellationToken = default)
         {
             return await _context.Comments
                 .Include(c => c.Author)
                 .Where(c => c.InventoryId == inventoryId)
                 .OrderBy(c => c.CreatedAt)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(Comment comment)
+        public async Task AddAsync(Comment comment, CancellationToken cancellationToken = default)
         {
-            await _context.Comments.AddAsync(comment);
+            await _context.Comments.AddAsync(comment, cancellationToken);
         }
     }
 }

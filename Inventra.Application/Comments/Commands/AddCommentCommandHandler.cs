@@ -23,7 +23,7 @@ namespace Inventra.Application.Comments.Commands
             ?? throw new UnauthorizedAccessException("User is not authenticated");
 
             var comment = new Comment(request.InventoryId, userId, request.Content);
-            await _commentRepository.AddAsync(comment);
+            await _commentRepository.AddAsync(comment, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

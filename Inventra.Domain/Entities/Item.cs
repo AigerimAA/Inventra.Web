@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Inventra.Domain.Exceptions;
+﻿using Inventra.Domain.Exceptions;
 
 namespace Inventra.Domain.Entities
 {
@@ -13,6 +12,7 @@ namespace Inventra.Domain.Entities
 
         public int InventoryId { get; private set; }
         public string CreatedById { get; private set; } = string.Empty;
+        public string? ImageUrl { get; private set; }
 
         public string? CustomString1Value { get; private set; }
         public string? CustomString2Value { get; private set; }
@@ -34,10 +34,9 @@ namespace Inventra.Domain.Entities
         public string? CustomLink2Value { get; private set; }
         public string? CustomLink3Value { get; private set; }
 
-        public string? ImageUrl { get; private set; }
-
         public Inventory Inventory { get; set; } = null!;
         public ApplicationUser CreatedBy { get; set; } = null!;
+
         private readonly List<Like> _likes = new();
         public IReadOnlyCollection<Like> Likes => _likes;
 

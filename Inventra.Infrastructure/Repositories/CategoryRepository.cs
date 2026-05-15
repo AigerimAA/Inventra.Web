@@ -12,9 +12,9 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.ToListAsync(cancellationToken);
         }
     }
 }

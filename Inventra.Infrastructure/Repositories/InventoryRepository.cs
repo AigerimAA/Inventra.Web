@@ -13,7 +13,7 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<Inventory?> GetByIdAsync(int id)
+        public async Task<Inventory?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
@@ -21,9 +21,9 @@ namespace Inventra.Infrastructure.Repositories
                 .Include(i => i.InventoryTags)
                     .ThenInclude(it => it.Tag)
                 .Include(i => i.Items)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
         }
-        public async Task<IEnumerable<Inventory>> GetAllAsync()
+        public async Task<IEnumerable<Inventory>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
@@ -31,9 +31,9 @@ namespace Inventra.Infrastructure.Repositories
                 .Include(i => i.InventoryTags)
                     .ThenInclude(it => it.Tag)
                 .Include(i => i.Items)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<IEnumerable<Inventory>> GetByOwnerIdAsync(string ownerId)
+        public async Task<IEnumerable<Inventory>> GetByOwnerIdAsync(string ownerId, CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
@@ -42,9 +42,9 @@ namespace Inventra.Infrastructure.Repositories
                     .ThenInclude(it => it.Tag)
                 .Include(i => i.Items)
                 .Where(i => i.OwnerId == ownerId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<IEnumerable<Inventory>> GetLatestAsync(int count)
+        public async Task<IEnumerable<Inventory>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
@@ -54,38 +54,38 @@ namespace Inventra.Infrastructure.Repositories
                     .ThenInclude(it => it.Tag)
                 .OrderByDescending(i => i.CreatedAt)
                 .Take(count)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<IEnumerable<Inventory>> GetMostPopularAsync(int count)
+        public async Task<IEnumerable<Inventory>> GetMostPopularAsync(int count, CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
                 .Include(i => i.Items)
                 .OrderByDescending(i => i.Items.Count)
                 .Take(count)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<IEnumerable<Inventory>> GetWithAccessByUserIdAsync(string userId)
+        public async Task<IEnumerable<Inventory>> GetWithAccessByUserIdAsync(string userId, CancellationToken cancellationToken = default)
         {
             return await _context.Inventories
                 .Include(i => i.Owner)
                 .Include(i => i.Category)
                 .Include(i => i.Items)
                 .Where(i => i.AccessList.Any(a => a.UserId == userId))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task AddAsync(Inventory inventory)
+        public async Task AddAsync(Inventory inventory, CancellationToken cancellationToken = default)
         {
-            await _context.Inventories.AddAsync(inventory);
+            await _context.Inventories.AddAsync(inventory, cancellationToken);
         }
-        public Task UpdateAsync(Inventory inventory)
+        public Task UpdateAsync(Inventory inventory, CancellationToken cancellationToken = default)
         {
             _context.Inventories.Update(inventory);
             return Task.CompletedTask;
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var inventory = await _context.Inventories.FindAsync(id);
+            var inventory = await _context.Inventories.FindAsync(id, cancellationToken);
             if (inventory is not null)
                 _context.Inventories.Remove(inventory);
         }

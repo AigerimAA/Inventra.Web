@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Inventra.Domain.Enums;
+﻿using Inventra.Domain.Enums;
 
 namespace Inventra.Domain.Entities
 {

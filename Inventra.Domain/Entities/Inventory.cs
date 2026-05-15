@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Inventra.Domain.Exceptions;
+﻿using Inventra.Domain.Exceptions;
 
 namespace Inventra.Domain.Entities
 {

@@ -13,30 +13,30 @@ namespace Inventra.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Tag>> GetByPrefixAsync(string prefix, int maxResults = 10)
+        public async Task<IEnumerable<Tag>> GetByPrefixAsync(string prefix, int maxResults = 10, CancellationToken cancellationToken = default)
         {
             return await _context.Tags
                 .Where(t => EF.Functions.Like(t.Name, prefix + "%"))
                 .OrderBy(t => t.Name)
                 .Take(maxResults)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public async Task<Tag?> GetByNameAsync(string name)
+        public async Task<Tag?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _context.Tags.FirstOrDefaultAsync(t => t.Name == name);
+            return await _context.Tags.FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
         }
 
-        public async Task AddAsync(Tag tag)
+        public async Task AddAsync(Tag tag, CancellationToken cancellationToken = default)
         {
-            await _context.Tags.AddAsync(tag);
+            await _context.Tags.AddAsync(tag, cancellationToken);
         }
         public void RemoveInventoryTags(IList<InventoryTag> inventoryTags)
         {
             _context.InventoryTags.RemoveRange(inventoryTags);
         }
-        public async Task<Tag> GetOrCreateAsync(string name)
+        public async Task<Tag> GetOrCreateAsync(string name, CancellationToken cancellationToken = default)
         {
-            var existing = await _context.Tags.FirstOrDefaultAsync(t => t.Name == name);
+            var existing = await _context.Tags.FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
 
             if (existing != null) return existing;
 
@@ -45,18 +45,17 @@ namespace Inventra.Infrastructure.Repositories
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
                 return tag;
             }
             catch (DbUpdateException)
             {
                 _context.Entry(tag).State = EntityState.Detached;
 
-                return await _context.Tags.FirstAsync(t => t.Name == name);
+                return await _context.Tags.FirstAsync(t => t.Name == name, cancellationToken);
             }
         }
-        public async Task<IEnumerable<TagWithCount>> GetTagsWithCountAsync(
-            int maxTags = 50, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TagWithCount>> GetTagsWithCountAsync(int maxTags = 50, CancellationToken cancellationToken = default)
         {
             var raw = await _context.InventoryTags
                 .AsNoTracking()
