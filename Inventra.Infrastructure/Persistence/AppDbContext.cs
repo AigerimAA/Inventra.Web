@@ -27,15 +27,6 @@ namespace Inventra.Infrastructure.Persistence
             base.OnModelCreating(builder);
 
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
-            builder.Entity<InventorySequence>()
-                .HasKey(s => s.InventoryId);
-
-            builder.Entity<InventorySequence>()
-                .HasOne(s => s.Inventory)
-                .WithOne(inv => inv.Sequence)
-                .HasForeignKey<InventorySequence>(s => s.InventoryId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
