@@ -693,7 +693,7 @@ function addTag() {
         }
 
         async function addUser() {
-            if (!selectedUserId) return alert('Please select a user from the dropdown');
+            if (!selectedUserId) { showToast('Please select a user from the dropdown', true); return; }
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
             const response = await fetch('/Access/Add', {
                 method: 'POST',
@@ -710,7 +710,7 @@ function addTag() {
                 selectedUserId = null;
             } else {
                 const err = await response.json();
-                alert(err.error ?? 'Error adding user');
+                showToast(err.error ?? 'Error adding user', true);
             }
         }
 

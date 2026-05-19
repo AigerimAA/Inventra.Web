@@ -20,19 +20,16 @@ namespace Inventra.Infrastructure.Repositories
 
         public async Task<InventoryAccess> AddAccessAsync(int inventoryId, string userId, CancellationToken cancellationToken = default)
         {
-            var exists = await _context.InventoryAccesses
-                .AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId, cancellationToken);
+            var exists = await _context.InventoryAccesses.AnyAsync(a => a.InventoryId == inventoryId && a.UserId == userId, cancellationToken);
             if (exists)
                 throw new InvalidOperationException("User already has access");
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken)
                 ?? throw new InvalidOperationException("User not found");
 
             var access = new InventoryAccess { InventoryId = inventoryId, UserId = userId };
             _context.InventoryAccesses.Add(access);
             access.User = user;
-
             return access;
         }
 

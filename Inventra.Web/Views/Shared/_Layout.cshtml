@@ -172,5 +172,27 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+        <div id="appToast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Inventra</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="appToastMessage"></div>
+        </div>
+    </div>
+
+    <script>
+            function showToast(message, isError = false) {
+                const toastEl = document.getElementById('appToast');
+                const toastBody = document.getElementById('appToastMessage');
+                toastBody.textContent = message;
+                toastEl.classList.toggle('text-bg-danger', isError);
+                toastEl.classList.toggle('text-bg-success', !isError);
+                const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                toast.show();
+            }
+    </script>
 </body>
 </html>

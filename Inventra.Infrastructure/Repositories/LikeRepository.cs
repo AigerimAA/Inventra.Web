@@ -16,8 +16,7 @@ namespace Inventra.Infrastructure.Repositories
 
         public async Task<Like?> GetByUserAndItemAsync(int itemId, string userId, CancellationToken cancellationToken = default)
         {
-            return await _context.Likes
-                .FirstOrDefaultAsync(l => l.ItemId == itemId && l.UserId == userId, cancellationToken);
+            return await _context.Likes.FirstOrDefaultAsync(l => l.ItemId == itemId && l.UserId == userId, cancellationToken);
         }
         public async Task AddAsync(Like like, CancellationToken cancellationToken = default)
         {
