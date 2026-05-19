@@ -10,11 +10,13 @@ namespace Inventra.Application.Access.Commands.AddAccess
         private readonly IAccessRepository _accessRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IInventoryPermissionService _permissionService;
-        public AddAccessCommandHandler(IAccessRepository accessRepository, ICurrentUserService currentUserService, IInventoryPermissionService permissionService)
+        private readonly IUnitOfWork _unitOfWork;
+        public AddAccessCommandHandler(IAccessRepository accessRepository, ICurrentUserService currentUserService, IInventoryPermissionService permissionService, IUnitOfWork unitOfWork)
         { 
             _accessRepository = accessRepository; 
             _currentUserService = currentUserService; 
-            _permissionService = permissionService; 
+            _permissionService = permissionService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<AccessUserDto> Handle(AddAccessCommand request, CancellationToken cancellationToken)
@@ -26,6 +28,7 @@ namespace Inventra.Application.Access.Commands.AddAccess
                 throw new InvalidOperationException("You already have access as the owner");
 
             var access = await _accessRepository.AddAccessAsync(request.InventoryId, request.TargetUserId, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return new AccessUserDto { Id = access.User.Id, UserName = access.User.UserName!, Email = access.User.Email! };
         }
     }
